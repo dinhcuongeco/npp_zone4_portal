@@ -1,0 +1,1860 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NPP Portal — Cổng nhà phân phối</title>
+<style>
+  :root{
+    --hk-green:#00863C;
+    --hk-green-dark:#005F2B;
+    --hk-green-deeper:#003E1B;
+    --hk-green-light:#33A663;
+    --hk-green-soft:#E6F4EC;
+    --hk-red:#E30613;
+    --hk-gold:#D4B43B;
+    --ink:#0F1A14;
+    --paper:#F4F7F4;
+    --card:#FFFFFF;
+    --line:#E0E5E0;
+    --muted:#6B756F;
+    --shadow-sm:0 1px 2px rgba(0,40,20,.04),0 2px 8px rgba(0,40,20,.04);
+    --shadow:0 2px 8px rgba(0,40,20,.06),0 16px 40px rgba(0,40,20,.08);
+    --shadow-lg:0 20px 60px rgba(0,80,30,.15);
+    --r:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter','Helvetica Neue',system-ui,-apple-system,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+  /* ================ LOGIN PAGE ================ */
+  .login-page{
+    position:fixed;inset:0;z-index:100;
+    background:
+      radial-gradient(ellipse at top right,rgba(0,134,60,.6) 0%,transparent 60%),
+      radial-gradient(ellipse at bottom left,rgba(0,62,27,.8) 0%,transparent 60%),
+      linear-gradient(135deg,#00251A 0%,#003E1B 50%,#001A0E 100%);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+    overflow:auto;
+  }
+  .login-page::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      radial-gradient(circle at 20% 30%,rgba(255,255,255,.04) 1px,transparent 1px),
+      radial-gradient(circle at 70% 70%,rgba(255,255,255,.03) 1px,transparent 1px);
+    background-size:40px 40px,60px 60px;
+    pointer-events:none;
+  }
+  .login-card{
+    background:rgba(255,255,255,.98);
+    border-radius:20px;
+    padding:44px 42px;
+    width:100%;max-width:440px;
+    box-shadow:var(--shadow-lg),0 0 0 1px rgba(255,255,255,.1);
+    position:relative;
+    backdrop-filter:blur(20px);
+    animation:slideUp .6s cubic-bezier(.2,.7,.2,1);
+  }
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+  .login-logo{
+    display:flex;justify-content:center;margin-bottom:24px;position:relative;
+  }
+  .login-logo svg{filter:drop-shadow(0 6px 14px rgba(0,134,60,.3))}
+  .login-eyebrow{
+    text-align:center;
+    font-size:11px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;
+    color:var(--hk-green);margin-bottom:6px;
+  }
+  .login-title{
+    text-align:center;font-size:30px;font-weight:800;letter-spacing:-.025em;
+    color:var(--ink);margin-bottom:6px;
+  }
+  .login-sub{
+    text-align:center;font-size:13.5px;color:var(--muted);margin-bottom:30px;
+  }
+  .login-row{margin-bottom:14px}
+  .login-row label{
+    display:block;font-size:11px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:6px;
+  }
+  .login-row input{
+    width:100%;font:inherit;font-size:15px;padding:13px 16px;
+    border:1.5px solid var(--line);border-radius:10px;background:#fafdfa;
+    transition:all .2s;color:var(--ink);font-weight:500;
+  }
+  .login-row input:focus{
+    outline:none;border-color:var(--hk-green);background:#fff;
+    box-shadow:0 0 0 4px rgba(0,134,60,.1);
+  }
+  .login-row input.error{border-color:var(--hk-red);background:#fff5f5}
+
+  .login-btn{
+    width:100%;font:inherit;font-size:14px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;padding:15px;border:none;cursor:pointer;
+    background:linear-gradient(135deg,var(--hk-green),var(--hk-green-dark));
+    color:#fff;border-radius:10px;margin-top:8px;
+    box-shadow:0 4px 12px rgba(0,134,60,.3);
+    transition:all .2s;
+  }
+  .login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,134,60,.4)}
+  .login-btn:active{transform:translateY(0)}
+
+  .login-error{
+    background:#fff5f5;border:1px solid #ffd0d0;color:var(--hk-red);
+    padding:10px 14px;border-radius:8px;font-size:12.5px;margin-top:14px;
+    font-weight:600;display:none;
+  }
+  .login-error.show{display:block;animation:shake .3s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+  .login-hint{
+    margin-top:22px;padding-top:18px;border-top:1px solid var(--line);
+    font-size:11.5px;color:var(--muted);text-align:center;line-height:1.6;
+  }
+  .login-hint b{color:var(--hk-green-dark);font-weight:700}
+
+  .login-foot{
+    position:absolute;bottom:24px;left:0;right:0;text-align:center;
+    color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;font-weight:600;
+  }
+  .login-foot b{color:rgba(255,255,255,.85)}
+
+  /* ================ DASHBOARD ================ */
+  .dash{display:none}
+  .dash.show{display:block}
+
+  /* Top bar */
+  .topbar{
+    background:linear-gradient(105deg,var(--hk-green-deeper) 0%,var(--hk-green-dark) 50%,var(--hk-green) 100%);
+    color:#fff;padding:18px 0;
+    position:sticky;top:0;z-index:50;
+    box-shadow:0 2px 12px rgba(0,40,20,.15);
+  }
+  .topbar-inner{
+    max-width:1400px;margin:0 auto;padding:0 24px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  }
+  .top-brand{display:flex;align-items:center;gap:14px}
+  .top-brand .ico{width:38px;height:38px;flex-shrink:0}
+  .top-brand .tx{display:flex;flex-direction:column}
+  .top-brand .nm{font-size:15px;font-weight:800;letter-spacing:-.01em;line-height:1.1}
+  .top-brand .sb{font-size:11px;color:rgba(255,255,255,.7);font-weight:500;letter-spacing:.04em;margin-top:1px}
+
+  .top-period{
+    display:flex;gap:0;background:rgba(0,0,0,.18);border-radius:9px;overflow:hidden;
+    border:1px solid rgba(255,255,255,.1);
+  }
+  .top-period .blk{padding:7px 14px;border-right:1px solid rgba(255,255,255,.1)}
+  .top-period .blk:last-child{border-right:none}
+  .top-period .lab{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6);font-weight:700;display:block}
+  .top-period .vl{font-size:13px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums;margin-top:1px}
+
+  .top-user{display:flex;align-items:center;gap:12px}
+  .top-user .info{text-align:right}
+  .top-user .who{font-size:13px;font-weight:700;line-height:1.1}
+  .top-user .sub{font-size:11px;color:rgba(255,255,255,.65);margin-top:2px}
+  .top-user .avatar{
+    width:38px;height:38px;border-radius:50%;
+    background:linear-gradient(135deg,var(--hk-gold),#a88b1f);
+    color:#fff;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;letter-spacing:.02em;
+  }
+  .top-logout{
+    background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);
+    padding:8px 14px;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;
+    font-family:inherit;transition:all .2s;
+  }
+  .top-logout:hover{background:rgba(255,255,255,.2)}
+
+  /* Welcome banner */
+  .welcome{
+    background:linear-gradient(180deg,#fff 0%,#fafdfa 100%);
+    border-bottom:1px solid var(--line);padding:26px 0 20px;
+  }
+  .welcome-inner{max-width:1400px;margin:0 auto;padding:0 24px}
+  .welcome h1{font-size:24px;font-weight:800;letter-spacing:-.025em;color:var(--ink);margin-bottom:4px}
+  .welcome h1 .hl{color:var(--hk-green)}
+  .welcome p{font-size:13.5px;color:var(--muted);max-width:760px}
+
+  .container{max-width:1400px;margin:0 auto;padding:0 24px}
+
+  /* KPI cards */
+  .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:20px}
+  .kpi{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+    padding:18px 20px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+    transition:transform .2s,box-shadow .2s;
+  }
+  .kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+  .kpi.k1::before{background:var(--hk-green-dark)}
+  .kpi.k2::before{background:var(--hk-green)}
+  .kpi.k3::before{background:var(--hk-gold)}
+  .kpi.k4::before{background:#9b59b6}
+  .kpi.k5::before{background:#2980b9}
+  .kpi .lab{
+    font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);font-weight:700;display:flex;align-items:center;gap:6px;
+  }
+  .kpi .val{
+    font-size:32px;font-weight:800;letter-spacing:-.025em;
+    margin-top:4px;font-variant-numeric:tabular-nums;line-height:1;color:var(--ink);
+  }
+  .kpi .sub{font-size:12px;color:var(--muted);margin-top:6px;font-weight:500}
+  .kpi .sub b{font-weight:700}
+  .kpi .sub b.good{color:var(--hk-green)}
+  .kpi .sub b.bad{color:var(--hk-red)}
+
+  .kpi-badge{
+    display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;
+    font-size:10.5px;font-weight:800;margin-left:6px;vertical-align:2px;letter-spacing:.04em;
+  }
+  .kpi-badge.pass{background:var(--hk-green-soft);color:var(--hk-green-dark)}
+  .kpi-badge.fail{background:#fce8e8;color:var(--hk-red)}
+
+  /* ASO action banner */
+  .aso-banner{
+    margin-top:14px;background:linear-gradient(105deg,#fff8f0,#ffe8d6);
+    border:1px solid #f0c896;border-left:4px solid var(--hk-red);
+    border-radius:var(--r);padding:14px 18px;display:flex;align-items:center;
+    justify-content:space-between;gap:14px;flex-wrap:wrap;
+    box-shadow:var(--shadow-sm);
+  }
+  .aso-banner.pass{background:linear-gradient(105deg,#f0faf3,#e6f4ec);border-color:#a8d4b7;border-left-color:var(--hk-green)}
+  .aso-banner.pass .ab-tx h3{color:var(--hk-green-dark)}
+  .aso-banner.pass .ab-ico{background:var(--hk-green-soft);color:var(--hk-green-dark)}
+  .aso-banner .ab-left{display:flex;align-items:center;gap:14px;flex:1;min-width:280px}
+  .aso-banner .ab-ico{
+    width:44px;height:44px;border-radius:12px;flex-shrink:0;
+    background:#fde5db;color:#c44519;display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:22px;
+  }
+  .aso-banner .ab-tx h3{
+    font-size:14px;font-weight:800;color:#a23b18;letter-spacing:-.005em;
+    margin-bottom:2px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;
+  }
+  .aso-banner .ab-tx h3 .num{font-size:22px;font-weight:900;color:var(--hk-red);letter-spacing:-.02em}
+  .aso-banner.pass .ab-tx h3 .num{color:var(--hk-green-dark)}
+  .aso-banner .ab-tx p{font-size:12.5px;color:#6e4523;line-height:1.4}
+  .aso-banner.pass .ab-tx p{color:#3a5a44}
+  .aso-banner .ab-tx p b{font-weight:700}
+  .aso-banner .ab-cta{
+    font:inherit;font-size:12px;font-weight:700;letter-spacing:.04em;
+    padding:10px 18px;cursor:pointer;border-radius:8px;border:none;
+    background:#fff;color:var(--hk-red);border:1.5px solid var(--hk-red);
+    transition:all .15s;white-space:nowrap;
+  }
+  .aso-banner .ab-cta:hover{background:var(--hk-red);color:#fff}
+  .aso-banner.pass .ab-cta{color:var(--hk-green-dark);border-color:var(--hk-green)}
+  .aso-banner.pass .ab-cta:hover{background:var(--hk-green);color:#fff}
+  .aso-banner.hidden{display:none}
+
+  /* ============================================================
+     TIP MODULE — Editorial · Modern · Calm
+     Inspiration: Stripe, Linear, premium editorial
+     ============================================================ */
+  .tip-module{
+    margin-top:22px;background:#fff;border-radius:16px;overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:0 1px 2px rgba(14,61,26,.04),0 12px 32px rgba(14,61,26,.06);
+  }
+
+  /* Module header — minimal, editorial */
+  .tm-head{padding:22px 28px 0;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+  .tm-head .tm-title .eb{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--hk-green);margin-bottom:6px;
+  }
+  .tm-head .tm-title .eb::before{
+    content:"";width:18px;height:1.5px;background:var(--hk-green);display:inline-block;
+  }
+  .tm-head .tm-title h2{
+    font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.1;
+  }
+  .tm-head .tm-title h2 .meta{
+    font-size:13px;font-weight:500;color:var(--muted);margin-left:8px;font-variant-numeric:tabular-nums;
+  }
+  .tm-head .tm-context{
+    font-size:12px;color:var(--muted);text-align:right;line-height:1.5;font-variant-numeric:tabular-nums;
+  }
+  .tm-head .tm-context b{color:var(--ink);font-weight:700}
+  .tm-head .tm-context .pill-time{
+    display:inline-block;margin-top:6px;padding:4px 12px;background:var(--hk-green-soft);
+    color:var(--hk-green-dark);font-size:11px;font-weight:700;letter-spacing:.06em;
+    border-radius:30px;border:1px solid #c4dbcb;
+  }
+
+  /* HERO row — split: focus + breakdown */
+  .tm-hero{
+    display:grid;grid-template-columns:1.4fr 1fr;gap:32px;
+    padding:32px 28px;border-bottom:1px solid var(--line);
+  }
+
+  /* Focus side — the big metric */
+  .tm-focus .focus-eb{
+    font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px;
+  }
+  .tm-focus .focus-num{
+    font-size:72px;font-weight:800;letter-spacing:-.04em;line-height:1;
+    color:var(--ink);font-variant-numeric:tabular-nums;display:flex;align-items:baseline;gap:14px;
+  }
+  .tm-focus .focus-num .unit{font-size:18px;font-weight:500;color:var(--muted);letter-spacing:0}
+  .tm-focus .focus-desc{
+    font-size:14px;color:var(--ink-soft);margin-top:8px;max-width:380px;line-height:1.5;
+  }
+  .tm-focus .focus-desc b{color:var(--ink);font-weight:700}
+
+  /* Progress ring/bar */
+  .focus-progress{margin-top:24px}
+  .fp-lab{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:8px;
+  }
+  .fp-lab b{color:var(--hk-green-dark);font-weight:700;font-variant-numeric:tabular-nums}
+  .fp-bar{
+    height:10px;background:#eef3ef;border-radius:30px;overflow:hidden;position:relative;
+  }
+  .fp-fill{
+    height:100%;background:linear-gradient(90deg,var(--hk-green),#5cb874);
+    border-radius:30px;width:0;
+    transition:width 1.2s cubic-bezier(.2,.7,.2,1);
+    position:relative;
+  }
+  .fp-fill::after{
+    content:"";position:absolute;right:0;top:0;bottom:0;width:3px;
+    background:#fff;box-shadow:0 0 0 2px var(--hk-green);border-radius:2px;
+  }
+  .fp-foot{
+    display:flex;justify-content:space-between;font-size:11px;color:var(--muted);
+    margin-top:6px;font-variant-numeric:tabular-nums;font-weight:500;
+  }
+
+  /* Breakdown side — compact vibrant chips */
+  .tm-breakdown{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+    align-content:start;align-self:start;
+  }
+  .bd-card{
+    padding:11px 13px;border-radius:12px;cursor:pointer;
+    transition:transform .18s cubic-bezier(.2,.7,.2,1),box-shadow .18s ease,filter .18s ease;
+    position:relative;display:grid;grid-template-columns:1fr auto;gap:8px;
+    align-items:center;overflow:hidden;border:1px solid transparent;
+  }
+  .bd-card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    border-radius:3px 0 0 3px;opacity:.9;
+  }
+  .bd-card:hover{transform:translateY(-2px);filter:brightness(1.02)}
+  .bd-card:active{transform:translateY(0)}
+
+  /* Vibrant gradient backgrounds — modern, youthful */
+  .bd-card[data-bucket="achieved"]{
+    background:linear-gradient(135deg,#E2FAEE 0%,#CCF3DE 100%);
+    border-color:#9DE5BF;box-shadow:0 2px 10px rgba(0,200,150,.10);
+  }
+  .bd-card[data-bucket="achieved"]::before{background:linear-gradient(180deg,#00C896,#00A87B)}
+  .bd-card[data-bucket="achieved"]:hover{box-shadow:0 6px 18px rgba(0,200,150,.18)}
+
+  .bd-card[data-bucket="onpace"]{
+    background:linear-gradient(135deg,#E5EFFF 0%,#D2E0FE 100%);
+    border-color:#A7BFFA;box-shadow:0 2px 10px rgba(79,139,250,.10);
+  }
+  .bd-card[data-bucket="onpace"]::before{background:linear-gradient(180deg,#4F8BFA,#3A6BD8)}
+  .bd-card[data-bucket="onpace"]:hover{box-shadow:0 6px 18px rgba(79,139,250,.18)}
+
+  .bd-card[data-bucket="lagging"]{
+    background:linear-gradient(135deg,#FFF6DC 0%,#FFE9B0 100%);
+    border-color:#F2CC60;box-shadow:0 2px 10px rgba(255,176,32,.12);
+  }
+  .bd-card[data-bucket="lagging"]::before{background:linear-gradient(180deg,#FFB020,#E89400)}
+  .bd-card[data-bucket="lagging"]:hover{box-shadow:0 6px 18px rgba(255,176,32,.22)}
+
+  .bd-card[data-bucket="noactive"]{
+    background:linear-gradient(135deg,#FFE6E0 0%,#FFCFC4 100%);
+    border-color:#FFA590;box-shadow:0 2px 10px rgba(255,107,94,.12);
+  }
+  .bd-card[data-bucket="noactive"]::before{background:linear-gradient(180deg,#FF6B5E,#E04D40)}
+  .bd-card[data-bucket="noactive"]:hover{box-shadow:0 6px 18px rgba(255,107,94,.22)}
+
+  .bd-card .bd-left{display:flex;flex-direction:column;gap:3px;min-width:0;padding-left:6px}
+  .bd-card .bd-top{
+    display:flex;align-items:center;gap:6px;
+    font-size:11px;font-weight:800;letter-spacing:.04em;line-height:1;
+    color:var(--ink);
+  }
+  .bd-card .dot{
+    width:9px;height:9px;border-radius:50%;flex-shrink:0;
+    box-shadow:0 0 0 2.5px rgba(255,255,255,.7);
+  }
+  .bd-card .dot.dot-ach{background:#00C896}
+  .bd-card .dot.dot-pace{background:#4F8BFA}
+  .bd-card .dot.dot-lag{background:#FFB020}
+  .bd-card .dot.dot-no{background:#FF6B5E}
+  .bd-card .pct{
+    font-size:10.5px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;
+    margin-left:15px;
+  }
+  .bd-card[data-bucket="achieved"] .pct{color:#007A52}
+  .bd-card[data-bucket="onpace"] .pct{color:#2659BB}
+  .bd-card[data-bucket="lagging"] .pct{color:#9C6800}
+  .bd-card[data-bucket="noactive"] .pct{color:#B33A30}
+
+  .bd-card .bd-num{
+    font-size:22px;font-weight:800;letter-spacing:-.025em;line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  .bd-card[data-bucket="achieved"] .bd-num{color:#007A52}
+  .bd-card[data-bucket="onpace"] .bd-num{color:#2659BB}
+  .bd-card[data-bucket="lagging"] .bd-num{color:#9C6800}
+  .bd-card[data-bucket="noactive"] .bd-num{color:#B33A30}
+
+  .bd-card .bd-arrow{
+    grid-column:1/-1;display:flex;justify-content:flex-end;
+    font-size:11px;font-weight:700;color:inherit;
+    opacity:0;max-height:0;overflow:hidden;
+    transition:opacity .15s,max-height .2s;
+  }
+  .bd-card:hover .bd-arrow{opacity:.8;max-height:14px}
+
+  /* PRIORITY list — refined editorial */
+  .tm-priority{padding:24px 28px 28px}
+  .tm-priority-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .tm-priority-head h3{
+    font-size:16px;font-weight:800;letter-spacing:-.015em;color:var(--ink);
+    display:flex;align-items:center;gap:10px;
+  }
+  .tm-priority-head h3 .eb-tiny{
+    font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--hk-green);background:var(--hk-green-soft);padding:3px 9px;border-radius:4px;
+  }
+  .tm-priority-head .hint{font-size:12px;color:var(--muted);font-style:italic;max-width:420px;line-height:1.5}
+  .tm-priority-list{
+    margin-top:18px;border-radius:11px;overflow:hidden;border:1px solid var(--line);background:#fff;
+  }
+
+  .pri-row{
+    display:grid;grid-template-columns:38px 1.5fr 1.3fr 110px 1fr 36px;
+    gap:18px;align-items:center;padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    transition:background .15s ease;
+    cursor:pointer;
+  }
+  .pri-row:last-child{border-bottom:none}
+  .pri-row:hover{background:#fafdfa}
+  .pri-row .rank{
+    width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:13px;color:var(--muted);background:#f4f0e6;
+    font-variant-numeric:tabular-nums;
+  }
+  .pri-row.top-3 .rank{background:var(--ink);color:#fff}
+  .pri-row .info .nm{
+    font-weight:700;font-size:13.5px;color:var(--ink);line-height:1.3;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .pri-row .info .sub{
+    font-size:11.5px;color:var(--muted);margin-top:3px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .pri-row .meta-cell .meta-line{
+    font-size:11px;color:var(--muted);letter-spacing:.04em;font-weight:600;text-transform:uppercase;
+  }
+  .pri-row .meta-cell .meta-val{
+    font-size:12.5px;font-weight:600;color:var(--ink-soft);margin-top:2px;
+  }
+  .pri-row .gap-cell{text-align:right}
+  .pri-row .gap-cell .gap-num{
+    font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.02em;
+    font-variant-numeric:tabular-nums;
+  }
+  .pri-row .gap-cell .gap-lab{
+    font-size:10.5px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    margin-top:2px;
+  }
+  .pri-row .progress-cell .pc-bar{
+    height:6px;background:#eef3ef;border-radius:30px;overflow:hidden;width:100%;position:relative;
+  }
+  .pri-row .progress-cell .pc-fill{
+    height:100%;background:var(--hk-green);border-radius:30px;width:0;
+    transition:width 1s cubic-bezier(.2,.7,.2,1);
+  }
+  .pri-row .progress-cell .pc-fill.cold{background:#c44519}
+  .pri-row .progress-cell .pc-fill.mid{background:#d4a020}
+  .pri-row .progress-cell .pc-fill.warm{background:#3498db}
+  .pri-row .progress-cell .pc-lab{
+    display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);
+    margin-top:5px;font-weight:600;font-variant-numeric:tabular-nums;
+  }
+  .pri-row .progress-cell .pc-lab .pc-status{font-weight:700}
+  .pri-row .progress-cell .pc-lab .pc-status.cold{color:#c44519}
+  .pri-row .progress-cell .pc-lab .pc-status.mid{color:#a67b18}
+  .pri-row .progress-cell .pc-lab .pc-status.warm{color:#1f6094}
+  .pri-row .progress-cell .pc-lab .pc-status.hot{color:var(--hk-green-dark)}
+  .pri-row .go-arrow{
+    width:32px;height:32px;border-radius:50%;background:#f4f0e6;
+    display:flex;align-items:center;justify-content:center;color:var(--ink);
+    font-size:13px;transition:all .2s ease;
+  }
+  .pri-row:hover .go-arrow{background:var(--hk-green);color:#fff;transform:translateX(3px)}
+
+  /* Stagger fade-in for priority rows */
+  @keyframes priFadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+  .pri-row{animation:priFadeIn .35s ease-out both}
+  .pri-row:nth-child(1){animation-delay:.05s}
+  .pri-row:nth-child(2){animation-delay:.1s}
+  .pri-row:nth-child(3){animation-delay:.15s}
+  .pri-row:nth-child(4){animation-delay:.2s}
+  .pri-row:nth-child(5){animation-delay:.25s}
+  .pri-row:nth-child(6){animation-delay:.3s}
+  .pri-row:nth-child(7){animation-delay:.35s}
+  .pri-row:nth-child(8){animation-delay:.4s}
+
+  .pri-empty{
+    padding:48px 24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;
+  }
+  .pri-empty .ic{
+    width:54px;height:54px;border-radius:50%;background:var(--hk-green-soft);
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:24px;color:var(--hk-green);margin-bottom:12px;
+  }
+  .pri-empty .ttl{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px}
+
+  @media(max-width:900px){
+    .tm-hero{grid-template-columns:1fr;gap:24px}
+    .tm-focus .focus-num{font-size:54px}
+    .pri-row{grid-template-columns:32px 1.5fr 80px 36px;gap:12px}
+    .pri-row .meta-cell,.pri-row .progress-cell{display:none}
+  }
+
+  /* ============================================================
+     CHANNEL MIX MODULE — Direct vs Indirect Sales
+     ============================================================ */
+  .ch-module{
+    margin-top:22px;background:#fff;border-radius:16px;overflow:hidden;
+    border:1px solid var(--line);
+    box-shadow:0 1px 2px rgba(14,61,26,.04),0 12px 32px rgba(14,61,26,.06);
+  }
+  .ch-head{
+    padding:22px 28px 0;display:flex;justify-content:space-between;
+    align-items:flex-end;gap:20px;flex-wrap:wrap;
+  }
+  .ch-head .ch-title .eb{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--hk-green);margin-bottom:6px;
+  }
+  .ch-head .ch-title .eb::before{
+    content:"";width:18px;height:1.5px;background:var(--hk-green);display:inline-block;
+  }
+  .ch-head .ch-title h2{
+    font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--ink);line-height:1.1;
+  }
+  .ch-head .ch-title h2 .meta{
+    font-size:13px;font-weight:500;color:var(--muted);margin-left:8px;
+  }
+  .ch-head .ch-status-pill{
+    display:inline-flex;align-items:center;gap:8px;padding:7px 16px;
+    border-radius:30px;font-size:12px;font-weight:800;letter-spacing:.04em;
+    font-variant-numeric:tabular-nums;
+  }
+  .ch-head .ch-status-pill.pass{background:#E2FAEE;color:#007A52;border:1px solid #9DE5BF}
+  .ch-head .ch-status-pill.fail{background:#FFE6E0;color:#B33A30;border:1px solid #FFA590}
+  .ch-head .ch-status-pill .dot{
+    width:8px;height:8px;border-radius:50%;animation:pulse 2s ease-in-out infinite;
+  }
+  .ch-head .ch-status-pill.pass .dot{background:#00C896}
+  .ch-head .ch-status-pill.fail .dot{background:#FF6B5E}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+  .ch-hero{
+    display:grid;grid-template-columns:1fr 1.1fr;gap:32px;
+    padding:32px 28px;
+  }
+
+  /* Focus side */
+  .ch-focus .focus-eb{
+    font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px;
+  }
+  .ch-focus-num{
+    display:flex;align-items:baseline;gap:14px;
+    font-size:72px;font-weight:800;letter-spacing:-.04em;line-height:1;
+    font-variant-numeric:tabular-nums;
+  }
+  .ch-focus-num.pass{color:#00C896}
+  .ch-focus-num.fail{color:#FF6B5E}
+  .ch-focus-num .unit{
+    font-size:18px;font-weight:500;color:var(--muted);letter-spacing:0;
+  }
+  .ch-focus-desc{
+    font-size:14px;color:var(--ink-soft);margin-top:8px;max-width:420px;line-height:1.5;
+  }
+  .ch-focus-desc b{color:var(--ink);font-weight:700}
+
+  /* KPI gauge with 65% mark */
+  .ch-gauge{margin-top:24px}
+  .ch-gauge-lab{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:8px;
+  }
+  .ch-gauge-lab .target-mark{
+    display:inline-flex;align-items:center;gap:5px;
+    color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums;
+  }
+  .ch-gauge-lab .target-mark::before{
+    content:"";width:2px;height:11px;background:var(--ink);display:inline-block;
+  }
+  .ch-gauge-bar{
+    height:14px;background:#eef3ef;border-radius:30px;overflow:hidden;
+    position:relative;
+  }
+  .ch-gauge-bar .marker{
+    position:absolute;top:-3px;bottom:-3px;left:65%;width:2px;
+    background:var(--ink);z-index:2;
+  }
+  .ch-gauge-bar .marker::after{
+    content:"KPI 65%";position:absolute;top:-18px;left:50%;transform:translateX(-50%);
+    background:var(--ink);color:#fff;font-size:10px;font-weight:800;letter-spacing:.04em;
+    padding:1px 7px;border-radius:3px;white-space:nowrap;
+  }
+  .ch-gauge-fill{
+    height:100%;border-radius:30px;width:0;
+    transition:width 1.2s cubic-bezier(.2,.7,.2,1),background 0.3s;
+  }
+  .ch-gauge-fill.pass{background:linear-gradient(90deg,#00C896,#5fd3a8)}
+  .ch-gauge-fill.fail{background:linear-gradient(90deg,#FF6B5E,#ff8a7d)}
+  .ch-gauge-foot{
+    display:flex;justify-content:space-between;font-size:11px;color:var(--muted);
+    margin-top:7px;font-variant-numeric:tabular-nums;font-weight:500;
+  }
+
+  /* Donuts side */
+  .ch-donuts{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .ch-donut-wrap{
+    background:#fafdfa;border:1px solid var(--line);border-radius:12px;
+    padding:18px 14px;text-align:center;
+  }
+  .ch-donut-wrap .ch-donut-title{
+    font-size:10.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:12px;
+  }
+  .ch-donut{
+    width:130px;height:130px;display:block;margin:0 auto;
+  }
+  .ch-donut circle{transition:stroke-dasharray 1.2s cubic-bezier(.2,.7,.2,1)}
+  .ch-donut-legend{
+    display:flex;flex-direction:column;gap:5px;margin-top:14px;
+    text-align:left;padding:0 4px;
+  }
+  .ch-leg-item{
+    display:flex;align-items:center;gap:8px;font-size:11.5px;
+    padding:4px 6px;border-radius:5px;
+  }
+  .ch-leg-item .dot{
+    width:9px;height:9px;border-radius:50%;flex-shrink:0;
+    box-shadow:0 0 0 2px rgba(255,255,255,.6);
+  }
+  .ch-leg-item .nm{flex:1;font-weight:600;color:var(--ink)}
+  .ch-leg-item .vv{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
+  .ch-leg-item .vv small{color:var(--muted);font-weight:500;margin-left:2px}
+
+  /* Recommendations */
+  .ch-recs{
+    padding:0 28px 28px;border-top:1px solid var(--line);padding-top:24px;
+  }
+  .ch-recs-head{
+    display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  }
+  .ch-recs-head h3{
+    font-size:14px;font-weight:800;letter-spacing:-.005em;color:var(--ink);
+  }
+  .ch-recs-head .eb-tiny{
+    font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--hk-green);background:var(--hk-green-soft);padding:3px 9px;border-radius:4px;
+  }
+  .ch-rec-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  }
+  .ch-rec{
+    background:#fafdfa;border:1px solid var(--line);border-radius:12px;
+    padding:16px 16px 14px;display:flex;flex-direction:column;gap:10px;
+    border-left:3px solid var(--hk-green);
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  .ch-rec:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(14,61,26,.06)}
+  .ch-rec.warn{border-left-color:#FFB020}
+  .ch-rec.bad{border-left-color:#FF6B5E}
+  .ch-rec-top{display:flex;align-items:center;gap:10px}
+  .ch-rec-ic{
+    width:34px;height:34px;border-radius:9px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:800;
+    background:var(--hk-green-soft);color:#007A52;
+  }
+  .ch-rec.warn .ch-rec-ic{background:#FFF6DC;color:#9C6800}
+  .ch-rec.bad .ch-rec-ic{background:#FFE6E0;color:#B33A30}
+  .ch-rec-ttl{
+    font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink);line-height:1.2;
+  }
+  .ch-rec-dsc{font-size:12.5px;color:var(--ink-soft);line-height:1.5}
+  .ch-rec-dsc b{color:var(--ink);font-weight:700}
+
+  @media(max-width:1000px){
+    .ch-hero{grid-template-columns:1fr;gap:24px}
+    .ch-focus-num{font-size:54px}
+    .ch-rec-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:600px){
+    .ch-donuts{grid-template-columns:1fr}
+  }
+
+  /* Panel */
+  .panel{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+    box-shadow:var(--shadow-sm);padding:20px 22px;margin-top:18px;
+  }
+  .panel-hd{
+    display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+    flex-wrap:wrap;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line);
+  }
+  .panel-hd h2{font-size:17px;font-weight:800;letter-spacing:-.015em}
+  .panel-hd h2 .accent{color:var(--hk-green);font-weight:800}
+  .panel-hd .meta{font-size:12px;color:var(--muted);font-weight:500}
+  .panel-hd .meta b{color:var(--ink);font-weight:700}
+  .panel-hd .actions{display:flex;gap:8px;flex-wrap:wrap}
+  .panel-hd .search{
+    font:inherit;font-size:13px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;width:240px;
+  }
+  .panel-hd .search:focus{outline:2px solid var(--hk-green);outline-offset:1px}
+  .panel-hd .btn{
+    font:inherit;font-size:12px;font-weight:700;padding:8px 14px;border:none;
+    cursor:pointer;border-radius:8px;letter-spacing:.04em;
+  }
+  .panel-hd .btn.primary{background:var(--hk-green);color:#fff}
+  .panel-hd .btn.primary:hover{background:var(--hk-green-dark)}
+  .panel-hd .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+  .panel-hd .btn.ghost:hover{background:var(--hk-green-soft);border-color:var(--hk-green);color:var(--hk-green-dark)}
+
+  /* Filter chips */
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .chip-grp{display:flex;align-items:center;gap:6px;background:var(--hk-green-soft);padding:4px 6px 4px 12px;border-radius:20px;font-size:12px}
+  .chip-grp label{font-weight:700;color:var(--hk-green-dark);letter-spacing:.04em;font-size:10.5px;text-transform:uppercase}
+  .chip-grp select{
+    appearance:none;font:inherit;font-size:12.5px;padding:4px 24px 4px 8px;
+    border:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300863C'/%3E%3C/svg%3E") no-repeat right 8px center;
+    border-radius:16px;font-weight:600;color:var(--ink);cursor:pointer;
+  }
+
+  /* Outlet detail table - PRIMARY VIEW */
+  .tbl-scroll{overflow:auto;max-height:680px;border:1px solid var(--line);border-radius:10px;background:#fff}
+  table.outlets{width:100%;border-collapse:collapse;font-size:12.5px}
+  table.outlets th{
+    background:linear-gradient(180deg,var(--hk-green-deeper),var(--hk-green-dark));
+    color:#fff;text-align:left;padding:11px 12px;font-weight:600;font-size:10.5px;
+    letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;
+    cursor:pointer;position:sticky;top:0;z-index:2;border-right:1px solid rgba(255,255,255,.1);
+  }
+  table.outlets th:hover{background:var(--hk-green)}
+  table.outlets th .ar{opacity:.5;font-size:9px;margin-left:3px}
+  table.outlets th.num,table.outlets td.num{text-align:right;font-variant-numeric:tabular-nums}
+  table.outlets th.ctr,table.outlets td.ctr{text-align:center}
+  table.outlets tbody td{padding:10px 12px;border-top:1px solid var(--line);white-space:nowrap;vertical-align:middle}
+  table.outlets tbody tr:nth-child(even){background:#fafdfa}
+  table.outlets tbody tr:hover{background:var(--hk-green-soft)}
+
+  .id-cell{font-family:'JetBrains Mono','Consolas',monospace;font-size:11.5px;color:var(--muted);font-weight:600}
+  .name-cell{font-weight:700;color:var(--ink);max-width:200px;white-space:normal;line-height:1.3}
+  .addr-cell{font-size:11px;color:var(--muted);max-width:260px;white-space:normal;line-height:1.3}
+
+  .pill{display:inline-block;padding:2px 9px;border-radius:5px;font-size:10.5px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+  .pill.tip{background:linear-gradient(135deg,var(--hk-green),var(--hk-green-light));color:#fff}
+  .pill.noprog{background:#f0f0ea;color:var(--muted)}
+  .pill.prog{background:#fdf4d8;color:#7a5e0a}
+
+  .type-pill{display:inline-block;padding:2px 9px;border-radius:5px;font-size:10.5px;font-weight:700;background:#eef2ef;color:#384d40}
+
+  .pct-cell{display:flex;align-items:center;gap:8px;min-width:130px}
+  .pct-bar{flex:1;height:8px;background:#ecf2ee;border-radius:4px;overflow:hidden;min-width:50px;position:relative}
+  .pct-fill{height:100%;border-radius:4px;transition:width .4s}
+  .pct-fill.good{background:linear-gradient(90deg,var(--hk-green),var(--hk-green-light))}
+  .pct-fill.mid{background:linear-gradient(90deg,var(--hk-gold),#e8c95e)}
+  .pct-fill.bad{background:linear-gradient(90deg,#cc4848,#e36868)}
+  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:43.3%;width:1.5px;background:rgba(0,0,0,.45)}
+  .pct-num{font-weight:700;min-width:48px;text-align:right;font-variant-numeric:tabular-nums}
+  .pct-num.good{color:var(--hk-green-dark)} .pct-num.mid{color:#7a5e0a} .pct-num.bad{color:var(--hk-red)}
+  .pct-num.zero{color:#b8b8b8;font-weight:500}
+
+  .status-cell{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;white-space:nowrap}
+  .status-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 3px rgba(0,0,0,.05)}
+  .s-achieved .status-dot{background:var(--hk-green)} .s-achieved{color:var(--hk-green-dark)}
+  .s-onpace .status-dot{background:#3498db} .s-onpace{color:#1f6094}
+  .s-lagging .status-dot{background:var(--hk-gold)} .s-lagging{color:#7a5e0a}
+  .s-noactive .status-dot{background:var(--hk-red)} .s-noactive{color:var(--hk-red)}
+  .s-na .status-dot{background:#c0c0c0} .s-na{color:#888}
+
+  /* Bottom row */
+  .grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;margin-top:18px}
+
+  .barlist{display:flex;flex-direction:column;gap:10px}
+  .barrow{display:grid;grid-template-columns:160px 1fr 80px;gap:12px;align-items:center;font-size:12.5px;padding:4px 6px;border-radius:6px;cursor:pointer}
+  .barrow:hover{background:var(--hk-green-soft)}
+  .barrow .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis}
+  .barrow .ctrack{height:18px;background:#ecf2ee;border-radius:5px;overflow:hidden}
+  .barrow .cfill{height:100%;background:linear-gradient(90deg,var(--hk-green),var(--hk-green-light));border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:7px;color:#fff;font-size:10.5px;font-weight:700;transition:width .5s}
+  .barrow .cnt{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink);text-align:right}
+
+  .recap{display:flex;flex-direction:column;gap:10px}
+  .recap-item{display:flex;align-items:flex-start;gap:12px;padding:14px;background:#fafdfa;border:1px solid var(--line);border-left:3px solid var(--hk-green);border-radius:10px}
+  .recap-item .ico-wrap{
+    width:36px;height:36px;border-radius:9px;flex-shrink:0;
+    background:var(--hk-green-soft);color:var(--hk-green-dark);
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;
+  }
+  .recap-item.warn{border-left-color:var(--hk-gold)}
+  .recap-item.warn .ico-wrap{background:#fdf4d8;color:#7a5e0a}
+  .recap-item.bad{border-left-color:var(--hk-red)}
+  .recap-item.bad .ico-wrap{background:#fce8e8;color:var(--hk-red)}
+  .recap-item .tx{flex:1}
+  .recap-item .tx .ttl{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
+  .recap-item .tx .dsc{font-size:12.5px;color:var(--muted);line-height:1.45}
+  .recap-item .tx .dsc b{color:var(--ink);font-weight:700}
+  .recap-item .tx .dsc b.good{color:var(--hk-green-dark)}
+  .recap-item .tx .dsc b.bad{color:var(--hk-red)}
+
+  .foot-attribution{text-align:center;color:var(--muted);font-size:11px;padding:30px 0 20px;letter-spacing:.04em}
+  .foot-attribution .star{color:var(--hk-red);margin:0 4px}
+
+  @media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}}
+  @media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}.topbar-inner{justify-content:center;text-align:center}.top-period{order:3;width:100%;justify-content:center}}
+</style>
+</head>
+<body>
+
+<!-- ================ LOGIN PAGE ================ -->
+<div class="login-page" id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">
+      <!-- Decorative star — not branded -->
+      <svg width="62" height="62" viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#00863C"/>
+            <stop offset="100%" stop-color="#005F2B"/>
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r="46" fill="url(#g1)"/>
+        <polygon points="50,18 58,42 84,42 63,57 71,82 50,67 29,82 37,57 16,42 42,42" fill="#E30613"/>
+      </svg>
+    </div>
+    <div class="login-eyebrow">Distributor Portal</div>
+    <h1 class="login-title">NPP Portal</h1>
+    <p class="login-sub">Hệ thống theo dõi hiệu quả nhà phân phối</p>
+    <form id="loginForm" autocomplete="off">
+      <div class="login-row">
+        <label for="userIn">Mã NPP</label>
+        <input id="userIn" type="text" placeholder="ví dụ: BD8" autocomplete="username" required>
+      </div>
+      <div class="login-row">
+        <label for="passIn">Mã Sold-to</label>
+        <input id="passIn" type="password" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <button class="login-btn" type="submit">Đăng nhập</button>
+      <div class="login-error" id="loginError">Mã NPP hoặc mã Sold-to không đúng. Vui lòng thử lại.</div>
+    </form>
+    <div class="login-hint">
+      Mỗi NPP đăng nhập bằng <b>Mã NPP</b> (username) và <b>Mã Sold-to</b> (password).<br>
+      Liên hệ Sales Admin nếu quên thông tin đăng nhập.
+    </div>
+  </div>
+  <div class="login-foot">Kỳ báo cáo: <b>T6 / 2026</b> · Cập nhật <b>13 / 06 / 2026</b></div>
+</div>
+
+<!-- ================ DASHBOARD ================ -->
+<div class="dash" id="dashPage">
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="top-brand">
+        <svg class="ico" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="46" fill="#fff"/>
+          <polygon points="50,18 58,42 84,42 63,57 71,82 50,67 29,82 37,57 16,42 42,42" fill="#E30613"/>
+        </svg>
+        <div class="tx">
+          <span class="nm">NPP Portal</span>
+          <span class="sb">Sales performance dashboard</span>
+        </div>
+      </div>
+      <div class="top-period">
+        <div class="blk"><span class="lab">Kỳ</span><span class="vl">T6/2026</span></div>
+        <div class="blk"><span class="lab">Ngày</span><span class="vl">13/30</span></div>
+        <div class="blk"><span class="lab">Time gone</span><span class="vl">43.3%</span></div>
+      </div>
+      <div class="top-user">
+        <div class="info">
+          <div class="who" id="userName">—</div>
+          <div class="sub" id="userMeta">—</div>
+        </div>
+        <div class="avatar" id="userAvatar">—</div>
+        <button class="top-logout" id="logoutBtn">Đăng xuất</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="welcome">
+    <div class="welcome-inner">
+      <h1>Chào mừng <span class="hl" id="welcomeName">—</span></h1>
+      <p>Đây là báo cáo riêng cho NPP của bạn — các chỉ tiêu ASO, TIP, và chi tiết từng outlet đang được giao quản lý. Click vào tiêu đề cột để sắp xếp, dùng ô tìm kiếm để lọc nhanh outlet cần xem.</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- KPI CARDS -->
+    <div class="kpis">
+      <div class="kpi k1">
+        <div class="lab">Tổng outlet</div>
+        <div class="val" id="kTotal">0</div>
+        <div class="sub" id="kTotalSub">được phân bổ</div>
+      </div>
+      <div class="kpi k2">
+        <div class="lab">ASO · có bán hàng</div>
+        <div class="val" id="kAso">0<span class="kpi-badge fail" id="kAsoBadge">—</span></div>
+        <div class="sub" id="kAsoSub">KPI ≥ 93%</div>
+      </div>
+      <div class="kpi k3">
+        <div class="lab">Outlet TIP</div>
+        <div class="val" id="kTip">0</div>
+        <div class="sub" id="kTipSub">— có Target Incentive</div>
+      </div>
+      <div class="kpi k4">
+        <div class="lab">Đạt target</div>
+        <div class="val" id="kAch">0</div>
+        <div class="sub" id="kAchSub">Actual ≥ Target</div>
+      </div>
+      <div class="kpi k5">
+        <div class="lab">Vượt time-gone</div>
+        <div class="val" id="kPace">0</div>
+        <div class="sub" id="kPaceSub">% ≥ 43.3%</div>
+      </div>
+    </div>
+
+    <!-- ASO Action Banner — auto shows gap to KPI -->
+    <div class="aso-banner hidden" id="asoBanner">
+      <div class="ab-left">
+        <div class="ab-ico" id="abIco">⚠</div>
+        <div class="ab-tx">
+          <h3 id="abTitle">—</h3>
+          <p id="abDesc">—</p>
+        </div>
+      </div>
+      <button class="ab-cta" id="abCta">Xem danh sách →</button>
+    </div>
+
+    <!-- ALLOCATION MODULE -->
+    <section class="panel" id="allocModule">
+      <div class="panel-hd">
+        <div>
+          <h2>Số chia <span class="accent">theo tuần</span></h2>
+          <div class="meta">Phân bổ Batch 1 / Batch 2 cho từng sản phẩm — cập nhật theo tuần</div>
+        </div>
+        <div class="actions">
+          <select id="fAllocWeek" class="search" style="cursor:pointer;width:auto;min-width:120px"></select>
+        </div>
+      </div>
+      <div class="tbl-scroll">
+        <table class="outlets" id="allocTable">
+          <thead><tr>
+            <th>Tuần</th>
+            <th>NPP</th>
+            <th>Item</th>
+            <th class="num">Số chia Batch 1</th>
+            <th class="num">Số chia Batch 2</th>
+            <th class="num">Tổng 2 Batch</th>
+          </tr></thead>
+          <tbody id="allocBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <!-- TIP MODULE — Editorial · Modern -->
+    <section class="tip-module" id="tipCenter">
+      <div class="tm-head">
+        <div class="tm-title">
+          <div class="eb">Target Incentive Program</div>
+          <h2>Tiến độ TIP <span class="meta" id="tipMetaTotal">— outlet</span></h2>
+        </div>
+        <div class="tm-context">
+          <div>Đã đạt <b id="tipMetaAchPct">—</b> chỉ tiêu</div>
+          <span class="pill-time">Còn <b id="tipMetaDays">17</b> ngày</span>
+        </div>
+      </div>
+
+      <div class="tm-hero">
+        <!-- Focus side: hero metric -->
+        <div class="tm-focus">
+          <div class="focus-eb">Cần đẩy thêm</div>
+          <div class="focus-num"><span id="focusNum">0</span><span class="unit">outlet để hoàn thành 100% TIP</span></div>
+          <div class="focus-desc" id="focusDesc">—</div>
+
+          <div class="focus-progress">
+            <div class="fp-lab">
+              <span>Tiến độ hoàn thành TIP</span>
+              <span><b id="fpPct">0%</b></span>
+            </div>
+            <div class="fp-bar"><div class="fp-fill" id="fpFill"></div></div>
+            <div class="fp-foot">
+              <span id="fpAchN">0 outlet đã đạt</span>
+              <span id="fpRemainV">— thùng còn cần bán</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Breakdown side — compact vibrant chips -->
+        <div class="tm-breakdown">
+          <div class="bd-card" data-bucket="achieved">
+            <div class="bd-left">
+              <div class="bd-top"><span class="dot dot-ach"></span>Đạt target</div>
+              <div class="pct" id="bdAchPct">0%</div>
+            </div>
+            <div class="bd-num" id="bdAchN">0</div>
+            <div class="bd-arrow">Xem chi tiết →</div>
+          </div>
+          <div class="bd-card" data-bucket="onpace">
+            <div class="bd-left">
+              <div class="bd-top"><span class="dot dot-pace"></span>Đúng nhịp</div>
+              <div class="pct" id="bdPacePct">0%</div>
+            </div>
+            <div class="bd-num" id="bdPaceN">0</div>
+            <div class="bd-arrow">Xem chi tiết →</div>
+          </div>
+          <div class="bd-card" data-bucket="lagging">
+            <div class="bd-left">
+              <div class="bd-top"><span class="dot dot-lag"></span>Chậm tiến độ</div>
+              <div class="pct" id="bdLagPct">0%</div>
+            </div>
+            <div class="bd-num" id="bdLagN">0</div>
+            <div class="bd-arrow">Xem chi tiết →</div>
+          </div>
+          <div class="bd-card" data-bucket="noactive">
+            <div class="bd-left">
+              <div class="bd-top"><span class="dot dot-no"></span>Chưa bán</div>
+              <div class="pct" id="bdNoPct">0%</div>
+            </div>
+            <div class="bd-num" id="bdNoN">0</div>
+            <div class="bd-arrow">Xem chi tiết →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Priority outlets -->
+      <div class="tm-priority">
+        <div class="tm-priority-head">
+          <h3>Outlet cần ưu tiên <span class="eb-tiny">Top 8</span></h3>
+          <div class="hint">Sắp xếp theo khoảng cách đến target — đẩy hàng tại đây tạo cú nhảy lớn nhất cho doanh số kỳ này</div>
+        </div>
+        <div class="tm-priority-list" id="priList"></div>
+      </div>
+    </section>
+
+    <!-- CHANNEL MIX MODULE — Direct vs Indirect Sales -->
+    <section class="ch-module" id="channelModule">
+      <div class="ch-head">
+        <div class="ch-title">
+          <div class="eb">Cấu trúc kênh bán</div>
+          <h2>Direct vs Indirect Sales <span class="meta">KPI Direct ≥ 65%</span></h2>
+        </div>
+        <div class="ch-status-pill" id="chStatusPill">
+          <span class="dot"></span><span id="chStatusTxt">—</span>
+        </div>
+      </div>
+
+      <div class="ch-hero">
+        <!-- LEFT: Focus number + gauge -->
+        <div class="ch-focus">
+          <div class="focus-eb">Tỷ trọng Direct Sales</div>
+          <div class="ch-focus-num" id="chFocusNum">
+            <span id="chFocusPct">0%</span>
+          </div>
+          <div class="ch-focus-desc" id="chFocusDesc">—</div>
+
+          <div class="ch-gauge">
+            <div class="ch-gauge-lab">
+              <span>0%</span>
+              <span class="target-mark">KPI ≥ 65%</span>
+              <span>100%</span>
+            </div>
+            <div class="ch-gauge-bar">
+              <div class="marker"></div>
+              <div class="ch-gauge-fill" id="chGaugeFill"></div>
+            </div>
+            <div class="ch-gauge-foot">
+              <span id="chGaugeLeft">— thùng Direct</span>
+              <span id="chGaugeRight">— thùng Indirect</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Two donut charts -->
+        <div class="ch-donuts">
+          <div class="ch-donut-wrap">
+            <div class="ch-donut-title">Theo Volume</div>
+            <svg class="ch-donut" id="donutVol" viewBox="0 0 100 100"></svg>
+            <div class="ch-donut-legend" id="legVol"></div>
+          </div>
+          <div class="ch-donut-wrap">
+            <div class="ch-donut-title">Theo Outlet</div>
+            <svg class="ch-donut" id="donutOut" viewBox="0 0 100 100"></svg>
+            <div class="ch-donut-legend" id="legOut"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ch-recs">
+        <div class="ch-recs-head">
+          <h3>Đề xuất hành động</h3>
+          <span class="eb-tiny">3 ưu tiên</span>
+        </div>
+        <div class="ch-rec-grid" id="chRecGrid"></div>
+      </div>
+    </section>
+
+    <!-- OUTLET DETAIL TABLE - MAIN -->
+    <div class="panel">
+      <div class="panel-hd">
+        <div>
+          <h2>Chi tiết <span class="accent">từng outlet</span></h2>
+          <div class="meta">Hiển thị <b id="rowCnt">0</b> outlet · Click tiêu đề cột để sắp xếp · Phím Ctrl+F không hoạt động trong bảng — hãy dùng ô tìm kiếm bên phải</div>
+        </div>
+        <div class="actions">
+          <input class="search" id="search" placeholder="🔍 Tìm tên / mã outlet / địa chỉ…">
+          <button class="btn ghost" id="exportBtn">⬇ Tải Excel (CSV)</button>
+        </div>
+      </div>
+
+      <div class="chips" id="chips">
+        <div class="chip-grp"><label>ASO</label><select id="fAso">
+          <option value="">Tất cả</option>
+          <option value="yes">✓ Đã bán (Actual &gt; 0)</option>
+          <option value="no">✗ Chưa bán — cần kích hoạt</option>
+        </select></div>
+        <div class="chip-grp"><label>Type</label><select id="fType"></select></div>
+        <div class="chip-grp"><label>Program</label><select id="fProg"></select></div>
+        <div class="chip-grp"><label>Tình trạng</label><select id="fStatus">
+          <option value="">Tất cả</option>
+          <option value="achieved">Đã đạt target</option>
+          <option value="onpace">Vượt time-gone</option>
+          <option value="lagging">Chậm tiến độ</option>
+          <option value="noactive">Chưa phát sinh bán</option>
+        </select></div>
+        <div class="chip-grp"><label>SR</label><select id="fSR"></select></div>
+      </div>
+
+      <div class="tbl-scroll">
+        <table class="outlets">
+          <thead><tr>
+            <th data-k="id">Mã outlet <span class="ar">↕</span></th>
+            <th data-k="name">Tên · Địa chỉ <span class="ar">↕</span></th>
+            <th data-k="terr">Territory · SR <span class="ar">↕</span></th>
+            <th data-k="type">Type <span class="ar">↕</span></th>
+            <th data-k="program">Program <span class="ar">↕</span></th>
+            <th class="num" data-k="target">Target <span class="ar">↕</span></th>
+            <th class="num" data-k="actual">Actual <span class="ar">↕</span></th>
+            <th data-k="pct">% Đạt (vs time-gone 43.3%) <span class="ar">↕</span></th>
+            <th class="num" data-k="balance">Còn lại <span class="ar">↕</span></th>
+            <th data-k="status">Tình trạng <span class="ar">↕</span></th>
+          </tr></thead>
+          <tbody id="outletBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <!-- Type breakdown -->
+      <div class="panel">
+        <div class="panel-hd"><h2>Phân bổ outlet theo <span class="accent">Type</span></h2></div>
+        <div class="barlist" id="typeList"></div>
+      </div>
+
+      <!-- Personal recap -->
+      <div class="panel">
+        <div class="panel-hd"><h2>Phân tích <span class="accent">dành cho bạn</span></h2></div>
+        <div class="recap" id="recap"></div>
+      </div>
+    </div>
+
+    <div class="foot-attribution">
+      <span class="star">★</span> Confidential · Internal use only · <b id="footUser">—</b> <span class="star">★</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+__DATA__
+__CREDS__
+__ALLOC__
+</script>
+<script>
+const $=s=>document.querySelector(s);
+const fmt=n=>Math.round(n||0).toLocaleString('vi-VN');
+const TIMEGONE=13/30;
+const KPI=0.93;
+
+let CURRENT={code:'',npp:'',area:'',rows:[]};
+let F={type:'',prog:'',status:'',sr:'',aso:''};
+let search='';
+let sortK='actual',sortDir=-1;
+
+// ============ LOGIN ============
+function tryLogin(u,p){
+  const code=Object.keys(CREDS).find(k=>k.toLowerCase()===u.toLowerCase());
+  if(!code) return null;
+  if(CREDS[code]!==p.trim()) return null;
+  const rows=DATA.filter(r=>r.nppCode===code);
+  if(!rows.length) return null;
+  return {code, npp:rows[0].npp, area:rows[0].area, rows};
+}
+
+$('#loginForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const u=$('#userIn').value.trim(), p=$('#passIn').value.trim();
+  const result=tryLogin(u,p);
+  if(!result){
+    $('#loginError').classList.add('show');
+    $('#userIn').classList.add('error');
+    $('#passIn').classList.add('error');
+    setTimeout(()=>{$('#userIn').classList.remove('error');$('#passIn').classList.remove('error')},800);
+    return;
+  }
+  CURRENT=result;
+  sessionStorage.setItem('npp_session', JSON.stringify({u,p}));
+  enterDash();
+});
+$('#userIn').addEventListener('input',()=>$('#loginError').classList.remove('show'));
+$('#passIn').addEventListener('input',()=>$('#loginError').classList.remove('show'));
+
+function enterDash(){
+  $('#loginPage').style.display='none';
+  $('#dashPage').classList.add('show');
+  $('#userName').textContent=CURRENT.code;
+  $('#userMeta').textContent=CURRENT.area;
+  $('#userAvatar').textContent=CURRENT.code.substring(0,Math.min(3,CURRENT.code.length)).toUpperCase();
+  $('#welcomeName').textContent=CURRENT.npp+' ('+CURRENT.code+')';
+  $('#footUser').textContent=CURRENT.npp;
+  render();
+  renderAllocation();
+}
+
+$('#logoutBtn').onclick=()=>{
+  sessionStorage.removeItem('npp_session');
+  CURRENT={code:'',npp:'',area:'',rows:[]};
+  $('#dashPage').classList.remove('show');
+  $('#loginPage').style.display='flex';
+  $('#userIn').value=''; $('#passIn').value='';
+};
+
+// Restore session
+try{
+  const s=JSON.parse(sessionStorage.getItem('npp_session')||'null');
+  if(s){
+    const r=tryLogin(s.u,s.p);
+    if(r){CURRENT=r;enterDash()}
+  }
+}catch(e){}
+
+// ============ DASHBOARD ============
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function statusOf(d){
+  if(d.actual===0) return {key:'noactive',label:'Chưa phát sinh',cls:'s-noactive'};
+  if(d.target===0) return {key:'na',label:'Không có Target',cls:'s-na'};
+  if(d.actual>=d.target) return {key:'achieved',label:'Đạt target',cls:'s-achieved'};
+  if(d.actual/d.target>=TIMEGONE) return {key:'onpace',label:'Vượt time-gone',cls:'s-onpace'};
+  return {key:'lagging',label:'Chậm tiến độ',cls:'s-lagging'};
+}
+
+function uniq(rows,key){return [...new Set(rows.map(d=>d[key]).filter(Boolean))].sort((a,b)=>(''+a).localeCompare(''+b,'vi'))}
+function fillSel(id,vals,allLabel){
+  const s=$(id);const cur=s.value;
+  s.innerHTML='<option value="">'+allLabel+'</option>'+vals.map(v=>`<option>${esc(v)}</option>`).join('');
+  if(cur&&[...s.options].some(o=>o.value===cur))s.value=cur;
+}
+
+function filtered(){
+  return CURRENT.rows.filter(d=>{
+    if(F.type&&d.type!==F.type)return false;
+    if(F.prog&&d.program!==F.prog)return false;
+    if(F.sr&&d.sr!==F.sr)return false;
+    if(F.aso==='yes' && !(d.actual>0))return false;
+    if(F.aso==='no' && d.actual>0)return false;
+    if(F.status){const s=statusOf(d).key;if(s!==F.status)return false}
+    if(search){const q=search.toLowerCase();if(!d.name.toLowerCase().includes(q)&&!(''+d.id).includes(q)&&!d.addr.toLowerCase().includes(q))return false}
+    return true;
+  });
+}
+
+function render(){
+  fillSel('#fType',uniq(CURRENT.rows,'type'),'Tất cả');
+  fillSel('#fProg',uniq(CURRENT.rows,'program'),'Tất cả');
+  fillSel('#fSR',uniq(CURRENT.rows,'sr'),'Tất cả');
+
+  const all=CURRENT.rows;
+  const total=all.length;
+  const aso=all.filter(d=>d.actual>0).length;
+  const tip=all.filter(d=>d.program==='Target Incentive');
+  const ach=tip.filter(d=>d.target>0&&d.actual>=d.target).length;
+  const pace=tip.filter(d=>d.target>0&&d.actual/d.target>=TIMEGONE).length;
+  const asoPc=total?aso/total:0;
+  const needed=Math.max(0,Math.ceil(KPI*total)-aso); // outlets to activate
+  const notSelling=total-aso;
+
+  $('#kTotal').textContent=fmt(total);
+  $('#kAso').innerHTML=fmt(aso)+`<span class="kpi-badge ${asoPc>=KPI?'pass':'fail'}">${(asoPc*100).toFixed(1)}%</span>`;
+  if(asoPc>=KPI){
+    $('#kAsoSub').innerHTML=`KPI ≥93% · <b class="good">ĐẠT</b> · dư <b>${aso-Math.ceil(KPI*total)}</b> outlet so chỉ tiêu`;
+  } else {
+    $('#kAsoSub').innerHTML=`KPI ≥93% · <b class="bad">CHƯA ĐẠT</b> · cần kích hoạt thêm <b class="bad">${fmt(needed)}</b> outlet`;
+  }
+  $('#kTip').textContent=fmt(tip.length);
+  $('#kTipSub').textContent=total?(tip.length/total*100).toFixed(1)+'% trên tổng outlet':'—';
+  $('#kAch').textContent=fmt(ach);
+  $('#kAchSub').textContent=tip.length?(ach/tip.length*100).toFixed(1)+'% trên TIP':'— trên TIP';
+  $('#kPace').textContent=fmt(pace);
+  $('#kPaceSub').textContent=tip.length?(pace/tip.length*100).toFixed(1)+'% trên TIP':'— trên TIP';
+
+  // ASO banner
+  const banner=$('#asoBanner');
+  if(total===0){
+    banner.classList.add('hidden');
+  } else if(asoPc>=KPI){
+    banner.classList.remove('hidden');banner.classList.add('pass');
+    $('#abIco').textContent='✓';
+    $('#abTitle').innerHTML=`Đã đạt KPI ASO · <span class="num">${(asoPc*100).toFixed(1)}%</span>`;
+    $('#abDesc').innerHTML=`Bạn đang vượt KPI 93%. Vẫn còn <b>${fmt(notSelling)} outlet</b> chưa phát sinh bán — duy trì và phát triển thêm để tăng doanh thu.`;
+    $('#abCta').textContent='Xem outlet chưa bán →';
+  } else {
+    banner.classList.remove('hidden','pass');
+    $('#abIco').textContent='⚠';
+    $('#abTitle').innerHTML=`Cần kích hoạt thêm <span class="num">${fmt(needed)}</span> outlet để đạt KPI ASO ≥93%`;
+    $('#abDesc').innerHTML=`Hiện ASO đạt <b>${(asoPc*100).toFixed(1)}%</b> (${fmt(aso)}/${fmt(total)}). Tổng cộng <b>${fmt(notSelling)} outlet</b> chưa phát sinh bán hàng — ưu tiên đẩy hàng vào ${fmt(needed)} outlet trong số đó.`;
+    $('#abCta').textContent='Xem danh sách →';
+  }
+
+  renderTable();
+  renderTipCenter();
+  renderChannelMix();
+  renderTypeList();
+  renderRecap();
+}
+
+// ============ CHANNEL MIX — Direct vs Indirect ============
+const CH_KPI = 0.65;
+const SUB_TYPE = 'Sub Distributor';
+
+function drawDonut(svg, directPct, colors){
+  const C = 2 * Math.PI * 42; // circumference for r=42
+  const directLen = C * directPct;
+  const indirectLen = C - directLen;
+  const pctTxt = (directPct*100).toFixed(1)+'%';
+  svg.innerHTML = `
+    <!-- background -->
+    <circle cx="50" cy="50" r="42" fill="none" stroke="#eef3ef" stroke-width="12"/>
+    <!-- indirect arc (behind) -->
+    <circle cx="50" cy="50" r="42" fill="none" stroke="${colors.indirect}" stroke-width="12"
+            stroke-dasharray="${indirectLen} ${C}"
+            stroke-dashoffset="${-directLen}"
+            transform="rotate(-90 50 50)" stroke-linecap="butt"/>
+    <!-- direct arc (front) -->
+    <circle cx="50" cy="50" r="42" fill="none" stroke="${colors.direct}" stroke-width="12"
+            stroke-dasharray="0 ${C}"
+            transform="rotate(-90 50 50)" stroke-linecap="butt" class="donut-anim"/>
+    <text x="50" y="49" text-anchor="middle" font-size="15" font-weight="800" fill="#1a2620" font-family="inherit">${pctTxt}</text>
+    <text x="50" y="62" text-anchor="middle" font-size="7" fill="#7a6e5c" letter-spacing="1.5" font-family="inherit" font-weight="700">DIRECT</text>
+  `;
+  // Animate after a tick
+  requestAnimationFrame(()=>{
+    const fill = svg.querySelector('.donut-anim');
+    if(fill) fill.setAttribute('stroke-dasharray', `${directLen} ${C}`);
+  });
+}
+
+function renderChannelMix(){
+  const all = CURRENT.rows;
+  const direct = all.filter(d => d.type !== SUB_TYPE);
+  const indirect = all.filter(d => d.type === SUB_TYPE);
+
+  const volD = direct.reduce((s,d)=>s+d.actual, 0);
+  const volI = indirect.reduce((s,d)=>s+d.actual, 0);
+  const totalVol = volD + volI;
+  const cntD = direct.length;
+  const cntI = indirect.length;
+  const totalCnt = cntD + cntI;
+
+  const directVolPct = totalVol ? volD/totalVol : 0;
+  const directCntPct = totalCnt ? cntD/totalCnt : 0;
+  const pass = directVolPct >= CH_KPI;
+
+  // Status pill
+  $('#chStatusPill').className = 'ch-status-pill ' + (pass ? 'pass' : 'fail');
+  $('#chStatusTxt').textContent = pass ? `ĐẠT KPI · ${(directVolPct*100).toFixed(1)}%` : `CHƯA ĐẠT · ${(directVolPct*100).toFixed(1)}%`;
+
+  // Focus number
+  $('#chFocusNum').className = 'ch-focus-num ' + (pass ? 'pass' : 'fail');
+  $('#chFocusPct').textContent = (directVolPct*100).toFixed(1) + '%';
+
+  // Focus description — context-aware
+  if(totalVol === 0){
+    $('#chFocusDesc').innerHTML = 'Chưa có dữ liệu sản lượng trong kỳ này.';
+  } else if(pass && directVolPct >= 0.75){
+    $('#chFocusDesc').innerHTML = `Cấu trúc kênh rất tốt — Direct vượt KPI 65% đến <b>${((directVolPct-0.65)*100).toFixed(1)} điểm %</b>. NPP đang xây kênh retail vững mạnh, không phụ thuộc Sub Distributor.`;
+  } else if(pass){
+    $('#chFocusDesc').innerHTML = `Đạt KPI nhưng còn sát ranh — Direct chỉ vượt mốc 65% được <b>${((directVolPct-0.65)*100).toFixed(1)} điểm %</b>. Cần tăng thêm để có bộ đệm an toàn.`;
+  } else {
+    const gapVol = Math.ceil(0.65*totalVol - volD);
+    $('#chFocusDesc').innerHTML = `Chưa đạt KPI — còn thiếu <b>${((0.65-directVolPct)*100).toFixed(1)} điểm %</b> tương đương <b>${fmt(gapVol)} thùng</b> phải chuyển từ Indirect sang Direct (hoặc tăng Direct).`;
+  }
+
+  // Gauge bar
+  $('#chGaugeFill').className = 'ch-gauge-fill ' + (pass ? 'pass' : 'fail');
+  $('#chGaugeFill').style.width = (directVolPct*100) + '%';
+  $('#chGaugeLeft').textContent = fmt(volD) + ' thùng Direct';
+  $('#chGaugeRight').textContent = fmt(volI) + ' thùng Indirect';
+
+  // Donuts
+  const COLORS = {direct:'#00C896', indirect:'#8B5CF6'};
+  drawDonut($('#donutVol'), directVolPct, COLORS);
+  drawDonut($('#donutOut'), directCntPct, COLORS);
+
+  // Legends
+  const avgDirect = cntD ? volD/cntD : 0;
+  const avgIndirect = cntI ? volI/cntI : 0;
+  $('#legVol').innerHTML = `
+    <div class="ch-leg-item"><span class="dot" style="background:${COLORS.direct}"></span><span class="nm">Direct</span><span class="vv">${fmt(volD)}<small> · ${(directVolPct*100).toFixed(1)}%</small></span></div>
+    <div class="ch-leg-item"><span class="dot" style="background:${COLORS.indirect}"></span><span class="nm">Indirect (Sub)</span><span class="vv">${fmt(volI)}<small> · ${((1-directVolPct)*100).toFixed(1)}%</small></span></div>
+  `;
+  $('#legOut').innerHTML = `
+    <div class="ch-leg-item"><span class="dot" style="background:${COLORS.direct}"></span><span class="nm">Direct</span><span class="vv">${fmt(cntD)}<small> · ${(directCntPct*100).toFixed(1)}%</small></span></div>
+    <div class="ch-leg-item"><span class="dot" style="background:${COLORS.indirect}"></span><span class="nm">Indirect (Sub)</span><span class="vv">${fmt(cntI)}<small> · ${((1-directCntPct)*100).toFixed(1)}%</small></span></div>
+  `;
+
+  // RECOMMENDATIONS — dynamic, context-aware
+  const recs = [];
+  const multiplier = avgIndirect > 0 && avgDirect > 0 ? avgIndirect/avgDirect : 0;
+
+  if(totalVol === 0){
+    recs.push({cls:'',ic:'○',ttl:'Chưa có dữ liệu',dsc:'Chưa phát sinh sản lượng trong kỳ này — cần kích hoạt hoạt động bán hàng trước.'});
+  } else if(!pass) {
+    // FAIL scenarios
+    const gapPts = ((0.65-directVolPct)*100).toFixed(1);
+    const gapVol = Math.ceil(0.65*totalVol - volD);
+
+    recs.push({
+      cls:'bad',ic:'!',ttl:'Cấu trúc kênh chưa cân đối',
+      dsc:`Direct ${(directVolPct*100).toFixed(1)}% — thấp hơn KPI <b>${gapPts} điểm %</b>. Cần tăng Direct thêm <b>${fmt(gapVol)} thùng</b> (hoặc giảm Indirect tương ứng) để đạt chỉ tiêu.`
+    });
+
+    if(cntI > 0 && multiplier > 0){
+      recs.push({
+        cls:'warn',ic:'⚠',ttl:'Phụ thuộc Sub Distributor cao',
+        dsc:`<b>${cntI} outlet Sub</b> (${(cntI/totalCnt*100).toFixed(1)}% số outlet) đang gánh <b>${((1-directVolPct)*100).toFixed(1)}% volume</b>. Trung bình mỗi outlet Sub bán <b>${fmt(avgIndirect)} thùng</b> — gấp <b>${multiplier.toFixed(1)} lần</b> outlet Direct (${fmt(avgDirect)}). Khi Sub gặp rủi ro, NPP mất ngay khối lượng lớn.`
+      });
+    }
+
+    recs.push({
+      cls:'',ic:'→',ttl:'Hành động trong 2 tuần',
+      dsc:`Tập trung visit và đẩy hàng vào <b>${Math.min(30, cntD)} outlet Direct lớn nhất</b>. Mở rộng coverage Grocery Store, Quan Nhau. Đặt mục tiêu chuyển ít nhất <b>${fmt(Math.round(gapVol/2))} thùng/tuần</b> sang Direct.`
+    });
+
+  } else if(directVolPct < 0.75) {
+    // Borderline PASS
+    const overPts = ((directVolPct-0.65)*100).toFixed(1);
+    recs.push({
+      cls:'warn',ic:'≈',ttl:'Đạt KPI sát ranh',
+      dsc:`Direct ${(directVolPct*100).toFixed(1)}% — vượt KPI 65% chỉ <b>${overPts} điểm %</b>. Tỷ lệ này mong manh: chỉ cần 1-2 outlet Sub Distributor giảm là rớt KPI.`
+    });
+
+    if(cntI > 0 && multiplier > 0){
+      recs.push({
+        cls:'',ic:'i',ttl:'Phân tích chi tiết',
+        dsc:`<b>${cntI} outlet Sub</b> đóng góp <b>${((1-directVolPct)*100).toFixed(1)}%</b> volume. Mỗi outlet Sub trung bình <b>${fmt(avgIndirect)} thùng</b> — gấp <b>${multiplier.toFixed(1)} lần</b> outlet Direct. Cần giảm dần phụ thuộc.`
+      });
+    }
+
+    recs.push({
+      cls:'',ic:'→',ttl:'Củng cố vùng đệm',
+      dsc:`Visit định kỳ <b>50 outlet Direct top</b> để giữ và đẩy thêm sản lượng. Mục tiêu tăng tỷ trọng Direct lên 75% trong 2 kỳ tới.`
+    });
+
+  } else {
+    // STRONG PASS (>=75%)
+    const overPts = ((directVolPct-0.65)*100).toFixed(1);
+    recs.push({
+      cls:'',ic:'★',ttl:'Cấu trúc kênh xuất sắc',
+      dsc:`Direct <b>${(directVolPct*100).toFixed(1)}%</b> — vượt KPI <b>${overPts} điểm %</b>. NPP có nền tảng retail bền vững, không phụ thuộc kênh bán sỉ.`
+    });
+
+    recs.push({
+      cls:'',ic:'i',ttl:'Bức tranh kênh',
+      dsc:`<b>${fmt(cntD)} outlet Direct</b> (${(directCntPct*100).toFixed(1)}%) tạo <b>${(directVolPct*100).toFixed(1)}% volume</b>. ${cntI?`Còn ${cntI} outlet Sub đóng góp ${((1-directVolPct)*100).toFixed(1)}% — vai trò bổ sung lành mạnh.`:'Không có outlet Sub Distributor — kênh thuần Direct.'}`
+    });
+
+    recs.push({
+      cls:'',ic:'→',ttl:'Duy trì và nhân rộng',
+      dsc:`Tiếp tục mô hình hiện tại. Chia sẻ best practice với các NPP khác trong khu vực — đây là điển hình về cấu trúc kênh bền vững.`
+    });
+  }
+
+  $('#chRecGrid').innerHTML = recs.map(r => `
+    <div class="ch-rec ${r.cls}">
+      <div class="ch-rec-top">
+        <div class="ch-rec-ic">${r.ic}</div>
+        <div class="ch-rec-ttl">${r.ttl}</div>
+      </div>
+      <div class="ch-rec-dsc">${r.dsc}</div>
+    </div>`).join('');
+}
+
+// ============ TIP MODULE — Editorial render ============
+const DAYS_LEFT = 30 - 13;
+
+// Smooth count-up animation
+function countUp(el, target, duration=900){
+  if(!el) return;
+  const start = parseInt(el.dataset.curr || '0', 10);
+  const startTime = performance.now();
+  const ease = t => 1 - Math.pow(1 - t, 3); // ease-out cubic
+  function step(now){
+    const t = Math.min(1, (now - startTime) / duration);
+    const v = Math.round(start + (target - start) * ease(t));
+    el.textContent = v.toLocaleString('vi-VN');
+    if(t < 1) requestAnimationFrame(step);
+    else el.dataset.curr = target;
+  }
+  requestAnimationFrame(step);
+}
+
+function renderTipCenter(){
+  const all=CURRENT.rows;
+  const tip=all.filter(d=>d.program==='Target Incentive');
+  const T=tip.length;
+
+  // Bucket counts
+  const buckets={achieved:[],onpace:[],lagging:[],noactive:[]};
+  tip.forEach(d=>{const k=statusOf(d).key; if(buckets[k]) buckets[k].push(d)});
+  const cA=buckets.achieved.length, cP=buckets.onpace.length, cL=buckets.lagging.length, cN=buckets.noactive.length;
+
+  // Header meta
+  $('#tipMetaTotal').textContent = T + ' outlet';
+  $('#tipMetaDays').textContent = DAYS_LEFT;
+  $('#tipMetaAchPct').textContent = T ? (cA/T*100).toFixed(0)+'%' : '—';
+
+  // Hero focus number = still need to reach target
+  const stillNeed = T - cA;
+  countUp($('#focusNum'), stillNeed);
+
+  // Hero description — calm, advisory tone
+  if(T===0){
+    $('#focusDesc').innerHTML='Hiện chưa có outlet nào tham gia chương trình Target Incentive trong vùng của bạn.';
+  } else if(stillNeed===0){
+    $('#focusDesc').innerHTML='Toàn bộ outlet TIP đã đạt mục tiêu. Hãy duy trì nhịp và chuẩn bị cho kỳ kế tiếp.';
+  } else {
+    const remVol = tip.filter(d=>d.actual<d.target).reduce((s,d)=>s+Math.max(0,d.target-d.actual),0);
+    $('#focusDesc').innerHTML = `Trong số <b>${fmt(T)}</b> outlet TIP, đã có <b>${fmt(cA)} outlet</b> hoàn thành. Phần còn lại cần đẩy thêm tổng cộng <b>${fmt(remVol)} thùng</b> trong <b>${DAYS_LEFT} ngày</b> tới.`;
+  }
+
+  // Progress bar
+  const pcDone = T ? cA/T : 0;
+  $('#fpPct').textContent = (pcDone*100).toFixed(1)+'%';
+  $('#fpFill').style.width = (pcDone*100)+'%';
+  $('#fpAchN').textContent = `${cA}/${T} outlet đã đạt`;
+  const remVol2 = tip.filter(d=>d.actual<d.target).reduce((s,d)=>s+Math.max(0,d.target-d.actual),0);
+  $('#fpRemainV').textContent = remVol2 ? `${fmt(remVol2)} thùng còn cần bán` : 'Đã hoàn thành';
+
+  // Breakdown cards — compact mode, no message text
+  countUp($('#bdAchN'), cA);  $('#bdAchPct').textContent = T ? (cA/T*100).toFixed(1)+'% TIP' : '—';
+  countUp($('#bdPaceN'), cP); $('#bdPacePct').textContent = T ? (cP/T*100).toFixed(1)+'% TIP' : '—';
+  countUp($('#bdLagN'), cL);  $('#bdLagPct').textContent = T ? (cL/T*100).toFixed(1)+'% TIP' : '—';
+  countUp($('#bdNoN'), cN);   $('#bdNoPct').textContent = T ? (cN/T*100).toFixed(1)+'% TIP' : '—';
+
+  // Priority list — Top 8 by gap, with "warmness" indicator
+  const priority=tip
+    .filter(d=>d.target>0 && d.actual<d.target)
+    .map(d=>({...d, gap:d.target-d.actual, pctDone:d.actual/d.target}))
+    .sort((a,b)=>b.gap-a.gap)
+    .slice(0,8);
+
+  if(!priority.length){
+    if(T===0){
+      $('#priList').innerHTML='<div class="pri-empty"><div class="ic">○</div><div class="ttl">Chưa có outlet TIP</div>NPP của bạn chưa có outlet nào tham gia chương trình Target Incentive trong kỳ này.</div>';
+    } else {
+      $('#priList').innerHTML='<div class="pri-empty"><div class="ic">✓</div><div class="ttl">Hoàn thành toàn bộ</div>Tất cả outlet TIP đã đạt target. NPP của bạn đang là điển hình của khu vực.</div>';
+    }
+  } else {
+    $('#priList').innerHTML = priority.map((d,i)=>{
+      const pct = d.pctDone;
+      let warmClass='cold', warmLabel='Chưa khởi động';
+      if(pct >= TIMEGONE){warmClass='warm'; warmLabel='Đúng nhịp';}
+      else if(pct >= TIMEGONE*0.6){warmClass='mid'; warmLabel='Chậm nhịp';}
+      else if(pct > 0){warmClass='cold'; warmLabel='Khởi động chậm';}
+      const w = Math.min(100, pct*100);
+      return `<div class="pri-row ${i<3?'top-3':''}" data-outlet-id="${d.id}" data-outlet-name="${esc(d.name)}">
+        <div class="rank">${String(i+1).padStart(2,'0')}</div>
+        <div class="info">
+          <div class="nm" title="${esc(d.name)}">${esc(d.name)}</div>
+          <div class="sub">${esc(d.terr||'—')} · SR ${esc(d.sr||'—')}</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-line">Mục tiêu kỳ</div>
+          <div class="meta-val">${fmt(d.target)} thùng · đã bán ${fmt(d.actual)}</div>
+        </div>
+        <div class="progress-cell">
+          <div class="pc-bar"><div class="pc-fill ${warmClass}" style="width:${w}%"></div></div>
+          <div class="pc-lab"><span>${(pct*100).toFixed(0)}% đạt</span><span class="pc-status ${warmClass}">${warmLabel}</span></div>
+        </div>
+        <div class="gap-cell">
+          <div class="gap-num">+${fmt(d.gap)}</div>
+          <div class="gap-lab">cần thêm</div>
+        </div>
+        <div class="go-arrow">→</div>
+      </div>`;
+    }).join('');
+
+    // Animate progress bars after render
+    requestAnimationFrame(()=>{
+      document.querySelectorAll('.pri-row .pc-fill').forEach(f=>{
+        const w=f.style.width; f.style.width='0';
+        requestAnimationFrame(()=>{f.style.width=w});
+      });
+    });
+
+    // Wire row click: filter main table to that outlet by searching name
+    document.querySelectorAll('.pri-row[data-outlet-name]').forEach(row=>{
+      row.onclick=()=>{
+        const nm = row.dataset.outletName;
+        search = nm;
+        $('#search').value = nm;
+        renderTable();
+        document.querySelector('.panel').scrollIntoView({behavior:'smooth',block:'start'});
+      };
+    });
+  }
+}
+
+function renderTable(){
+  let rows=filtered();
+  rows=[...rows].sort((a,b)=>{
+    let x,y;
+    if(sortK==='status'){x=statusOf(a).key;y=statusOf(b).key}
+    else if(sortK==='terr'){x=a.terr+a.sr;y=b.terr+b.sr}
+    else{x=a[sortK];y=b[sortK]}
+    if(typeof x==='number')return ((x||0)-(y||0))*sortDir;
+    return (''+(x||'')).localeCompare(''+(y||''),'vi')*sortDir;
+  });
+
+  $('#rowCnt').textContent=fmt(rows.length);
+  const show=rows.slice(0,300);
+  $('#outletBody').innerHTML=show.map(d=>{
+    const st=statusOf(d);
+    const pct=d.target>0?d.actual/d.target:0;
+    const pctCls=pct===0?'zero':(pct>=1?'good':(pct>=TIMEGONE?'mid':'bad'));
+    const fillCls=pct>=1?'good':(pct>=TIMEGONE?'mid':'bad');
+    const w=Math.min(100,pct*100);
+    let pctDisp;
+    if(d.target===0){pctDisp=`<div class="pct-cell"><span style="color:#b8b8b8;font-size:11.5px">không có target</span></div>`}
+    else{pctDisp=`<div class="pct-cell"><div class="pct-bar"><div class="pct-fill ${fillCls}" style="width:${w}%"></div><div class="timeline"></div></div><span class="pct-num ${pctCls}">${(pct*100).toFixed(0)}%</span></div>`}
+    const progPill = d.program==='Target Incentive'?'<span class="pill tip">TIP</span> '+esc(d.program==='Target Incentive'?'':d.program):
+                     (d.program==='(Không có)'||d.program==='No Program')?'<span class="pill noprog">'+esc(d.program)+'</span>':
+                     '<span class="pill prog">'+esc(d.program)+'</span>';
+    return `<tr>
+      <td><span class="id-cell">${d.id}</span></td>
+      <td><div class="name-cell">${esc(d.name)}</div><div class="addr-cell">${esc(d.addr)}</div></td>
+      <td><div style="font-size:11.5px;font-weight:600">${esc(d.terr)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px">SR: ${esc(d.sr)}</div></td>
+      <td><span class="type-pill">${esc(d.type)}</span></td>
+      <td>${d.program==='Target Incentive'?'<span class="pill tip">TIP · Target Incentive</span>':progPill}</td>
+      <td class="num">${d.target?fmt(d.target):'<span style="color:#b8b8b8">—</span>'}</td>
+      <td class="num"><b>${fmt(d.actual)}</b></td>
+      <td>${pctDisp}</td>
+      <td class="num">${d.balance?fmt(d.balance):'<span style="color:#b8b8b8">—</span>'}</td>
+      <td><div class="status-cell ${st.cls}"><span class="status-dot"></span>${st.label}</div></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="10" style="text-align:center;padding:40px;color:#888">Không có outlet nào khớp bộ lọc</td></tr>';
+
+  if(rows.length>300){
+    $('#outletBody').insertAdjacentHTML('beforeend',`<tr><td colspan="10" style="text-align:center;padding:14px;color:#888;font-size:12px;background:#fafdfa;font-style:italic">Hiển thị 300 / ${fmt(rows.length)} dòng đầu — thu hẹp bộ lọc để xem chi tiết hơn</td></tr>`);
+  }
+}
+
+const WEEK_DATES={'W25':'15/06 – 20/06'};
+
+function renderAllocation(){
+  const rows=ALLOC.filter(d=>d.npp===CURRENT.code);
+  const weeks=[...new Set(rows.map(d=>d.week))].sort();
+
+  const sel=$('#fAllocWeek');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Tất cả tuần</option>'+weeks.map(w=>{
+    const dr=WEEK_DATES[w]?` (${WEEK_DATES[w]})`:'';
+    return `<option value="${esc(w)}">${esc(w)}${esc(dr)}</option>`;
+  }).join('');
+  if(cur && weeks.includes(cur)) sel.value=cur;
+
+  const wkFilter=sel.value;
+  const show=wkFilter?rows.filter(d=>d.week===wkFilter):rows;
+
+  $('#allocBody').innerHTML=show.map(d=>{
+    const dr=WEEK_DATES[d.week]?` <span style="color:var(--muted);font-size:11px">(${esc(WEEK_DATES[d.week])})</span>`:'';
+    return `<tr>
+      <td>${esc(d.week)}${dr}</td>
+      <td>${esc(d.npp)}</td>
+      <td><b>${esc(d.item)}</b></td>
+      <td class="num">${fmt(d.b1)}</td>
+      <td class="num">${fmt(d.b2)}</td>
+      <td class="num"><b>${fmt(d.total)}</b></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="6" style="text-align:center;padding:30px;color:#888">Chưa có số chia cho NPP này</td></tr>';
+}
+$('#fAllocWeek').addEventListener('change',renderAllocation);
+
+function renderTypeList(){
+  const rows=filtered();
+  const g={};
+  rows.forEach(d=>{if(!g[d.type])g[d.type]={type:d.type,n:0,v:0};g[d.type].n++;g[d.type].v+=d.actual});
+  const arr=Object.values(g).sort((a,b)=>b.n-a.n);
+  const max=Math.max(1,...arr.map(x=>x.n));
+  const tot=arr.reduce((s,x)=>s+x.n,0)||1;
+  $('#typeList').innerHTML=arr.map(x=>`
+    <div class="barrow" data-type="${esc(x.type)}">
+      <div class="nm" title="${esc(x.type)}">${esc(x.type)}</div>
+      <div class="ctrack"><div class="cfill" style="width:${Math.max(15,x.n/max*100)}%">${x.n}</div></div>
+      <div class="cnt">${(x.n/tot*100).toFixed(1)}%</div>
+    </div>`).join('') || '<div style="text-align:center;padding:30px;color:#888">Không có dữ liệu</div>';
+  document.querySelectorAll('#typeList .barrow').forEach(el=>el.onclick=()=>{
+    const v=el.dataset.type;F.type=(F.type===v?'':v);$('#fType').value=F.type;render();
+  });
+}
+
+function renderRecap(){
+  const all=CURRENT.rows;
+  const total=all.length;
+  const aso=all.filter(d=>d.actual>0).length;
+  const tip=all.filter(d=>d.program==='Target Incentive');
+  const ach=tip.filter(d=>d.target>0&&d.actual>=d.target).length;
+  const pace=tip.filter(d=>d.target>0&&d.actual/d.target>=TIMEGONE).length;
+  const lagging=tip.filter(d=>{const s=statusOf(d).key;return s==='lagging'}).length;
+  const noactive=all.filter(d=>d.actual===0).length;
+  const asoPc=total?aso/total:0;
+  const gap=Math.max(0,Math.ceil(KPI*total-aso));
+
+  const items=[];
+  // ASO summary
+  if(asoPc>=KPI){
+    items.push({cls:'',ic:'✓',ttl:'ASO đạt KPI',
+      dsc:`Outlet phát sinh bán: <b class="good">${aso}/${total} (${(asoPc*100).toFixed(1)}%)</b> — vượt mốc KPI 93%. Tiếp tục duy trì.`});
+  } else if(asoPc>=0.8){
+    items.push({cls:'warn',ic:'⚠',ttl:'ASO sát KPI',
+      dsc:`Hiện ${aso}/${total} outlet phát sinh bán (${(asoPc*100).toFixed(1)}%). Còn <b>${gap} outlet</b> nữa phải kích hoạt để đạt KPI ≥93%.`});
+  } else {
+    items.push({cls:'bad',ic:'!',ttl:'ASO chưa đạt KPI',
+      dsc:`Mới có ${aso}/${total} outlet phát sinh bán (${(asoPc*100).toFixed(1)}%). Cần đẩy thêm <b class="bad">${gap} outlet</b> để đạt KPI ≥93%. Ưu tiên rà soát ${noactive} outlet chưa bán.`});
+  }
+  // TIP performance
+  if(tip.length){
+    const achPc=ach/tip.length, pacePc=pace/tip.length;
+    if(achPc>=0.3){
+      items.push({cls:'',ic:'★',ttl:'TIP triển khai tốt',
+        dsc:`${ach}/${tip.length} outlet TIP đã đạt target (<b class="good">${(achPc*100).toFixed(1)}%</b>) — kết quả khả quan giữa kỳ.`});
+    } else if(pacePc>=0.45){
+      items.push({cls:'',ic:'↑',ttl:'TIP đang đúng nhịp',
+        dsc:`Mới ${ach} outlet đạt target nhưng <b class="good">${pace}/${tip.length} (${(pacePc*100).toFixed(1)}%)</b> đang vượt time-gone 43.3% — có cơ sở kỳ vọng tăng vào cuối tháng.`});
+    } else {
+      items.push({cls:'warn',ic:'⚠',ttl:'TIP cần thúc đẩy',
+        dsc:`Chỉ ${ach}/${tip.length} outlet TIP đạt target và ${pace} outlet đang đúng nhịp. <b>${lagging} outlet đang chậm tiến độ</b> — nên ưu tiên xuống làm việc với các outlet này.`});
+    }
+  }
+  // Volume by type insight
+  const vols={};
+  all.forEach(d=>{if(!vols[d.type])vols[d.type]=0;vols[d.type]+=d.actual});
+  const topT=Object.entries(vols).sort((a,b)=>b[1]-a[1])[0];
+  if(topT && topT[1]>0){
+    const totVol=Object.values(vols).reduce((s,v)=>s+v,0);
+    items.push({cls:'',ic:'V',ttl:'Sản lượng tập trung ở',
+      dsc:`<b>${esc(topT[0])}</b> chiếm <b>${(topT[1]/totVol*100).toFixed(1)}%</b> tổng sản lượng (${fmt(topT[1])} thùng). Đây là nhóm cần được chú trọng nhất.`});
+  }
+
+  $('#recap').innerHTML=items.map(it=>`
+    <div class="recap-item ${it.cls}">
+      <div class="ico-wrap">${it.ic}</div>
+      <div class="tx"><div class="ttl">${it.ttl}</div><div class="dsc">${it.dsc}</div></div>
+    </div>`).join('');
+}
+
+// CSV export
+function exportCSV(){
+  const rows=filtered();
+  const cols=['Mã outlet','Tên outlet','Địa chỉ','Territory','SR','Type','Program','Target','Actual','% Đạt','Còn lại','Tình trạng'];
+  const lines=[cols.join(',')];
+  rows.forEach(d=>{
+    const pct=d.target>0?(d.actual/d.target*100).toFixed(1)+'%':'';
+    const st=statusOf(d).label;
+    const cells=[d.id,d.name,d.addr,d.terr,d.sr,d.type,d.program,d.target,d.actual,pct,d.balance,st];
+    lines.push(cells.map(c=>{
+      let s=(c==null?'':''+c).replace(/"/g,'""');
+      if(/[,\n"]/.test(s)) s='"'+s+'"';
+      return s;
+    }).join(','));
+  });
+  const csv='\ufeff'+lines.join('\n'); // BOM for Excel Vietnamese
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`Outlet_${CURRENT.code}_${new Date().toISOString().slice(0,10)}.csv`; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),500);
+}
+
+// Events
+$('#exportBtn').onclick=exportCSV;
+$('#search').oninput=e=>{search=e.target.value;renderTable()};
+['fType','fProg','fSR','fStatus','fAso'].forEach(id=>{
+  $('#'+id).onchange=e=>{
+    const key=id.slice(1).toLowerCase();
+    F[key==='status'?'status':key]=e.target.value;
+    render();
+  };
+});
+$('#abCta').onclick=()=>{
+  // Filter table to outlets that haven't sold yet, scroll to table
+  F.aso='no';
+  $('#fAso').value='no';
+  render();
+  // smooth scroll to table panel
+  document.querySelector('.panel').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+// TIP module bucket cards — click to filter table
+function filterToTipBucket(bucket){
+  F.prog='Target Incentive';
+  F.status=bucket;
+  F.aso=''; // clear ASO filter
+  $('#fProg').value='Target Incentive';
+  $('#fStatus').value=bucket;
+  $('#fAso').value='';
+  render();
+  document.querySelector('.tbl-scroll').scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.querySelectorAll('.bd-card[data-bucket]').forEach(el=>{
+  el.onclick=()=>filterToTipBucket(el.dataset.bucket);
+});
+document.querySelectorAll('table.outlets thead th').forEach(th=>th.onclick=()=>{
+  const k=th.dataset.k;
+  if(sortK===k)sortDir*=-1;
+  else{sortK=k;sortDir=(['target','actual','pct','balance','id'].includes(k))?-1:1}
+  renderTable();
+});
+</script>
+</body>
+</html>
