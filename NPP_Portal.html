@@ -1007,6 +1007,52 @@
   @media(max-width:1100px){.grid2{grid-template-columns:1fr}}
   @media(max-width:1100px) and (min-width:861px){.kpis{grid-template-columns:repeat(3,1fr)}}
 
+  /* ===== ADMIN: NPP Ranking & Risk panel ===== */
+  #nppRiskPanel .panel-hd .meta{max-width:520px}
+  .npp-alert-row{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:#fafdfa;border:1px solid var(--line);border-left:3px solid var(--hk-red);border-radius:10px;margin-bottom:10px}
+  .npp-alert-row:last-child{margin-bottom:0}
+  .npp-alert-row.warn{border-left-color:#FFB020}
+  .npp-alert-row .ico-wrap{width:34px;height:34px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;background:#fce8e8;color:var(--hk-red)}
+  .npp-alert-row.warn .ico-wrap{background:#fdf4d8;color:#9C6800}
+  .npp-alert-row .tx{flex:1}
+  .npp-alert-row .tx .ttl{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px}
+  .npp-alert-row .tx .dsc{font-size:12.5px;color:var(--muted);line-height:1.45}
+  .npp-alert-row .tx .dsc b{color:var(--ink);font-weight:700}
+  .npp-alert-row .tx .dsc b.bad{color:var(--hk-red)}
+  .npp-alert-row .tx .dsc b.warn{color:#9C6800}
+  .npp-alert-empty{display:flex;align-items:center;gap:12px;padding:14px;background:var(--hk-green-soft);border:1px solid var(--line);border-left:3px solid var(--hk-green);border-radius:10px;font-size:12.5px;color:var(--ink)}
+  .npp-alert-empty b{color:var(--hk-green-dark)}
+
+  #nppRankTable{table-layout:auto;min-width:760px}
+  #nppRankTable th,#nppRankTable td{font-size:12px;padding:9px 9px}
+  #nppRankTable .npp-name{font-weight:700;color:var(--ink);font-size:12.5px}
+  #nppRankTable .npp-code{font-size:10.5px;color:var(--muted);font-weight:600;letter-spacing:.03em}
+  #nppRankTable .npp-rank{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:800;background:#f0f3f0;color:var(--muted)}
+  #nppRankTable tr.rank-best .npp-rank{background:var(--hk-green-soft);color:var(--hk-green-dark)}
+  #nppRankTable tr.rank-worst .npp-rank{background:#fce8e8;color:var(--hk-red)}
+  #nppRankTable tr.active{outline:2px solid var(--hk-green);outline-offset:-2px;background:var(--hk-green-soft)}
+  #nppRankTable tr{cursor:pointer}
+  .npp-risk-pill{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:3px 8px;border-radius:99px;white-space:nowrap}
+  .npp-risk-pill.ok{background:var(--hk-green-soft);color:var(--hk-green-dark)}
+  .npp-risk-pill.warn{background:#fdf4d8;color:#9C6800}
+  .npp-risk-pill.bad{background:#fce8e8;color:var(--hk-red)}
+  .npp-mini-bar{height:6px;border-radius:99px;background:#eef3ef;overflow:hidden;min-width:54px}
+  .npp-mini-bar > div{height:100%;border-radius:99px}
+  .npp-mini-bar .fill-ok{background:var(--hk-green)}
+  .npp-mini-bar .fill-warn{background:#FFB020}
+  .npp-mini-bar .fill-bad{background:#FF6B5E}
+  .npp-mini-cell{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+  .npp-mini-cell .npp-mini-val{font-variant-numeric:tabular-nums;font-weight:700;font-size:12px}
+
+  @media(max-width:1100px){
+    #nppRiskPanel .tbl-scroll{overflow-x:auto}
+    #nppRankTable{min-width:760px}
+  }
+  @media(max-width:860px){
+    #nppRiskPanel{padding:16px 14px}
+    #nppRankTable th,#nppRankTable td{font-size:11px;padding:7px 7px}
+  }
+
   @media(max-width:860px){
     .kpis{
       display:flex;grid-template-columns:none;gap:10px;margin-top:14px;
@@ -1087,7 +1133,7 @@
       Liên hệ Sales Admin nếu quên thông tin đăng nhập.
     </div>
   </div>
-  <div class="login-foot">Kỳ báo cáo: <b>Tháng 6/2026</b> · Dữ liệu cập nhật <b>11:19 15/06/2026</b></div>
+  <div class="login-foot">Kỳ báo cáo: <b>Tháng 6/2026</b> · Dữ liệu cập nhật <b>16:06 15/06/2026</b></div>
 </div>
 
 <!-- ================ DASHBOARD ================ -->
@@ -1109,7 +1155,7 @@
         <div class="blk"><span class="lab">Kỳ</span><span class="vl">T6/2026</span></div>
         <div class="blk"><span class="lab">Ngày</span><span class="vl">15/30</span></div>
         <div class="blk"><span class="lab">Time gone</span><span class="vl">50.0%</span></div>
-        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">11:19 15/06/2026</span></div>
+        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">16:06 15/06/2026</span></div>
       </div>
       <div class="top-user">
         <div class="info">
@@ -1137,7 +1183,7 @@
           <span class="mm-lab">Time gone</span><span class="mm-val">50.0%</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">11:19 15/06/2026</span>
+          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">16:06 15/06/2026</span>
         </div>
       </div>
     </div>
@@ -1355,6 +1401,32 @@
       </div>
     </section>
 
+    <!-- ADMIN ONLY: NPP Ranking & Risk panel -->
+    <div class="panel" id="nppRiskPanel" style="display:none">
+      <div class="panel-hd">
+        <div>
+          <h2>Xếp hạng &amp; <span class="accent">cảnh báo rủi ro</span> theo NPP</h2>
+          <div class="meta">So sánh 9 NPP theo độ phủ (ASO), tiến độ TIP và sản lượng · Click vào dòng để lọc toàn bộ dashboard theo NPP đó</div>
+        </div>
+      </div>
+      <div id="nppAlerts" style="margin-bottom:16px"></div>
+      <div class="tbl-scroll" id="nppRiskScroll" style="max-height:none">
+        <table class="outlets" id="nppRankTable">
+          <thead><tr>
+            <th>#</th>
+            <th>NPP</th>
+            <th class="num">Tổng outlet</th>
+            <th>ASO (độ phủ)</th>
+            <th>TIP đạt target</th>
+            <th>TIP chậm tiến độ</th>
+            <th class="num">Sản lượng</th>
+            <th>Mức rủi ro</th>
+          </tr></thead>
+          <tbody id="nppRankBody"></tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="grid2">
       <!-- Type breakdown — moved above outlet detail, now with Volume columns -->
       <div class="panel">
@@ -1529,6 +1601,7 @@ function enterDash(){
   $('#footUser').textContent=CURRENT.npp;
   $('#grpArea').style.display=CURRENT.isAdmin?'':'none';
   $('#grpNpp').style.display=CURRENT.isAdmin?'':'none';
+  $('#nppRiskPanel').style.display=CURRENT.isAdmin?'':'none';
   F.area=''; F.npp='';
   render();
   renderAllocation();
@@ -1647,6 +1720,7 @@ function render(){
   renderChannelMix();
   renderTypeList();
   renderRecap();
+  if(CURRENT.isAdmin) renderNppRisk();
 }
 
 // ============ CHANNEL MIX — Direct vs Indirect ============
@@ -2151,6 +2225,113 @@ function renderTypeList(){
   $('#typeList').innerHTML=body;
   document.querySelectorAll('#typeList .type-row').forEach(el=>el.onclick=()=>{
     const v=el.dataset.type;F.type=(F.type===v?'':v);$('#fType').value=F.type;render();
+  });
+}
+
+// ============ ADMIN: NPP Ranking & Risk ============
+function renderNppRisk(){
+  const all=DATA; // toàn bộ 3070 outlet, không phụ thuộc filter hiện tại
+  const g={};
+  all.forEach(d=>{
+    const code=d.nppCode;
+    if(!g[code])g[code]={code,name:d.npp,area:d.area,total:0,aso:0,tip:0,ach:0,pace:0,lag:0,vol:0};
+    const x=g[code];
+    x.total++;
+    if(d.actual>0)x.aso++;
+    x.vol+=(d.actual||0);
+    if(d.program==='Target Incentive'){
+      x.tip++;
+      const s=statusOf(d).key;
+      if(d.target>0&&d.actual>=d.target)x.ach++;
+      if(d.target>0&&d.actual/d.target>=TIMEGONE)x.pace++;
+      if(s==='lagging')x.lag++;
+    }
+  });
+
+  const arr=Object.values(g).map(x=>{
+    const asoPc=x.total?x.aso/x.total:0;
+    const achPc=x.tip?x.ach/x.tip:0;
+    const lagPc=x.tip?x.lag/x.tip:0;
+    // Risk score: cao = rủi ro nhiều. Trọng số: ASO gap 50%, TIP achievement gap 30%, lagging ratio 20%
+    const asoGap=Math.max(0,KPI-asoPc);
+    const achGap=Math.max(0,0.3-achPc); // mốc tham chiếu 30% TIP đạt target giữa kỳ (đồng bộ renderRecap)
+    const riskScore=asoGap*0.5/KPI + achGap*0.3/0.3 + lagPc*0.2;
+    let riskLvl='ok';
+    if(asoPc<0.80 || lagPc>=0.5) riskLvl='bad';
+    else if(asoPc<KPI || achPc<0.3 || lagPc>=0.3) riskLvl='warn';
+    return {...x,asoPc,achPc,lagPc,riskScore,riskLvl};
+  }).sort((a,b)=>b.riskScore-a.riskScore);
+
+  // ---- Alerts (top issues) ----
+  const alerts=[];
+  arr.forEach(x=>{
+    if(x.asoPc<0.80){
+      alerts.push({lvl:'bad',ttl:`${x.code} — ASO rất thấp`,
+        dsc:`Độ phủ bán hàng chỉ <b class="bad">${(x.asoPc*100).toFixed(1)}%</b> (${x.aso}/${x.total} outlet), cách xa KPI ≥93%. Nguy cơ mất outlet/khách hàng ngừng giao dịch — cần SS/SR rà soát ngay danh sách outlet chưa bán.`});
+    } else if(x.asoPc<KPI){
+      alerts.push({lvl:'warn',ttl:`${x.code} — ASO chưa đạt KPI`,
+        dsc:`Độ phủ bán hàng <b class="warn">${(x.asoPc*100).toFixed(1)}%</b> (${x.aso}/${x.total}), còn thiếu <b>${Math.max(0,Math.ceil(KPI*x.total)-x.aso)} outlet</b> để đạt 93%.`});
+    }
+    if(x.tip>0 && x.lagPc>=0.5){
+      alerts.push({lvl:'bad',ttl:`${x.code} — TIP chậm tiến độ nghiêm trọng`,
+        dsc:`<b class="bad">${x.lag}/${x.tip} outlet TIP (${(x.lagPc*100).toFixed(1)}%)</b> đang chậm so với time-gone ${(TIMEGONE*100).toFixed(1)}% — nguy cơ không đạt target tháng, ảnh hưởng thưởng/incentive của NPP.`});
+    } else if(x.tip>0 && x.lagPc>=0.3){
+      alerts.push({lvl:'warn',ttl:`${x.code} — TIP có dấu hiệu chậm`,
+        dsc:`<b class="warn">${x.lag}/${x.tip} outlet TIP (${(x.lagPc*100).toFixed(1)}%)</b> đang chậm tiến độ so với time-gone — cần thúc đẩy trong các tuần còn lại.`});
+    }
+  });
+
+  const alertsBox=$('#nppAlerts');
+  if(alerts.length===0){
+    alertsBox.innerHTML=`<div class="npp-alert-empty"><div class="ico-wrap" style="background:var(--hk-green-soft);color:var(--hk-green-dark);width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:800">✓</div>
+      <div><b>Không có cảnh báo rủi ro</b> — tất cả NPP đang đạt KPI ASO ≥93% và TIP đúng tiến độ.</div></div>`;
+  } else {
+    alertsBox.innerHTML=alerts.map(a=>`
+      <div class="npp-alert-row ${a.lvl==='warn'?'warn':''}">
+        <div class="ico-wrap">${a.lvl==='bad'?'!':'⚠'}</div>
+        <div class="tx"><div class="ttl">${esc(a.ttl)}</div><div class="dsc">${a.dsc}</div></div>
+      </div>`).join('');
+  }
+
+  // ---- Ranking table ----
+  const body=arr.map((x,i)=>{
+    const rankCls=i===0?'rank-worst':(i===arr.length-1?'rank-best':'');
+    const activeCls=F.npp===x.code?'active':'';
+    const asoFill=x.asoPc>=KPI?'fill-ok':(x.asoPc>=0.8?'fill-warn':'fill-bad');
+    const achFill=x.achPc>=0.3?'fill-ok':(x.achPc>=0.15?'fill-warn':'fill-bad');
+    const pillTxt=x.riskLvl==='ok'?'An toàn':(x.riskLvl==='warn'?'Cần lưu ý':'Rủi ro cao');
+    return `<tr class="${rankCls} ${activeCls}" data-npp="${esc(x.code)}">
+      <td><span class="npp-rank">${i+1}</span></td>
+      <td>
+        <div class="npp-name">${esc(x.name)}</div>
+        <div class="npp-code">${esc(x.code)} · ${esc(x.area)}</div>
+      </td>
+      <td class="num"><b>${fmt(x.total)}</b></td>
+      <td>
+        <div class="npp-mini-cell">
+          <span class="npp-mini-val">${(x.asoPc*100).toFixed(1)}%</span>
+          <div class="npp-mini-bar"><div class="${asoFill}" style="width:${Math.min(100,x.asoPc*100)}%"></div></div>
+        </div>
+      </td>
+      <td>
+        ${x.tip?`<div class="npp-mini-cell">
+          <span class="npp-mini-val">${(x.achPc*100).toFixed(1)}%</span>
+          <div class="npp-mini-bar"><div class="${achFill}" style="width:${Math.min(100,x.achPc*100)}%"></div></div>
+        </div>`:'<span style="color:var(--muted)">—</span>'}
+      </td>
+      <td class="num">${x.tip?`${fmt(x.lag)}/${fmt(x.tip)}`:'—'}</td>
+      <td class="num">${fmt(x.vol)}</td>
+      <td><span class="npp-risk-pill ${x.riskLvl}">${pillTxt}</span></td>
+    </tr>`;
+  }).join('');
+
+  $('#nppRankBody').innerHTML=body;
+  document.querySelectorAll('#nppRankTable tbody tr').forEach(el=>el.onclick=()=>{
+    const v=el.dataset.npp;
+    F.npp=(F.npp===v?'':v);
+    $('#fNpp').value=F.npp;
+    render();
+    document.querySelector('#outletPanel').scrollIntoView({behavior:'smooth',block:'start'});
   });
 }
 
