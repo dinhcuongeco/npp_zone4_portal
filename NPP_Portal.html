@@ -167,6 +167,16 @@
   }
   .top-logout:hover{background:rgba(255,255,255,.2)}
 
+  @media(max-width:860px){
+    .topbar{padding:12px 0}
+    .topbar-inner{padding:0 14px;gap:10px}
+    .top-brand .sb{display:none}
+    .top-period{display:none}
+    .top-user .info{display:none}
+    .top-user{gap:8px}
+    .top-logout{padding:10px 12px;font-size:11px}
+  }
+
   /* Welcome banner */
   .welcome{
     background:linear-gradient(180deg,#fff 0%,#fafdfa 100%);
@@ -177,7 +187,26 @@
   .welcome h1 .hl{color:var(--hk-green)}
   .welcome p{font-size:13.5px;color:var(--muted);max-width:760px}
 
+  .mobile-meta{display:none}
+
   .container{max-width:1400px;margin:0 auto;padding:0 24px}
+
+  @media(max-width:860px){
+    .welcome{padding:16px 0 14px}
+    .welcome-inner{padding:0 14px}
+    .welcome h1{font-size:19px}
+    .welcome p{display:none}
+    .container{padding:0 14px}
+
+    .mobile-meta{
+      display:grid;grid-template-columns:1fr 1fr;gap:8px;
+      margin-top:14px;background:#fff;border:1px solid var(--line);
+      border-radius:10px;padding:10px 12px;
+    }
+    .mm-row{display:flex;flex-direction:column;gap:2px}
+    .mm-lab{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .mm-val{font-size:12.5px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  }
 
   /* KPI cards */
   .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:20px}
@@ -528,6 +557,34 @@
     .pri-row .meta-cell,.pri-row .progress-cell{display:none}
   }
 
+  @media(max-width:860px){
+    .tm-head{padding:16px 14px 0;align-items:flex-start}
+    .tm-head .tm-title h2{font-size:18px}
+    .tm-head .tm-title h2 .meta{display:block;margin-left:0;margin-top:2px}
+    .tm-head .tm-context{text-align:left;font-size:11px}
+
+    .tm-hero{padding:18px 14px}
+    .tm-focus .focus-num{font-size:40px;gap:8px}
+    .tm-focus .focus-num .unit{font-size:13px}
+    .tm-focus .focus-desc{font-size:13px;max-width:none}
+
+    .tm-breakdown{grid-template-columns:repeat(2,1fr);gap:8px}
+    .bd-card{padding:10px}
+    .bd-card .bd-num{font-size:18px}
+
+    .tm-priority{padding:16px 14px 20px}
+    .tm-priority-head{flex-direction:column;align-items:flex-start;gap:6px}
+    .tm-priority-head .hint{max-width:none;font-size:11.5px}
+
+    .pri-row{
+      grid-template-columns:30px 1fr 28px;gap:10px;padding:12px 14px;
+    }
+    .pri-row .info .nm{font-size:12.5px}
+    .pri-row .info .sub{font-size:11px}
+    .pri-row .gap-cell{display:none}
+    .pri-row .go-arrow{width:28px;height:28px;font-size:12px}
+  }
+
   /* ============================================================
      CHANNEL MIX MODULE — Direct vs Indirect Sales
      ============================================================ */
@@ -711,6 +768,26 @@
     .ch-donuts{grid-template-columns:1fr}
   }
 
+  @media(max-width:860px){
+    .ch-head{padding:16px 14px 0;align-items:flex-start}
+    .ch-head .ch-title h2{font-size:18px}
+    .ch-head .ch-title h2 .meta{display:block;margin-left:0;margin-top:2px}
+    .ch-head .ch-status-pill{font-size:11px;padding:6px 12px}
+
+    .ch-hero{padding:18px 14px}
+    .ch-focus-num{font-size:40px;gap:8px}
+    .ch-focus-num .unit{font-size:13px}
+    .ch-focus-desc{font-size:13px;max-width:none}
+
+    .ch-gauge-bar .marker::after{font-size:9px;padding:1px 5px}
+
+    .ch-donut-wrap{padding:14px 10px}
+    .ch-donut{width:104px;height:104px}
+
+    .ch-recs{padding:0 14px 20px;padding-top:18px}
+    .ch-rec{padding:12px}
+  }
+
   /* Panel */
   .panel{
     background:var(--card);border:1px solid var(--line);border-radius:var(--r);
@@ -730,6 +807,7 @@
     border-radius:8px;width:240px;
   }
   .panel-hd .search:focus{outline:2px solid var(--hk-green);outline-offset:1px}
+  .mobile-sort{display:none}
   .panel-hd .btn{
     font:inherit;font-size:12px;font-weight:700;padding:8px 14px;border:none;
     cursor:pointer;border-radius:8px;letter-spacing:.04em;
@@ -747,6 +825,39 @@
     appearance:none;font:inherit;font-size:12.5px;padding:4px 24px 4px 8px;
     border:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300863C'/%3E%3C/svg%3E") no-repeat right 8px center;
     border-radius:16px;font-weight:600;color:var(--ink);cursor:pointer;
+  }
+
+  @media(max-width:860px){
+    .container{padding-left:14px;padding-right:14px}
+    .panel{padding:16px 14px;margin-top:14px;border-radius:12px}
+    .panel-hd{align-items:flex-start;gap:10px}
+    .panel-hd h2{font-size:15px}
+    .panel-hd .meta{font-size:11px;line-height:1.5}
+    .panel-hd .actions{width:100%;flex-direction:column;gap:8px}
+    .panel-hd .search{
+      width:100%;font-size:14px;padding:12px 14px;min-height:48px;border-radius:10px;
+    }
+    .mobile-sort{
+      display:block;width:100%;font-size:14px;padding:12px 14px;min-height:48px;border-radius:10px;
+      border:1px solid var(--line);font:inherit;background:#fff;
+      appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300863C'/%3E%3C/svg%3E");
+      background-repeat:no-repeat;background-position:right 14px center;
+    }
+    .panel-hd .btn{
+      width:100%;min-height:48px;font-size:13px;border-radius:10px;
+    }
+    #allocModule .panel-hd .actions{width:auto}
+    #fAllocWeek{min-height:44px;font-size:13px}
+
+    /* Filter chips → full-width touch-friendly selects, stacked */
+    .chips{flex-direction:column;gap:8px;align-items:stretch}
+    .chip-grp{
+      border-radius:10px;padding:8px 12px;justify-content:space-between;gap:10px;
+    }
+    .chip-grp label{font-size:10px;flex-shrink:0}
+    .chip-grp select{
+      flex:1;min-height:40px;font-size:13px;text-align:right;padding:8px 24px 8px 8px;
+    }
   }
 
   /* Outlet detail table - PRIMARY VIEW */
@@ -785,7 +896,7 @@
   .pct-fill.good{background:linear-gradient(90deg,var(--hk-green),var(--hk-green-light))}
   .pct-fill.mid{background:linear-gradient(90deg,var(--hk-gold),#e8c95e)}
   .pct-fill.bad{background:linear-gradient(90deg,#cc4848,#e36868)}
-  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:43.3%;width:1.5px;background:rgba(0,0,0,.45)}
+  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:__TIMEGONE_PCT__%;width:1.5px;background:rgba(0,0,0,.45)}
   .pct-num{font-weight:700;min-width:36px;text-align:right;font-variant-numeric:tabular-nums;font-size:11.5px;flex-shrink:0}
   .pct-num.good{color:var(--hk-green-dark)} .pct-num.mid{color:#7a5e0a} .pct-num.bad{color:var(--hk-red)}
   .pct-num.zero{color:#b8b8b8;font-weight:500}
@@ -801,9 +912,50 @@
   /* Tooltip for truncated cells */
   table.outlets td[title]{cursor:default}
 
+  /* Mobile card view for outlet table — hidden by default (desktop shows table) */
+  .outlet-cards{display:none}
+
   @media(max-width:1100px){
     .tbl-scroll{overflow-x:auto}
     table.outlets{table-layout:auto;min-width:900px}
+  }
+
+  @media(max-width:860px){
+    .tbl-scroll{display:none}
+    .outlet-cards{display:flex;flex-direction:column;gap:10px}
+
+    .oc-card{
+      border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;
+    }
+    .oc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+    .oc-name-wrap{flex:1;min-width:0}
+    .oc-name{font-weight:700;font-size:14px;color:var(--ink);line-height:1.3}
+    .oc-addr{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+    .oc-status{flex-shrink:0;font-size:11px;padding:3px 9px;border-radius:20px;background:#f4f7f4}
+    .s-achieved.oc-status{background:var(--hk-green-soft)}
+    .s-onpace.oc-status{background:#e8f1fb}
+    .s-lagging.oc-status{background:#fdf4d8}
+    .s-noactive.oc-status{background:#fce8e8}
+    .s-na.oc-status{background:#f0f0f0}
+
+    .oc-progress{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+    .oc-progress .pct-bar{height:10px}
+    .oc-pct{font-weight:800;font-size:13px;font-variant-numeric:tabular-nums;flex-shrink:0;min-width:40px;text-align:right}
+    .oc-pct.good{color:var(--hk-green-dark)} .oc-pct.mid{color:#7a5e0a} .oc-pct.bad{color:var(--hk-red)}
+    .oc-pct.zero{color:#b8b8b8;font-size:11px;font-weight:500}
+
+    .oc-stats{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+      background:#fafdfa;border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:10px;
+    }
+    .oc-stat{display:flex;flex-direction:column;gap:2px;text-align:center}
+    .oc-stat-lab{font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    .oc-stat-val{font-size:15px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+    .oc-stat-val.strong{color:var(--hk-green-dark)}
+
+    .oc-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+    .oc-id{font-family:'JetBrains Mono','Consolas',monospace;font-size:10.5px;color:var(--muted);margin-left:auto}
+    .oc-terr{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-top:1px solid var(--line);padding-top:8px}
   }
 
   /* Bottom row */
@@ -838,8 +990,51 @@
   .foot-attribution{text-align:center;color:var(--muted);font-size:11px;padding:30px 0 20px;letter-spacing:.04em}
   .foot-attribution .star{color:var(--hk-red);margin:0 4px}
 
-  @media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}}
-  @media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}.topbar-inner{justify-content:center;text-align:center}.top-period{order:3;width:100%;justify-content:center}}
+  @media(max-width:1100px){.grid2{grid-template-columns:1fr}}
+  @media(max-width:1100px) and (min-width:861px){.kpis{grid-template-columns:repeat(3,1fr)}}
+
+  @media(max-width:860px){
+    .kpis{
+      display:flex;grid-template-columns:none;gap:10px;margin-top:14px;
+      overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+      padding-bottom:4px;margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px;
+    }
+    .kpis::-webkit-scrollbar{display:none}
+    .kpi{
+      flex:0 0 78%;scroll-snap-align:start;padding:14px 16px;
+    }
+    .kpi:hover{transform:none}
+    .kpi .val{font-size:28px}
+
+    /* Type breakdown bars */
+    .barrow{grid-template-columns:1fr;gap:4px;padding:8px 6px}
+    .barrow .nm{font-size:12px}
+    .barrow .ctrack{height:22px}
+    .barrow .cnt{text-align:left;font-size:11px;color:var(--muted);font-weight:600}
+
+    /* Recap items */
+    .recap-item{padding:12px}
+    .recap-item .ico-wrap{width:32px;height:32px;font-size:13px}
+    .recap-item .tx .ttl{font-size:12.5px}
+    .recap-item .tx .dsc{font-size:12px}
+
+    /* Allocation table → horizontal scroll with sticky first col */
+    #allocModule .tbl-scroll{overflow-x:auto}
+    #allocModule table.outlets{min-width:560px}
+
+    /* ASO banner */
+    .aso-banner{padding:14px;gap:12px}
+    .aso-banner .ab-left{min-width:0;width:100%}
+    .aso-banner .ab-cta{width:100%;min-height:46px}
+    .aso-banner .ab-tx h3{font-size:13px}
+    .aso-banner .ab-tx h3 .num{font-size:18px}
+
+    /* Login page */
+    .login-card{padding:32px 22px;border-radius:16px}
+    .login-title{font-size:24px}
+    .login-row input{min-height:48px}
+    .login-btn{min-height:50px}
+  }
 
   @media(prefers-reduced-motion:reduce){
     *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
@@ -884,7 +1079,7 @@
       Liên hệ Sales Admin nếu quên thông tin đăng nhập.
     </div>
   </div>
-  <div class="login-foot">Kỳ báo cáo: <b>T6 / 2026</b> · Dữ liệu cập nhật <b>07:45 15/06/2026</b></div>
+  <div class="login-foot">Kỳ báo cáo: <b>__MONTH_LABEL__</b> · Dữ liệu cập nhật <b>08:13 15/06/2026</b></div>
 </div>
 
 <!-- ================ DASHBOARD ================ -->
@@ -903,10 +1098,10 @@
         </div>
       </div>
       <div class="top-period">
-        <div class="blk"><span class="lab">Kỳ</span><span class="vl">T6/2026</span></div>
-        <div class="blk"><span class="lab">Ngày</span><span class="vl">13/30</span></div>
-        <div class="blk"><span class="lab">Time gone</span><span class="vl">43.3%</span></div>
-        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">07:45 15/06/2026</span></div>
+        <div class="blk"><span class="lab">Kỳ</span><span class="vl">__MONTH_LABEL_SHORT__</span></div>
+        <div class="blk"><span class="lab">Ngày</span><span class="vl">__DAY_OF_MONTH__/__DAYS_IN_MONTH__</span></div>
+        <div class="blk"><span class="lab">Time gone</span><span class="vl">__TIMEGONE_PCT__%</span></div>
+        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">08:13 15/06/2026</span></div>
       </div>
       <div class="top-user">
         <div class="info">
@@ -923,6 +1118,20 @@
     <div class="welcome-inner">
       <h1>Chào mừng <span class="hl" id="welcomeName">—</span></h1>
       <p>Đây là báo cáo riêng cho NPP của bạn — các chỉ tiêu ASO, TIP, và chi tiết từng outlet đang được giao quản lý. Click vào tiêu đề cột để sắp xếp, dùng ô tìm kiếm để lọc nhanh outlet cần xem.</p>
+      <div class="mobile-meta" id="mobileMeta">
+        <div class="mm-row">
+          <span class="mm-lab">Mã NPP</span><span class="mm-val" id="mmUser">—</span>
+        </div>
+        <div class="mm-row">
+          <span class="mm-lab">Kỳ báo cáo</span><span class="mm-val">__MONTH_LABEL_SHORT__ · Ngày __DAY_OF_MONTH__/__DAYS_IN_MONTH__</span>
+        </div>
+        <div class="mm-row">
+          <span class="mm-lab">Time gone</span><span class="mm-val">__TIMEGONE_PCT__%</span>
+        </div>
+        <div class="mm-row">
+          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">08:13 15/06/2026</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -953,7 +1162,7 @@
       <div class="kpi k5">
         <div class="lab">Vượt time-gone</div>
         <div class="val" id="kPace">0</div>
-        <div class="sub" id="kPaceSub">% ≥ 43.3%</div>
+        <div class="sub" id="kPaceSub">% ≥ __TIMEGONE_PCT__%</div>
       </div>
     </div>
 
@@ -1139,7 +1348,7 @@
     </section>
 
     <!-- OUTLET DETAIL TABLE - MAIN -->
-    <div class="panel">
+    <div class="panel" id="outletPanel">
       <div class="panel-hd">
         <div>
           <h2>Chi tiết <span class="accent">từng outlet</span></h2>
@@ -1147,6 +1356,15 @@
         </div>
         <div class="actions">
           <input class="search" id="search" placeholder="🔍 Tìm tên / mã outlet / địa chỉ…">
+          <select class="search mobile-sort" id="mobileSortSel" aria-label="Sắp xếp">
+            <option value="actual:-1">Actual: cao → thấp</option>
+            <option value="actual:1">Actual: thấp → cao</option>
+            <option value="target:-1">Target: cao → thấp</option>
+            <option value="balance:-1">Còn lại: cao → thấp</option>
+            <option value="pct:-1">% Đạt: cao → thấp</option>
+            <option value="pct:1">% Đạt: thấp → cao</option>
+            <option value="name:1">Tên A → Z</option>
+          </select>
           <button class="btn ghost" id="exportBtn">⬇ Tải Excel (CSV)</button>
         </div>
       </div>
@@ -1196,6 +1414,7 @@
           <tbody id="outletBody"></tbody>
         </table>
       </div>
+      <div class="outlet-cards" id="outletCards"></div>
     </div>
 
     <div class="grid2">
@@ -1227,7 +1446,7 @@ const ALLOC=[{"week": "W25", "npp": "HMcc", "item": "HS2", "itemCode": 10128309,
 <script>
 const $=s=>document.querySelector(s);
 const fmt=n=>Math.round(n||0).toLocaleString('vi-VN');
-const TIMEGONE=13/30;
+const TIMEGONE=__TIMEGONE_FRAC__;
 const KPI=0.93;
 
 let CURRENT={code:'',npp:'',area:'',rows:[]};
@@ -1270,6 +1489,7 @@ function enterDash(){
   $('#userMeta').textContent=CURRENT.area;
   $('#userAvatar').textContent=CURRENT.code.substring(0,Math.min(3,CURRENT.code.length)).toUpperCase();
   $('#welcomeName').textContent=CURRENT.npp+' ('+CURRENT.code+')';
+  $('#mmUser').textContent=CURRENT.code+' · '+CURRENT.area;
   $('#footUser').textContent=CURRENT.npp;
   render();
   renderAllocation();
@@ -1545,7 +1765,7 @@ function renderChannelMix(){
 }
 
 // ============ TIP MODULE — Editorial render ============
-const DAYS_LEFT = 30 - 13;
+const DAYS_LEFT = __DAYS_LEFT__;
 
 // Smooth count-up animation
 function countUp(el, target, duration=900){
@@ -1666,7 +1886,7 @@ function renderTipCenter(){
         search = nm;
         $('#search').value = nm;
         renderTable();
-        document.querySelector('.panel').scrollIntoView({behavior:'smooth',block:'start'});
+        document.querySelector('#outletPanel').scrollIntoView({behavior:'smooth',block:'start'});
       };
     });
   }
@@ -1685,7 +1905,11 @@ function renderTable(){
 
   $('#rowCnt').textContent=fmt(rows.length);
   const show=rows.slice(0,300);
-  $('#outletBody').innerHTML=show.map(d=>{
+
+  let tableHtml='';
+  let cardHtml='';
+
+  show.forEach(d=>{
     const st=statusOf(d);
     const pct=d.target>0?d.actual/d.target:0;
     const pctCls=pct===0?'zero':(pct>=1?'good':(pct>=TIMEGONE?'mid':'bad'));
@@ -1697,7 +1921,8 @@ function renderTable(){
     const progPill = d.program==='Target Incentive'?'<span class="pill tip">TIP · Target Incentive</span>':
                      (d.program==='(Không có)'||d.program==='No Program')?'<span class="pill noprog">'+esc(d.program)+'</span>':
                      '<span class="pill prog">'+esc(d.program)+'</span>';
-    return `<tr>
+
+    tableHtml+=`<tr>
       <td><span class="id-cell" title="${d.id}">${d.id}</span></td>
       <td><div class="name-cell">${esc(d.name)}</div><div class="addr-cell">${esc(d.addr)}</div></td>
       <td><div style="font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(d.terr)}">${esc(d.terr)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SR: ${esc(d.sr)}">SR: ${esc(d.sr)}</div></td>
@@ -1708,10 +1933,50 @@ function renderTable(){
       <td class="num">${d.balance?fmt(d.balance):'<span style="color:#b8b8b8">—</span>'}</td>
       <td><div class="status-cell ${st.cls}" title="${st.label}"><span class="status-dot"></span>${st.label}</div></td>
     </tr>`;
-  }).join('') || '<tr><td colspan="9" style="text-align:center;padding:40px;color:#888">Không có outlet nào khớp bộ lọc</td></tr>';
+
+    // Mobile card — same data, denser single-column layout
+    const pctPill = d.target===0
+      ? `<span class="oc-pct zero">không có target</span>`
+      : `<span class="oc-pct ${pctCls}">${(pct*100).toFixed(0)}%</span>`;
+    const progBadge = d.program==='Target Incentive' ? '<span class="pill tip">TIP</span>' :
+                     (d.program==='(Không có)'||d.program==='No Program') ? '' :
+                     `<span class="pill prog">${esc(d.program)}</span>`;
+
+    cardHtml+=`<div class="oc-card">
+      <div class="oc-top">
+        <div class="oc-name-wrap">
+          <div class="oc-name">${esc(d.name)}</div>
+          <div class="oc-addr">${esc(d.addr)}</div>
+        </div>
+        <div class="status-cell ${st.cls} oc-status"><span class="status-dot"></span>${st.label}</div>
+      </div>
+      ${d.target>0?`<div class="oc-progress"><div class="pct-bar"><div class="pct-fill ${fillCls}" style="width:${w}%"></div><div class="timeline"></div></div>${pctPill}</div>`:''}
+      <div class="oc-stats">
+        <div class="oc-stat"><span class="oc-stat-lab">Target</span><span class="oc-stat-val">${d.target?fmt(d.target):'—'}</span></div>
+        <div class="oc-stat"><span class="oc-stat-lab">Actual</span><span class="oc-stat-val strong">${fmt(d.actual)}</span></div>
+        <div class="oc-stat"><span class="oc-stat-lab">Còn lại</span><span class="oc-stat-val">${d.balance?fmt(d.balance):'—'}</span></div>
+      </div>
+      <div class="oc-meta">
+        <span class="type-pill" title="${esc(d.type)}">${esc(d.type)}</span>
+        ${progBadge}
+        <span class="oc-id" title="${d.id}">#${d.id}</span>
+      </div>
+      <div class="oc-terr" title="${esc(d.terr)} · SR: ${esc(d.sr)}">${esc(d.terr)} · SR: ${esc(d.sr)}</div>
+    </div>`;
+  });
+
+  if(!show.length){
+    tableHtml='<tr><td colspan="9" style="text-align:center;padding:40px;color:#888">Không có outlet nào khớp bộ lọc</td></tr>';
+    cardHtml='<div style="text-align:center;padding:40px 20px;color:#888">Không có outlet nào khớp bộ lọc</div>';
+  }
+
+  $('#outletBody').innerHTML=tableHtml;
+  $('#outletCards').innerHTML=cardHtml;
 
   if(rows.length>300){
-    $('#outletBody').insertAdjacentHTML('beforeend',`<tr><td colspan="9" style="text-align:center;padding:14px;color:#888;font-size:12px;background:#fafdfa;font-style:italic">Hiển thị 300 / ${fmt(rows.length)} dòng đầu — thu hẹp bộ lọc để xem chi tiết hơn</td></tr>`);
+    const moreMsg=`Hiển thị 300 / ${fmt(rows.length)} dòng đầu — thu hẹp bộ lọc để xem chi tiết hơn`;
+    $('#outletBody').insertAdjacentHTML('beforeend',`<tr><td colspan="9" style="text-align:center;padding:14px;color:#888;font-size:12px;background:#fafdfa;font-style:italic">${moreMsg}</td></tr>`);
+    $('#outletCards').insertAdjacentHTML('beforeend',`<div style="text-align:center;padding:14px;color:#888;font-size:12px;font-style:italic">${moreMsg}</div>`);
   }
 }
 
@@ -1839,7 +2104,7 @@ function renderRecap(){
         dsc:`${ach}/${tip.length} outlet TIP đã đạt target (<b class="good">${(achPc*100).toFixed(1)}%</b>) — kết quả khả quan giữa kỳ.`});
     } else if(pacePc>=0.45){
       items.push({cls:'',ic:'↑',ttl:'TIP đang đúng nhịp',
-        dsc:`Mới ${ach} outlet đạt target nhưng <b class="good">${pace}/${tip.length} (${(pacePc*100).toFixed(1)}%)</b> đang vượt time-gone 43.3% — có cơ sở kỳ vọng tăng vào cuối tháng.`});
+        dsc:`Mới ${ach} outlet đạt target nhưng <b class="good">${pace}/${tip.length} (${(pacePc*100).toFixed(1)}%)</b> đang vượt time-gone ${(TIMEGONE*100).toFixed(1)}% — có cơ sở kỳ vọng tăng vào cuối tháng.`});
     } else {
       items.push({cls:'warn',ic:'⚠',ttl:'TIP cần thúc đẩy',
         dsc:`Chỉ ${ach}/${tip.length} outlet TIP đạt target và ${pace} outlet đang đúng nhịp. <b>${lagging} outlet đang chậm tiến độ</b> — nên ưu tiên xuống làm việc với các outlet này.`});
@@ -1906,7 +2171,7 @@ $('#abCta').onclick=()=>{
   $('#fAso').value='no';
   render();
   // smooth scroll to table panel
-  document.querySelector('.panel').scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelector('#outletPanel').scrollIntoView({behavior:'smooth',block:'start'});
 };
 
 // TIP module bucket cards — click to filter table
@@ -1918,7 +2183,7 @@ function filterToTipBucket(bucket){
   $('#fStatus').value=bucket;
   $('#fAso').value='';
   render();
-  document.querySelector('.tbl-scroll').scrollIntoView({behavior:'smooth',block:'start'});
+  document.querySelector('#outletPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
 document.querySelectorAll('.bd-card[data-bucket]').forEach(el=>{
   el.onclick=()=>filterToTipBucket(el.dataset.bucket);
@@ -1927,8 +2192,26 @@ document.querySelectorAll('table.outlets thead th').forEach(th=>th.onclick=()=>{
   const k=th.dataset.k;
   if(sortK===k)sortDir*=-1;
   else{sortK=k;sortDir=(['target','actual','pct','balance','id'].includes(k))?-1:1}
+  syncMobileSort();
   renderTable();
 });
+
+// Mobile sort select — mirrors sortK/sortDir for card view
+function syncMobileSort(){
+  const sel=$('#mobileSortSel');
+  if(!sel) return;
+  const val=sortK+':'+sortDir;
+  if([...sel.options].some(o=>o.value===val)) sel.value=val;
+}
+const mobileSortSel=$('#mobileSortSel');
+if(mobileSortSel){
+  mobileSortSel.onchange=e=>{
+    const [k,dir]=e.target.value.split(':');
+    sortK=k; sortDir=parseInt(dir,10);
+    renderTable();
+  };
+  syncMobileSort();
+}
 </script>
 </body>
 </html>
