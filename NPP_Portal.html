@@ -909,6 +909,23 @@
   .s-noactive .status-dot{background:var(--hk-red)} .s-noactive{color:var(--hk-red)}
   .s-na .status-dot{background:#c0c0c0} .s-na{color:#888}
 
+  /* Type breakdown table */
+  .type-row{cursor:pointer}
+  .type-row.active{background:var(--hk-green-soft)!important}
+  .type-name{font-weight:700;color:var(--ink);font-size:13px}
+  .share-cell{display:flex;align-items:center;gap:8px;min-width:0}
+  .share-bar{flex:1;height:8px;background:#ecf2ee;border-radius:4px;overflow:hidden;min-width:40px}
+  .share-fill{height:100%;border-radius:4px}
+  .share-fill.outlet{background:linear-gradient(90deg,#9fb8ab,#c4d6cc)}
+  .share-fill.volume{background:linear-gradient(90deg,var(--hk-green),var(--hk-green-light))}
+  .share-num{font-weight:700;font-size:12px;font-variant-numeric:tabular-nums;min-width:42px;text-align:right;color:var(--ink);flex-shrink:0}
+  .share-num.strong{color:var(--hk-green-dark);font-size:13px}
+  .type-row.rank-1 .share-fill.volume{background:linear-gradient(90deg,var(--hk-green-dark),var(--hk-green))}
+  .type-row.rank-1 .type-name::before{content:'① ';color:var(--hk-green-dark)}
+  .type-row.rank-2 .type-name::before{content:'② ';color:var(--muted)}
+  .type-row.rank-3 .type-name::before{content:'③ ';color:var(--muted)}
+  .type-row-total td{background:var(--hk-green-soft);font-weight:800;border-top:2px solid var(--hk-green)}
+
   /* Tooltip for truncated cells */
   table.outlets td[title]{cursor:default}
 
@@ -916,13 +933,18 @@
   .outlet-cards{display:none}
 
   @media(max-width:1100px){
-    .tbl-scroll{overflow-x:auto}
-    table.outlets{table-layout:auto;min-width:900px}
+    #outletPanel .tbl-scroll{overflow-x:auto}
+    #outletPanel table.outlets{table-layout:auto;min-width:900px}
   }
 
   @media(max-width:860px){
-    .tbl-scroll{display:none}
+    #outletPanel .tbl-scroll{display:none}
     .outlet-cards{display:flex;flex-direction:column;gap:10px}
+
+    #typeTable{table-layout:auto;min-width:560px}
+    #typeTable th,#typeTable td{font-size:11.5px;padding:8px 8px}
+    #typeTable .share-bar{min-width:50px}
+    #typeTable .type-name{font-size:12.5px}
 
     .oc-card{
       border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff;
@@ -959,15 +981,7 @@
   }
 
   /* Bottom row */
-  .grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;margin-top:18px}
-
-  .barlist{display:flex;flex-direction:column;gap:10px}
-  .barrow{display:grid;grid-template-columns:160px 1fr 80px;gap:12px;align-items:center;font-size:12.5px;padding:4px 6px;border-radius:6px;cursor:pointer}
-  .barrow:hover{background:var(--hk-green-soft)}
-  .barrow .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis}
-  .barrow .ctrack{height:18px;background:#ecf2ee;border-radius:5px;overflow:hidden}
-  .barrow .cfill{height:100%;background:linear-gradient(90deg,var(--hk-green),var(--hk-green-light));border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:7px;color:#fff;font-size:10.5px;font-weight:700;transition:width .5s}
-  .barrow .cnt{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink);text-align:right}
+  .grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-top:18px}
 
   .recap{display:flex;flex-direction:column;gap:10px}
   .recap-item{display:flex;align-items:flex-start;gap:12px;padding:14px;background:#fafdfa;border:1px solid var(--line);border-left:3px solid var(--hk-green);border-radius:10px}
@@ -1005,12 +1019,6 @@
     }
     .kpi:hover{transform:none}
     .kpi .val{font-size:28px}
-
-    /* Type breakdown bars */
-    .barrow{grid-template-columns:1fr;gap:4px;padding:8px 6px}
-    .barrow .nm{font-size:12px}
-    .barrow .ctrack{height:22px}
-    .barrow .cnt{text-align:left;font-size:11px;color:var(--muted);font-weight:600}
 
     /* Recap items */
     .recap-item{padding:12px}
@@ -1079,7 +1087,7 @@
       Liên hệ Sales Admin nếu quên thông tin đăng nhập.
     </div>
   </div>
-  <div class="login-foot">Kỳ báo cáo: <b>Tháng 6/2026</b> · Dữ liệu cập nhật <b>11:06 15/06/2026</b></div>
+  <div class="login-foot">Kỳ báo cáo: <b>Tháng 6/2026</b> · Dữ liệu cập nhật <b>11:13 15/06/2026</b></div>
 </div>
 
 <!-- ================ DASHBOARD ================ -->
@@ -1101,7 +1109,7 @@
         <div class="blk"><span class="lab">Kỳ</span><span class="vl">T6/2026</span></div>
         <div class="blk"><span class="lab">Ngày</span><span class="vl">15/30</span></div>
         <div class="blk"><span class="lab">Time gone</span><span class="vl">50.0%</span></div>
-        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">11:06 15/06/2026</span></div>
+        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">11:13 15/06/2026</span></div>
       </div>
       <div class="top-user">
         <div class="info">
@@ -1129,7 +1137,7 @@
           <span class="mm-lab">Time gone</span><span class="mm-val">50.0%</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">11:06 15/06/2026</span>
+          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">11:13 15/06/2026</span>
         </div>
       </div>
     </div>
@@ -1347,6 +1355,43 @@
       </div>
     </section>
 
+    <div class="grid2">
+      <!-- Type breakdown — moved above outlet detail, now with Volume columns -->
+      <div class="panel">
+        <div class="panel-hd">
+          <div>
+            <h2>Phân bổ outlet theo <span class="accent">Type</span></h2>
+            <div class="meta">Click vào dòng để lọc bảng chi tiết bên dưới theo Type</div>
+          </div>
+        </div>
+        <div class="tbl-scroll" style="max-height:none">
+          <table class="outlets" id="typeTable">
+            <colgroup>
+              <col style="width:24%">
+              <col style="width:11%">
+              <col style="width:20%">
+              <col style="width:12%">
+              <col style="width:33%">
+            </colgroup>
+            <thead><tr>
+              <th>Type</th>
+              <th class="num">Số outlet</th>
+              <th>Tỷ trọng outlet</th>
+              <th class="num">Volume</th>
+              <th>Tỷ trọng volume</th>
+            </tr></thead>
+            <tbody id="typeList"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Personal recap -->
+      <div class="panel">
+        <div class="panel-hd"><h2>Phân tích <span class="accent">dành cho bạn</span></h2></div>
+        <div class="recap" id="recap"></div>
+      </div>
+    </div>
+
     <!-- OUTLET DETAIL TABLE - MAIN -->
     <div class="panel" id="outletPanel">
       <div class="panel-hd">
@@ -1370,6 +1415,8 @@
       </div>
 
       <div class="chips" id="chips">
+        <div class="chip-grp" id="grpArea" style="display:none"><label>Khu vực</label><select id="fArea"></select></div>
+        <div class="chip-grp" id="grpNpp" style="display:none"><label>NPP</label><select id="fNpp"></select></div>
         <div class="chip-grp"><label>ASO</label><select id="fAso">
           <option value="">Tất cả</option>
           <option value="yes">✓ Đã bán (Actual &gt; 0)</option>
@@ -1417,20 +1464,6 @@
       <div class="outlet-cards" id="outletCards"></div>
     </div>
 
-    <div class="grid2">
-      <!-- Type breakdown -->
-      <div class="panel">
-        <div class="panel-hd"><h2>Phân bổ outlet theo <span class="accent">Type</span></h2></div>
-        <div class="barlist" id="typeList"></div>
-      </div>
-
-      <!-- Personal recap -->
-      <div class="panel">
-        <div class="panel-hd"><h2>Phân tích <span class="accent">dành cho bạn</span></h2></div>
-        <div class="recap" id="recap"></div>
-      </div>
-    </div>
-
     <div class="foot-attribution">
       <span class="star">★</span> Confidential · Internal use only · <b id="footUser">—</b> <span class="star">★</span>
     </div>
@@ -1450,18 +1483,21 @@ const TIMEGONE=0.5;
 const KPI=0.93;
 
 let CURRENT={code:'',npp:'',area:'',rows:[]};
-let F={type:'',prog:'',status:'',sr:'',aso:''};
+let F={type:'',prog:'',status:'',sr:'',aso:'',area:'',npp:''};
 let search='';
 let sortK='actual',sortDir=-1;
 
 // ============ LOGIN ============
 function tryLogin(u,p){
+  if(u.trim().toLowerCase()==='admin' && p.trim()==='12345'){
+    return {code:'ADMIN', npp:'Toàn bộ NPP', area:'Tất cả khu vực', rows:DATA, isAdmin:true};
+  }
   const code=Object.keys(CREDS).find(k=>k.toLowerCase()===u.toLowerCase());
   if(!code) return null;
   if(CREDS[code]!==p.trim()) return null;
   const rows=DATA.filter(r=>r.nppCode===code);
   if(!rows.length) return null;
-  return {code, npp:rows[0].npp, area:rows[0].area, rows};
+  return {code, npp:rows[0].npp, area:rows[0].area, rows, isAdmin:false};
 }
 
 $('#loginForm').addEventListener('submit',e=>{
@@ -1491,6 +1527,9 @@ function enterDash(){
   $('#welcomeName').textContent=CURRENT.npp+' ('+CURRENT.code+')';
   $('#mmUser').textContent=CURRENT.code+' · '+CURRENT.area;
   $('#footUser').textContent=CURRENT.npp;
+  $('#grpArea').style.display=CURRENT.isAdmin?'':'none';
+  $('#grpNpp').style.display=CURRENT.isAdmin?'':'none';
+  F.area=''; F.npp='';
   render();
   renderAllocation();
 }
@@ -1535,6 +1574,8 @@ function filtered(){
     if(F.type&&d.type!==F.type)return false;
     if(F.prog&&d.program!==F.prog)return false;
     if(F.sr&&d.sr!==F.sr)return false;
+    if(F.area&&d.area!==F.area)return false;
+    if(F.npp&&d.nppCode!==F.npp)return false;
     if(F.aso==='yes' && !(d.actual>0))return false;
     if(F.aso==='no' && d.actual>0)return false;
     if(F.status){const s=statusOf(d).key;if(s!==F.status)return false}
@@ -1547,6 +1588,17 @@ function render(){
   fillSel('#fType',uniq(CURRENT.rows,'type'),'Tất cả');
   fillSel('#fProg',uniq(CURRENT.rows,'program'),'Tất cả');
   fillSel('#fSR',uniq(CURRENT.rows,'sr'),'Tất cả');
+
+  if(CURRENT.isAdmin){
+    fillSel('#fArea',uniq(CURRENT.rows,'area'),'Tất cả khu vực');
+    // NPP select: value = nppCode, label = npp name (code)
+    const nppMap={};
+    CURRENT.rows.forEach(d=>{if(!nppMap[d.nppCode])nppMap[d.nppCode]=d.npp});
+    const nppCodes=Object.keys(nppMap).sort((a,b)=>a.localeCompare(b,'vi'));
+    const selNpp=$('#fNpp'); const curNpp=selNpp.value;
+    selNpp.innerHTML='<option value="">Tất cả NPP</option>'+nppCodes.map(c=>`<option value="${esc(c)}">${esc(c)} — ${esc(nppMap[c])}</option>`).join('');
+    if(curNpp&&[...selNpp.options].some(o=>o.value===curNpp))selNpp.value=curNpp;
+  }
 
   const all=CURRENT.rows;
   const total=all.length;
@@ -1983,7 +2035,7 @@ function renderTable(){
 const WEEK_DATES={'W25':'15/06 – 20/06'};
 
 function renderAllocation(){
-  const rows=ALLOC.filter(d=>d.npp===CURRENT.code);
+  const rows=CURRENT.isAdmin ? ALLOC : ALLOC.filter(d=>d.npp===CURRENT.code);
   const weeks=[...new Set(rows.map(d=>d.week))].sort();
 
   const sel=$('#fAllocWeek');
@@ -2057,17 +2109,47 @@ $('#fAllocWeek').addEventListener('change',renderAllocation);
 function renderTypeList(){
   const rows=filtered();
   const g={};
-  rows.forEach(d=>{if(!g[d.type])g[d.type]={type:d.type,n:0,v:0};g[d.type].n++;g[d.type].v+=d.actual});
-  const arr=Object.values(g).sort((a,b)=>b.n-a.n);
-  const max=Math.max(1,...arr.map(x=>x.n));
-  const tot=arr.reduce((s,x)=>s+x.n,0)||1;
-  $('#typeList').innerHTML=arr.map(x=>`
-    <div class="barrow" data-type="${esc(x.type)}">
-      <div class="nm" title="${esc(x.type)}">${esc(x.type)}</div>
-      <div class="ctrack"><div class="cfill" style="width:${Math.max(15,x.n/max*100)}%">${x.n}</div></div>
-      <div class="cnt">${(x.n/tot*100).toFixed(1)}%</div>
-    </div>`).join('') || '<div style="text-align:center;padding:30px;color:#888">Không có dữ liệu</div>';
-  document.querySelectorAll('#typeList .barrow').forEach(el=>el.onclick=()=>{
+  rows.forEach(d=>{if(!g[d.type])g[d.type]={type:d.type,n:0,v:0};g[d.type].n++;g[d.type].v+=(d.actual||0)});
+  const arr=Object.values(g).sort((a,b)=>b.v-a.v);
+  const totN=arr.reduce((s,x)=>s+x.n,0)||1;
+  const totV=arr.reduce((s,x)=>s+x.v,0)||1;
+  let body=arr.map((x,i)=>{
+    const pctN=x.n/totN*100, pctV=x.v/totV*100;
+    const rankCls=i===0?'rank-1':(i===1?'rank-2':(i===2?'rank-3':''));
+    const activeCls=F.type===x.type?'active':'';
+    return `<tr class="type-row ${rankCls} ${activeCls}" data-type="${esc(x.type)}">
+      <td><div class="type-name">${esc(x.type)}</div></td>
+      <td class="num">${fmt(x.n)}</td>
+      <td>
+        <div class="share-cell">
+          <div class="share-bar"><div class="share-fill outlet" style="width:${Math.max(pctN,1.5)}%"></div></div>
+          <span class="share-num">${pctN.toFixed(1)}%</span>
+        </div>
+      </td>
+      <td class="num"><b>${fmt(x.v)}</b></td>
+      <td>
+        <div class="share-cell">
+          <div class="share-bar"><div class="share-fill volume" style="width:${Math.max(pctV,1.5)}%"></div></div>
+          <span class="share-num strong">${pctV.toFixed(1)}%</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  if(arr.length){
+    body+=`<tr class="type-row-total">
+      <td><b>Tổng cộng</b></td>
+      <td class="num"><b>${fmt(totN)}</b></td>
+      <td></td>
+      <td class="num"><b>${fmt(totV)}</b></td>
+      <td></td>
+    </tr>`;
+  } else {
+    body='<tr><td colspan="5" style="text-align:center;padding:30px;color:#888">Không có dữ liệu</td></tr>';
+  }
+
+  $('#typeList').innerHTML=body;
+  document.querySelectorAll('#typeList .type-row').forEach(el=>el.onclick=()=>{
     const v=el.dataset.type;F.type=(F.type===v?'':v);$('#fType').value=F.type;render();
   });
 }
@@ -2158,10 +2240,10 @@ $('#search').oninput=e=>{
   clearTimeout(searchTimer);
   searchTimer=setTimeout(()=>{search=v;renderTable()},120);
 };
-['fType','fProg','fSR','fStatus','fAso'].forEach(id=>{
+['fType','fProg','fSR','fStatus','fAso','fArea','fNpp'].forEach(id=>{
   $('#'+id).onchange=e=>{
     const key=id.slice(1).toLowerCase();
-    F[key==='status'?'status':key]=e.target.value;
+    F[key]=e.target.value;
     render();
   };
 });
