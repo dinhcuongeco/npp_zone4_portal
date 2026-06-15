@@ -187,6 +187,27 @@
   .welcome h1 .hl{color:var(--hk-green)}
   .welcome p{font-size:13.5px;color:var(--muted);max-width:760px}
 
+  .admin-view-as{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;
+    padding:10px 14px;background:var(--hk-green-soft);border:1px solid var(--hk-green);
+    border-radius:10px;
+  }
+  .admin-view-as label{font-size:12px;font-weight:700;color:var(--hk-green-dark);letter-spacing:.02em}
+  .admin-view-as select{
+    appearance:none;font:inherit;font-size:13px;font-weight:600;padding:6px 28px 6px 10px;
+    border:1px solid var(--hk-green);border-radius:8px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300863C'/%3E%3C/svg%3E") no-repeat right 10px center;
+    color:var(--ink);cursor:pointer;min-width:240px;
+  }
+  .view-as-badge{
+    font-size:12px;font-weight:700;color:var(--hk-green-dark);display:flex;align-items:center;gap:8px;
+  }
+  .view-as-badge button{
+    font:inherit;font-size:12px;font-weight:800;padding:6px 12px;border-radius:8px;
+    border:1.5px solid var(--hk-green-dark);background:#fff;color:var(--hk-green-dark);cursor:pointer;
+    transition:all .15s;
+  }
+  .view-as-badge button:hover{background:var(--hk-green-dark);color:#fff}
+
   .mobile-meta{display:none}
 
   .container{max-width:1400px;margin:0 auto;padding:0 24px}
@@ -197,6 +218,11 @@
     .welcome h1{font-size:19px}
     .welcome p{display:none}
     .container{padding:0 14px}
+
+    .admin-view-as{flex-direction:column;align-items:stretch}
+    .admin-view-as select{width:100%;min-width:0;min-height:44px}
+    .view-as-badge{flex-direction:column;align-items:stretch;gap:6px}
+    .view-as-badge button{width:100%;min-height:40px}
 
     .mobile-meta{
       display:grid;grid-template-columns:1fr 1fr;gap:8px;
@@ -896,7 +922,7 @@
   .pct-fill.good{background:linear-gradient(90deg,var(--hk-green),var(--hk-green-light))}
   .pct-fill.mid{background:linear-gradient(90deg,var(--hk-gold),#e8c95e)}
   .pct-fill.bad{background:linear-gradient(90deg,#cc4848,#e36868)}
-  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:50.0%;width:1.5px;background:rgba(0,0,0,.45)}
+  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:53.3%;width:1.5px;background:rgba(0,0,0,.45)}
   .pct-num{font-weight:700;min-width:36px;text-align:right;font-variant-numeric:tabular-nums;font-size:11.5px;flex-shrink:0}
   .pct-num.good{color:var(--hk-green-dark)} .pct-num.mid{color:#7a5e0a} .pct-num.bad{color:var(--hk-red)}
   .pct-num.zero{color:#b8b8b8;font-weight:500}
@@ -1160,7 +1186,7 @@
       Liên hệ Sales Admin nếu quên thông tin đăng nhập.
     </div>
   </div>
-  <div class="login-foot">Kỳ báo cáo: <b>Tháng 6/2026</b> · Dữ liệu cập nhật <b>16:24 15/06/2026</b></div>
+  <div class="login-foot">Kỳ báo cáo: <b>Tháng 6/2026</b> · Dữ liệu cập nhật <b>06:11 16/06/2026</b></div>
 </div>
 
 <!-- ================ DASHBOARD ================ -->
@@ -1180,9 +1206,9 @@
       </div>
       <div class="top-period">
         <div class="blk"><span class="lab">Kỳ</span><span class="vl">T6/2026</span></div>
-        <div class="blk"><span class="lab">Ngày</span><span class="vl">15/30</span></div>
-        <div class="blk"><span class="lab">Time gone</span><span class="vl">50.0%</span></div>
-        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">16:24 15/06/2026</span></div>
+        <div class="blk"><span class="lab">Ngày</span><span class="vl">16/30</span></div>
+        <div class="blk"><span class="lab">Time gone</span><span class="vl">53.3%</span></div>
+        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">06:11 16/06/2026</span></div>
       </div>
       <div class="top-user">
         <div class="info">
@@ -1199,18 +1225,27 @@
     <div class="welcome-inner">
       <h1>Chào mừng <span class="hl" id="welcomeName">—</span></h1>
       <p>Đây là báo cáo riêng cho NPP của bạn — các chỉ tiêu ASO, TIP, và chi tiết từng outlet đang được giao quản lý. Click vào tiêu đề cột để sắp xếp, dùng ô tìm kiếm để lọc nhanh outlet cần xem.</p>
+
+      <div class="admin-view-as" id="adminViewAs" style="display:none">
+        <label for="viewAsNpp">Xem dashboard như</label>
+        <select id="viewAsNpp">
+          <option value="">— Toàn bộ NPP (Admin) —</option>
+        </select>
+        <span class="view-as-badge" id="viewAsBadge" style="display:none">Đang xem thay NPP — <button id="backToAdmin" type="button">↩ Về tổng quan Admin</button></span>
+      </div>
+
       <div class="mobile-meta" id="mobileMeta">
         <div class="mm-row">
           <span class="mm-lab">Mã NPP</span><span class="mm-val" id="mmUser">—</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Kỳ báo cáo</span><span class="mm-val">T6/2026 · Ngày 15/30</span>
+          <span class="mm-lab">Kỳ báo cáo</span><span class="mm-val">T6/2026 · Ngày 16/30</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Time gone</span><span class="mm-val">50.0%</span>
+          <span class="mm-lab">Time gone</span><span class="mm-val">53.3%</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">16:24 15/06/2026</span>
+          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">06:11 16/06/2026</span>
         </div>
       </div>
     </div>
@@ -1243,7 +1278,7 @@
       <div class="kpi k5">
         <div class="lab">Vượt time-gone</div>
         <div class="val" id="kPace">0</div>
-        <div class="sub" id="kPaceSub">% ≥ 50.0%</div>
+        <div class="sub" id="kPaceSub">% ≥ 53.3%</div>
       </div>
     </div>
 
@@ -1593,7 +1628,7 @@ const ALLOC=[{"week": "W25", "npp": "HMcc", "item": "HS2", "itemCode": 10128309,
 <script>
 const $=s=>document.querySelector(s);
 const fmt=n=>Math.round(n||0).toLocaleString('vi-VN');
-const TIMEGONE=0.5;
+const TIMEGONE=0.5333333333333333;
 const KPI=0.93;
 
 let CURRENT={code:'',npp:'',area:'',rows:[]};
@@ -1632,18 +1667,64 @@ $('#loginForm').addEventListener('submit',e=>{
 $('#userIn').addEventListener('input',()=>$('#loginError').classList.remove('show'));
 $('#passIn').addEventListener('input',()=>$('#loginError').classList.remove('show'));
 
-function enterDash(){
-  $('#loginPage').style.display='none';
-  $('#dashPage').classList.add('show');
+function refreshHeaderUI(){
   $('#userName').textContent=CURRENT.code;
   $('#userMeta').textContent=CURRENT.area;
   $('#userAvatar').textContent=CURRENT.code.substring(0,Math.min(3,CURRENT.code.length)).toUpperCase();
   $('#welcomeName').textContent=CURRENT.npp+' ('+CURRENT.code+')';
   $('#mmUser').textContent=CURRENT.code+' · '+CURRENT.area;
   $('#footUser').textContent=CURRENT.npp;
+}
+
+// ADMIN_SESSION holds the original admin login — preserved while "viewing as" an NPP
+let ADMIN_SESSION=null;
+
+function setupAdminViewAs(){
+  ADMIN_SESSION=CURRENT;
+  const nppMap={};
+  DATA.forEach(d=>{if(!nppMap[d.nppCode])nppMap[d.nppCode]=d.npp});
+  const codes=Object.keys(nppMap).sort((a,b)=>a.localeCompare(b,'vi'));
+  const sel=$('#viewAsNpp');
+  sel.innerHTML='<option value="">— Toàn bộ NPP (Admin) —</option>'
+    +codes.map(c=>`<option value="${esc(c)}">${esc(c)} — ${esc(nppMap[c])}</option>`).join('');
+  $('#adminViewAs').style.display='';
+  $('#viewAsBadge').style.display='none';
+  sel.value='';
+}
+
+function applyViewAs(code){
+  if(!code){
+    // Back to full admin view
+    CURRENT=ADMIN_SESSION;
+    $('#viewAsBadge').style.display='none';
+    $('#grpArea').style.display='';
+    $('#grpNpp').style.display='';
+    $('#adminOverview').style.display='';
+  } else {
+    // View as a specific NPP — recompute all NPP-scoped modules on its subset
+    const rows=DATA.filter(r=>r.nppCode===code);
+    CURRENT={code, npp:rows[0].npp, area:rows[0].area, rows, isAdmin:false, viaAdmin:true};
+    $('#viewAsBadge').style.display='';
+    $('#grpArea').style.display='none';
+    $('#grpNpp').style.display='none';
+    $('#adminOverview').style.display='none';
+  }
+  F.area=''; F.npp=''; F.type=''; F.prog=''; F.status=''; F.sr=''; F.aso=''; search='';
+  $('#search').value='';
+  refreshHeaderUI();
+  render();
+  renderAllocation();
+}
+
+function enterDash(){
+  $('#loginPage').style.display='none';
+  $('#dashPage').classList.add('show');
+  refreshHeaderUI();
   $('#grpArea').style.display=CURRENT.isAdmin?'':'none';
   $('#grpNpp').style.display=CURRENT.isAdmin?'':'none';
   $('#adminOverview').style.display=CURRENT.isAdmin?'':'none';
+  $('#adminViewAs').style.display=CURRENT.isAdmin?'':'none';
+  if(CURRENT.isAdmin) setupAdminViewAs();
   F.area=''; F.npp='';
   render();
   renderAllocation();
@@ -1652,9 +1733,20 @@ function enterDash(){
 $('#logoutBtn').onclick=()=>{
   try{ sessionStorage.removeItem('npp_session'); }catch(e){}
   CURRENT={code:'',npp:'',area:'',rows:[]};
+  ADMIN_SESSION=null;
   $('#dashPage').classList.remove('show');
   $('#loginPage').style.display='flex';
+  $('#adminViewAs').style.display='none';
   $('#userIn').value=''; $('#passIn').value='';
+};
+
+// View-as NPP events (admin only)
+$('#viewAsNpp').onchange=e=>{
+  applyViewAs(e.target.value);
+};
+$('#backToAdmin').onclick=()=>{
+  $('#viewAsNpp').value='';
+  applyViewAs('');
 };
 
 // Restore session
@@ -1933,7 +2025,7 @@ function renderChannelMix(){
 }
 
 // ============ TIP MODULE — Editorial render ============
-const DAYS_LEFT = 15;
+const DAYS_LEFT = 14;
 
 // Smooth count-up animation
 function countUp(el, target, duration=900){
