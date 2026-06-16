@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NPP Portal — Cổng nhà phân phối</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --hk-green:#00863C;
@@ -14,6 +17,8 @@
     --hk-red:#E30613;
     --hk-gold:#D4B43B;
     --ink:#0F1A14;
+    --ink-soft:#4A5E52;
+    --ink-mid:#2E4035;
     --paper:#F4F7F4;
     --card:#FFFFFF;
     --line:#E0E5E0;
@@ -22,9 +27,11 @@
     --shadow:0 2px 8px rgba(0,40,20,.06),0 16px 40px rgba(0,40,20,.08);
     --shadow-lg:0 20px 60px rgba(0,80,30,.15);
     --r:14px;
+    --bottom-nav-h:64px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Inter','Helvetica Neue',system-ui,-apple-system,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+  .dash.show{padding-bottom:0} /* overridden on mobile */
 
   /* ================ LOGIN PAGE ================ */
   .login-page{
@@ -80,7 +87,7 @@
   .login-row input{
     width:100%;font:inherit;font-size:15px;padding:13px 16px;
     border:1.5px solid var(--line);border-radius:10px;background:#fafdfa;
-    transition:all .2s;color:var(--ink);font-weight:500;
+    transition:border-color .2s, box-shadow .2s, background-color .2s;color:var(--ink);font-weight:500;
   }
   .login-row input:focus{
     outline:none;border-color:var(--hk-green);background:#fff;
@@ -94,7 +101,7 @@
     background:linear-gradient(135deg,var(--hk-green),var(--hk-green-dark));
     color:#fff;border-radius:10px;margin-top:8px;
     box-shadow:0 4px 12px rgba(0,134,60,.3);
-    transition:all .2s;
+    transition:transform .2s, box-shadow .2s;
   }
   .login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,134,60,.4)}
   .login-btn:active{transform:translateY(0)}
@@ -130,6 +137,7 @@
     color:#fff;padding:18px 0;
     position:sticky;top:0;z-index:50;
     box-shadow:0 2px 12px rgba(0,40,20,.15);
+    will-change:transform;
   }
   .topbar-inner{
     max-width:1400px;margin:0 auto;padding:0 24px;
@@ -163,7 +171,7 @@
   .top-logout{
     background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);
     padding:8px 14px;font-size:12px;font-weight:600;border-radius:8px;cursor:pointer;
-    font-family:inherit;transition:all .2s;
+    font-family:inherit;transition:background .2s,box-shadow .2s;
   }
   .top-logout:hover{background:rgba(255,255,255,.2)}
 
@@ -204,7 +212,7 @@
   .view-as-badge button{
     font:inherit;font-size:12px;font-weight:800;padding:6px 12px;border-radius:8px;
     border:1.5px solid var(--hk-green-dark);background:#fff;color:var(--hk-green-dark);cursor:pointer;
-    transition:all .15s;
+    transition:background .15s,color .15s;
   }
   .view-as-badge button:hover{background:var(--hk-green-dark);color:#fff}
 
@@ -240,6 +248,7 @@
     background:var(--card);border:1px solid var(--line);border-radius:var(--r);
     padding:18px 20px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
     transition:transform .2s,box-shadow .2s;
+    will-change:transform;
   }
   .kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
   .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
@@ -298,7 +307,7 @@
     font:inherit;font-size:12px;font-weight:700;letter-spacing:.04em;
     padding:10px 18px;cursor:pointer;border-radius:8px;border:none;
     background:#fff;color:var(--hk-red);border:1.5px solid var(--hk-red);
-    transition:all .15s;white-space:nowrap;
+    transition:background .15s,color .15s;white-space:nowrap;
   }
   .aso-banner .ab-cta:hover{background:var(--hk-red);color:#fff}
   .aso-banner.pass .ab-cta{color:var(--hk-green-dark);border-color:var(--hk-green)}
@@ -395,6 +404,7 @@
   .bd-card{
     padding:11px 13px;border-radius:12px;cursor:pointer;
     transition:transform .18s cubic-bezier(.2,.7,.2,1),box-shadow .18s ease,filter .18s ease;
+    will-change:transform;
     position:relative;display:grid;grid-template-columns:1fr auto;gap:8px;
     align-items:center;overflow:hidden;border:1px solid transparent;
   }
@@ -550,7 +560,7 @@
   .pri-row .go-arrow{
     width:32px;height:32px;border-radius:50%;background:#f4f0e6;
     display:flex;align-items:center;justify-content:center;color:var(--ink);
-    font-size:13px;transition:all .2s ease;
+    font-size:13px;transition:background .2s ease,color .2s ease,transform .2s ease;
   }
   .pri-row:hover .go-arrow{background:var(--hk-green);color:#fff;transform:translateX(3px)}
 
@@ -1146,6 +1156,262 @@
   @media(prefers-reduced-motion:reduce){
     *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   }
+
+  /* ============================================================
+     BOTTOM NAVIGATION — Mobile only, 5 sections
+     ============================================================ */
+  .bottom-nav{display:none}
+
+  @media(max-width:860px){
+    .bottom-nav{
+      display:flex;position:fixed;bottom:0;left:0;right:0;z-index:100;
+      background:#fff;border-top:1px solid var(--line);
+      box-shadow:0 -4px 16px rgba(0,40,20,.08);
+      height:var(--bottom-nav-h);padding:0 4px;
+      padding-bottom:env(safe-area-inset-bottom,0px);
+    }
+    .bn-item{
+      flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:3px;padding:8px 4px;cursor:pointer;border:none;background:none;
+      font-family:inherit;color:var(--muted);text-decoration:none;
+      transition:color .15s;-webkit-tap-highlight-color:transparent;
+      position:relative;overflow:hidden;
+    }
+    .bn-item::after{
+      content:'';position:absolute;top:0;left:10%;right:10%;height:2px;
+      background:var(--hk-green);border-radius:0 0 3px 3px;
+      transform:scaleX(0);transition:transform .2s;
+    }
+    .bn-item.active,.bn-item:hover{color:var(--hk-green-dark)}
+    .bn-item.active::after{transform:scaleX(1)}
+    .bn-ico{font-size:20px;line-height:1}
+    .bn-lbl{font-size:10px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+
+    /* Push content above bottom nav */
+    .dash.show{padding-bottom:calc(var(--bottom-nav-h) + env(safe-area-inset-bottom,0px))}
+  }
+
+  /* ============================================================
+     KPI SCROLL DOTS — Mobile carousel indicator
+     ============================================================ */
+  .kpi-dots{display:none}
+
+  @media(max-width:860px){
+    .kpi-dots{
+      display:flex;justify-content:center;gap:6px;margin-top:10px;
+    }
+    .kpi-dot{
+      width:6px;height:6px;border-radius:50%;background:var(--line);
+      transition:background .2s,transform .2s;cursor:pointer;
+    }
+    .kpi-dot.active{background:var(--hk-green);transform:scale(1.4)}
+  }
+
+  /* ============================================================
+     OUTLET TABLE — Sticky first column on mobile horizontal scroll
+     ============================================================ */
+  @media(max-width:1100px){
+    #outletPanel .tbl-scroll{
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+    #outletPanel table.outlets{table-layout:auto;min-width:900px}
+    /* Sticky mã outlet column */
+    #outletPanel table.outlets th:first-child,
+    #outletPanel table.outlets td:first-child{
+      position:sticky;left:0;z-index:1;
+      background:#fff;
+      box-shadow:2px 0 6px rgba(0,40,20,.07);
+    }
+    #outletPanel table.outlets th:first-child{
+      background:var(--hk-green-dark);
+      z-index:3;
+    }
+    #outletPanel table.outlets tbody tr:nth-child(even) td:first-child{background:#fafdfa}
+    #outletPanel table.outlets tbody tr:hover td:first-child{background:var(--hk-green-soft)}
+  }
+
+  /* ============================================================
+     LOAD MORE BUTTON — progressive disclosure for outlet list
+     ============================================================ */
+  .load-more-wrap{
+    text-align:center;padding:16px 0 4px;
+  }
+  .load-more-btn{
+    font:inherit;font-size:13px;font-weight:700;padding:10px 28px;
+    border:1.5px solid var(--hk-green);border-radius:8px;
+    background:#fff;color:var(--hk-green-dark);cursor:pointer;
+    transition:background .15s,color .15s;
+  }
+  .load-more-btn:hover{background:var(--hk-green-soft)}
+  .load-more-info{font-size:12px;color:var(--muted);margin-top:6px}
+
+  /* ============================================================
+     NPP COMPARE TABLE — Sort headers + tfoot totals
+     ============================================================ */
+  .npc-th{cursor:pointer;user-select:none}
+  .npc-th:hover{background:var(--hk-green)!important}
+  .npc-th .ar{opacity:.45;font-size:9px;margin-left:3px}
+  .npc-th.sort-asc .ar,.npc-th.sort-desc .ar{opacity:1;color:#fff}
+  .npc-th.sort-asc .ar::before{content:'↑'}
+  .npc-th.sort-desc .ar::before{content:'↓'}
+  .npc-th .ar::before{content:'↕'}
+
+  #nppCompareFoot td{
+    background:var(--hk-green-soft);font-weight:800;
+    border-top:2px solid var(--hk-green);padding:10px 10px;
+    font-size:12.5px;font-variant-numeric:tabular-nums;vertical-align:middle;
+  }
+  #nppCompareFoot .foot-label{font-weight:800;color:var(--hk-green-dark);font-size:13px}
+  #nppCompareFoot .foot-sub{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
+  #nppCompareFoot .foot-pct{font-size:13px;font-weight:800;color:var(--hk-green-dark);font-variant-numeric:tabular-nums}
+  #nppCompareFoot .foot-kpi{display:flex;align-items:center;gap:6px;min-width:0}
+  #nppCompareFoot .foot-kpi .pct-bar{flex:1;height:8px;min-width:36px}
+
+  /* ============================================================
+     ALLOCATION MODULE — View toggle + sortable headers + tfoot
+     ============================================================ */
+  .alloc-view-toggle{
+    display:flex;gap:0;border:1.5px solid var(--hk-green);border-radius:8px;overflow:hidden;
+  }
+  .avt-btn{
+    font:inherit;font-size:12px;font-weight:700;padding:7px 14px;border:none;cursor:pointer;
+    background:#fff;color:var(--hk-green-dark);
+    transition:background .15s,color .15s;
+    border-right:1px solid var(--hk-green);
+  }
+  .avt-btn{
+    font:inherit;font-size:12px;font-weight:700;padding:7px 14px;border:none;cursor:pointer;
+    background:#fff;color:var(--hk-green-dark);
+    transition:background .15s,color .15s;
+    border-right:1px solid var(--hk-green);
+  }
+  .avt-btn:last-child{border-right:none}
+  .avt-btn:hover{background:var(--hk-green-soft)}
+  .avt-btn.active{background:var(--hk-green);color:#fff}
+
+  /* Allocation Key Metrics Strip */
+  .alloc-kpi-strip{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+    padding:12px 22px 16px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,#f8fbf9,#fff);
+  }
+  .aks-card{display:flex;flex-direction:column;gap:3px}
+  .aks-lab{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .aks-val{font-size:20px;font-weight:800;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums}
+  .aks-sub{font-size:11px;color:var(--muted);font-weight:500}
+  .aks-sub b{color:var(--hk-green-dark);font-weight:700}
+
+  @media(max-width:860px){
+    .alloc-kpi-strip{grid-template-columns:repeat(2,1fr);padding:10px 14px 14px}
+    .aks-val{font-size:17px}
+  }
+
+  /* Item rank badge */
+  .item-rank{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:20px;height:20px;border-radius:6px;font-size:10px;font-weight:800;
+    margin-right:8px;flex-shrink:0;vertical-align:middle;
+  }
+  .item-rank.r1{background:#FFD700;color:#7a5a00}
+  .item-rank.r2{background:#C0C0C0;color:#444}
+  .item-rank.r3{background:#CD7F32;color:#fff}
+  .item-rank.rn{background:#eef3ef;color:var(--muted)}
+
+  /* Batch Mix badge */
+  .batch-mix{
+    display:inline-flex;align-items:center;gap:0;border-radius:5px;overflow:hidden;
+    font-size:10.5px;font-weight:700;height:18px;
+  }
+  .batch-mix .bm-b1{background:#3b82f6;color:#fff;padding:0 5px}
+  .batch-mix .bm-b2{background:#8b5cf6;color:#fff;padding:0 5px}
+  .batch-mix.only-b1 .bm-b1{background:var(--hk-green)}
+  .batch-mix.no-b2 .bm-b2{background:#e0e0e0;color:#999}
+
+  /* Tỷ trọng column */
+  .pct-share-cell{display:flex;align-items:center;gap:6px;min-width:0}
+  .pct-share-bar{flex:1;height:7px;background:#ecf2ee;border-radius:4px;overflow:hidden;min-width:40px}
+  .pct-share-fill{height:100%;border-radius:4px}
+  .pct-share-num{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;min-width:38px;text-align:right;flex-shrink:0}
+
+  /* B2=0 badge */
+  .b2-zero{
+    display:inline-block;font-size:9.5px;font-weight:700;padding:1px 6px;
+    border-radius:4px;background:#fce8e8;color:var(--hk-red);margin-left:4px;vertical-align:middle;
+  }
+
+  /* NPP sub-rows trong item view */
+  .npp-pct-cell{display:flex;align-items:center;gap:5px;min-width:0}
+  .npp-pct-bar{flex:1;height:5px;background:#ecf2ee;border-radius:3px;overflow:hidden;min-width:30px}
+  .npp-pct-fill{height:100%;border-radius:3px;background:var(--hk-green-light)}
+
+  .alloc-th{cursor:pointer;user-select:none}
+  .alloc-th:hover{background:var(--hk-green)!important}
+  .alloc-th .ar{opacity:.4;font-size:9px;margin-left:3px}
+  .alloc-th.sort-asc .ar,.alloc-th.sort-desc .ar{opacity:1;color:#fff}
+  .alloc-th.sort-asc .ar::before{content:'↑'}
+  .alloc-th.sort-desc .ar::before{content:'↓'}
+  .alloc-th .ar::before{content:'↕'}
+
+  #allocFoot td{
+    background:var(--hk-green-soft);font-weight:800;
+    border-top:2px solid var(--hk-green);padding:10px 10px;
+    font-size:12.5px;font-variant-numeric:tabular-nums;vertical-align:middle;
+  }
+
+  /* Item summary mode — highlight item name more prominently */
+  #allocTable .item-sum-row td:first-child{
+    font-weight:800;color:var(--hk-green-dark);font-size:13px;
+  }
+  #allocTable .item-sum-row:hover{background:var(--hk-green-soft)}
+  .item-expand-ico{
+    display:inline-block;width:16px;height:16px;margin-right:6px;
+    font-size:9px;color:var(--hk-green);font-style:normal;
+    transition:transform .15s;vertical-align:middle;
+  }
+  #allocTable .item-npp-row{background:#fafdfa;animation:fadeInRow .15s ease-out}
+  #allocTable .item-npp-row:hover{background:var(--hk-green-soft)}
+  #allocTable .item-npp-row td{border-top:1px dashed var(--line)!important}
+  @keyframes fadeInRow{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+  @media(max-width:860px){
+    .alloc-view-toggle{width:100%}
+    .avt-btn{flex:1;padding:10px 8px;font-size:11.5px}
+  }
+
+  /* ============================================================
+     NPP COMPARE TABLE — Active row when viewAsNpp selected
+     ============================================================ */
+  .npp-row.is-viewing{
+    background:var(--hk-green-soft)!important;
+    outline:2px solid var(--hk-green);
+    outline-offset:-2px;
+  }
+  .npp-row.is-viewing .npp-name{color:var(--hk-green-dark)}
+
+  /* ============================================================
+     FILTER CHIPS — Collapsible on mobile
+     ============================================================ */
+  .chip-toggle-btn{display:none}
+
+  @media(max-width:860px){
+    .chip-toggle-btn{
+      display:flex;align-items:center;gap:6px;
+      font:inherit;font-size:12.5px;font-weight:700;
+      padding:10px 14px;border-radius:10px;
+      border:1px solid var(--line);background:#fff;color:var(--ink);
+      cursor:pointer;width:100%;margin-bottom:0;
+      justify-content:space-between;
+    }
+    .chip-toggle-btn .ct-ico{transition:transform .2s}
+    .chip-toggle-btn.open .ct-ico{transform:rotate(180deg)}
+    .chips-collapsible{
+      overflow:hidden;max-height:0;
+      transition:max-height .3s cubic-bezier(.4,0,.2,1);
+    }
+    .chips-collapsible.open{max-height:600px}
+  }
+
 </style>
 </head>
 <body>
@@ -1186,7 +1452,7 @@
       Liên hệ Sales Admin nếu quên thông tin đăng nhập.
     </div>
   </div>
-  <div class="login-foot">Kỳ báo cáo: <b>Tháng 6/2026</b> · Dữ liệu cập nhật <b>06:11 16/06/2026</b></div>
+  <div class="login-foot">Kỳ báo cáo: <b>Tháng 6/2026</b> · Dữ liệu cập nhật <b>07:35 16/06/2026</b></div>
 </div>
 
 <!-- ================ DASHBOARD ================ -->
@@ -1208,7 +1474,7 @@
         <div class="blk"><span class="lab">Kỳ</span><span class="vl">T6/2026</span></div>
         <div class="blk"><span class="lab">Ngày</span><span class="vl">16/30</span></div>
         <div class="blk"><span class="lab">Time gone</span><span class="vl">53.3%</span></div>
-        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">06:11 16/06/2026</span></div>
+        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">07:35 16/06/2026</span></div>
       </div>
       <div class="top-user">
         <div class="info">
@@ -1245,7 +1511,7 @@
           <span class="mm-lab">Time gone</span><span class="mm-val">53.3%</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">06:11 16/06/2026</span>
+          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">07:35 16/06/2026</span>
         </div>
       </div>
     </div>
@@ -1254,7 +1520,7 @@
   <div class="container">
 
     <!-- KPI CARDS -->
-    <div class="kpis">
+    <div class="kpis" id="kpiSection">
       <div class="kpi k1">
         <div class="lab">Tổng outlet</div>
         <div class="val" id="kTotal">0</div>
@@ -1280,6 +1546,15 @@
         <div class="val" id="kPace">0</div>
         <div class="sub" id="kPaceSub">% ≥ 53.3%</div>
       </div>
+    </div>
+
+    <!-- KPI scroll dots — mobile only -->
+    <div class="kpi-dots" id="kpiDots">
+      <span class="kpi-dot active" data-idx="0"></span>
+      <span class="kpi-dot" data-idx="1"></span>
+      <span class="kpi-dot" data-idx="2"></span>
+      <span class="kpi-dot" data-idx="3"></span>
+      <span class="kpi-dot" data-idx="4"></span>
     </div>
 
     <!-- ASO Action Banner — auto shows gap to KPI -->
@@ -1314,15 +1589,16 @@
             <col style="width:10%">
           </colgroup>
           <thead><tr>
-            <th>NPP</th>
-            <th class="num">Outlet</th>
-            <th class="num">Volume</th>
-            <th>ASO (≥93%)</th>
-            <th>TIP đạt target</th>
-            <th>Direct Channel (≥65%)</th>
-            <th>Mức rủi ro</th>
+            <th class="npc-th" data-col="name">NPP <span class="ar">↕</span></th>
+            <th class="npc-th num" data-col="total">Outlet <span class="ar">↕</span></th>
+            <th class="npc-th num" data-col="volume">Volume <span class="ar">↕</span></th>
+            <th class="npc-th" data-col="aso">ASO (≥93%) <span class="ar">↕</span></th>
+            <th class="npc-th" data-col="tip">TIP đạt target <span class="ar">↕</span></th>
+            <th class="npc-th" data-col="direct">Direct Channel (≥65%) <span class="ar">↕</span></th>
+            <th class="npc-th" data-col="risk">Mức rủi ro <span class="ar">↕</span></th>
           </tr></thead>
           <tbody id="nppCompareBody"></tbody>
+          <tfoot id="nppCompareFoot"></tfoot>
         </table>
       </div>
 
@@ -1340,23 +1616,32 @@
       <div class="panel-hd">
         <div>
           <h2>Số chia <span class="accent">theo tuần</span></h2>
-          <div class="meta">Phân bổ Batch 1 / Batch 2 cho từng sản phẩm — cập nhật theo tuần</div>
+          <div class="meta" id="allocMeta">Phân bổ Batch 1 / Batch 2 cho từng sản phẩm — cập nhật theo tuần</div>
         </div>
-        <div class="actions">
+        <div class="actions" style="flex-wrap:wrap;gap:8px">
           <select id="fAllocWeek" class="search" style="cursor:pointer;width:auto;min-width:120px"></select>
+          <div class="alloc-view-toggle" id="allocViewToggle" style="display:none">
+            <button class="avt-btn active" id="avt-detail" onclick="setAllocView('detail',this)">Chi tiết NPP</button>
+            <button class="avt-btn" id="avt-item" onclick="setAllocView('item',this)">Tổng hợp theo Item</button>
+          </div>
         </div>
       </div>
+
+      <!-- Key metrics strip — admin item view only -->
+      <div class="alloc-kpi-strip" id="allocKpiStrip" style="display:none"></div>
+
       <div class="tbl-scroll">
         <table class="outlets" id="allocTable">
-          <thead><tr>
-            <th>Tuần</th>
-            <th>NPP</th>
-            <th>Item</th>
-            <th class="num">Số chia Batch 1</th>
-            <th class="num">Số chia Batch 2</th>
-            <th class="num">Tổng 2 Batch</th>
+          <thead id="allocHead"><tr>
+            <th class="alloc-th" data-col="week">Tuần <span class="ar"></span></th>
+            <th class="alloc-th" data-col="npp">NPP <span class="ar"></span></th>
+            <th class="alloc-th" data-col="item">Item <span class="ar"></span></th>
+            <th class="alloc-th num" data-col="b1">Số chia Batch 1 <span class="ar"></span></th>
+            <th class="alloc-th num" data-col="b2">Số chia Batch 2 <span class="ar"></span></th>
+            <th class="alloc-th num" data-col="total">Tổng 2 Batch <span class="ar"></span></th>
           </tr></thead>
           <tbody id="allocBody"></tbody>
+          <tfoot id="allocFoot"></tfoot>
         </table>
       </div>
     </section>
@@ -1563,6 +1848,12 @@
         </div>
       </div>
 
+      <button class="chip-toggle-btn" id="chipToggleBtn" onclick="toggleChips(this)" aria-expanded="false">
+        <span>🔍 Bộ lọc <span id="chipActiveCount"></span></span>
+        <span class="ct-ico">▾</span>
+      </button>
+
+      <div class="chips-collapsible" id="chipsCollapsible">
       <div class="chips" id="chips">
         <div class="chip-grp" id="grpArea" style="display:none"><label>Khu vực</label><select id="fArea"></select></div>
         <div class="chip-grp" id="grpNpp" style="display:none"><label>NPP</label><select id="fNpp"></select></div>
@@ -1581,6 +1872,7 @@
           <option value="noactive">Chưa phát sinh bán</option>
         </select></div>
         <div class="chip-grp"><label>SR</label><select id="fSR"></select></div>
+      </div>
       </div>
 
       <div class="tbl-scroll">
@@ -1611,6 +1903,10 @@
         </table>
       </div>
       <div class="outlet-cards" id="outletCards"></div>
+      <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreRows()">Xem thêm 100 outlet ↓</button>
+        <div class="load-more-info" id="loadMoreInfo"></div>
+      </div>
     </div>
 
     <div class="foot-attribution">
@@ -1618,6 +1914,31 @@
     </div>
 
   </div>
+
+  <!-- ===== BOTTOM NAVIGATION — Mobile only ===== -->
+  <nav class="bottom-nav" id="bottomNav" aria-label="Điều hướng chính">
+    <button class="bn-item active" data-target="kpiSection" onclick="bnNav(this,'kpiSection')">
+      <span class="bn-ico">📊</span>
+      <span class="bn-lbl">Dashboard</span>
+    </button>
+    <button class="bn-item" data-target="tipCenter" onclick="bnNav(this,'tipCenter')">
+      <span class="bn-ico">🎯</span>
+      <span class="bn-lbl">TIP</span>
+    </button>
+    <button class="bn-item" data-target="channelModule" onclick="bnNav(this,'channelModule')">
+      <span class="bn-ico">📦</span>
+      <span class="bn-lbl">Channel</span>
+    </button>
+    <button class="bn-item" data-target="outletPanel" onclick="bnNav(this,'outletPanel')">
+      <span class="bn-ico">🏪</span>
+      <span class="bn-lbl">Outlet</span>
+    </button>
+    <button class="bn-item" id="bnAdmin" data-target="adminOverview" onclick="bnNav(this,'adminOverview')" style="display:none">
+      <span class="bn-ico">⚡</span>
+      <span class="bn-lbl">Admin</span>
+    </button>
+  </nav>
+
 </div>
 
 <script>
@@ -1711,6 +2032,15 @@ function applyViewAs(code){
   }
   F.area=''; F.npp=''; F.type=''; F.prog=''; F.status=''; F.sr=''; F.aso=''; search='';
   $('#search').value='';
+  // Reset allocation view mode theo loại user
+  allocViewMode = (CURRENT.isAdmin && !CURRENT.viaAdmin) ? 'item' : 'detail';
+  allocSortCol=''; allocSortDir=1;
+  document.querySelectorAll('.avt-btn').forEach(b=>{
+    b.classList.toggle('active',
+      (b.id==='avt-item' && allocViewMode==='item') ||
+      (b.id==='avt-detail' && allocViewMode==='detail')
+    );
+  });
   refreshHeaderUI();
   render();
   renderAllocation();
@@ -1726,8 +2056,20 @@ function enterDash(){
   $('#adminViewAs').style.display=CURRENT.isAdmin?'':'none';
   if(CURRENT.isAdmin) setupAdminViewAs();
   F.area=''; F.npp='';
+  // Admin mặc định xem "Tổng hợp theo Item", user thường xem "Chi tiết NPP"
+  allocViewMode = CURRENT.isAdmin && !CURRENT.viaAdmin ? 'item' : 'detail';
+  allocSortCol=''; allocSortDir=1;
+  // Sync toggle button state
+  const avt=document.querySelectorAll('.avt-btn');
+  avt.forEach(b=>{
+    b.classList.toggle('active',
+      (b.id==='avt-item' && allocViewMode==='item') ||
+      (b.id==='avt-detail' && allocViewMode==='detail')
+    );
+  });
   render();
   renderAllocation();
+  updateAdminBottomNav();
 }
 
 $('#logoutBtn').onclick=()=>{
@@ -1855,6 +2197,8 @@ function render(){
   renderTypeList();
   renderRecap();
   if(CURRENT.isAdmin) renderAdminOverview();
+  updateChipBadge();
+  syncNppCompareActive();
 }
 
 // ============ CHANNEL MIX — Direct vs Indirect ============
@@ -2152,99 +2496,27 @@ function renderTipCenter(){
   }
 }
 
-function renderTable(){
-  let rows=filtered();
-  rows=[...rows].sort((a,b)=>{
-    let x,y;
-    if(sortK==='status'){x=statusOf(a).key;y=statusOf(b).key}
-    else if(sortK==='terr'){x=a.terr+a.sr;y=b.terr+b.sr}
-    else{x=a[sortK];y=b[sortK]}
-    if(typeof x==='number')return ((x||0)-(y||0))*sortDir;
-    return (''+(x||'')).localeCompare(''+(y||''),'vi')*sortDir;
-  });
-
-  $('#rowCnt').textContent=fmt(rows.length);
-  const show=rows.slice(0,300);
-
-  let tableHtml='';
-  let cardHtml='';
-
-  show.forEach(d=>{
-    const st=statusOf(d);
-    const pct=d.target>0?d.actual/d.target:0;
-    const pctCls=pct===0?'zero':(pct>=1?'good':(pct>=TIMEGONE?'mid':'bad'));
-    const fillCls=pct>=1?'good':(pct>=TIMEGONE?'mid':'bad');
-    const w=Math.min(100,pct*100);
-    let pctDisp;
-    if(d.target===0){pctDisp=`<div class="pct-cell"><span style="color:#b8b8b8;font-size:11.5px">không có target</span></div>`}
-    else{pctDisp=`<div class="pct-cell"><div class="pct-bar"><div class="pct-fill ${fillCls}" style="width:${w}%"></div><div class="timeline"></div></div><span class="pct-num ${pctCls}">${(pct*100).toFixed(0)}%</span></div>`}
-    const progPill = d.program==='Target Incentive'?'<span class="pill tip">TIP · Target Incentive</span>':
-                     (d.program==='(Không có)'||d.program==='No Program')?'<span class="pill noprog">'+esc(d.program)+'</span>':
-                     '<span class="pill prog">'+esc(d.program)+'</span>';
-
-    tableHtml+=`<tr>
-      <td><span class="id-cell" title="${d.id}">${d.id}</span></td>
-      <td><div class="name-cell">${esc(d.name)}</div><div class="addr-cell">${esc(d.addr)}</div></td>
-      <td><div style="font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(d.terr)}">${esc(d.terr)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SR: ${esc(d.sr)}">SR: ${esc(d.sr)}</div></td>
-      <td><div class="type-prog-cell"><span class="type-pill" title="${esc(d.type)}">${esc(d.type)}</span>${progPill}</div></td>
-      <td class="num">${d.target?fmt(d.target):'<span style="color:#b8b8b8">—</span>'}</td>
-      <td class="num"><b>${fmt(d.actual)}</b></td>
-      <td>${pctDisp}</td>
-      <td class="num">${d.balance?fmt(d.balance):'<span style="color:#b8b8b8">—</span>'}</td>
-      <td><div class="status-cell ${st.cls}" title="${st.label}"><span class="status-dot"></span>${st.label}</div></td>
-    </tr>`;
-
-    // Mobile card — same data, denser single-column layout
-    const pctPill = d.target===0
-      ? `<span class="oc-pct zero">không có target</span>`
-      : `<span class="oc-pct ${pctCls}">${(pct*100).toFixed(0)}%</span>`;
-    const progBadge = d.program==='Target Incentive' ? '<span class="pill tip">TIP</span>' :
-                     (d.program==='(Không có)'||d.program==='No Program') ? '' :
-                     `<span class="pill prog">${esc(d.program)}</span>`;
-
-    cardHtml+=`<div class="oc-card">
-      <div class="oc-top">
-        <div class="oc-name-wrap">
-          <div class="oc-name">${esc(d.name)}</div>
-          <div class="oc-addr">${esc(d.addr)}</div>
-        </div>
-        <div class="status-cell ${st.cls} oc-status"><span class="status-dot"></span>${st.label}</div>
-      </div>
-      ${d.target>0?`<div class="oc-progress"><div class="pct-bar"><div class="pct-fill ${fillCls}" style="width:${w}%"></div><div class="timeline"></div></div>${pctPill}</div>`:''}
-      <div class="oc-stats">
-        <div class="oc-stat"><span class="oc-stat-lab">Target</span><span class="oc-stat-val">${d.target?fmt(d.target):'—'}</span></div>
-        <div class="oc-stat"><span class="oc-stat-lab">Actual</span><span class="oc-stat-val strong">${fmt(d.actual)}</span></div>
-        <div class="oc-stat"><span class="oc-stat-lab">Còn lại</span><span class="oc-stat-val">${d.balance?fmt(d.balance):'—'}</span></div>
-      </div>
-      <div class="oc-meta">
-        <span class="type-pill" title="${esc(d.type)}">${esc(d.type)}</span>
-        ${progBadge}
-        <span class="oc-id" title="${d.id}">#${d.id}</span>
-      </div>
-      <div class="oc-terr" title="${esc(d.terr)} · SR: ${esc(d.sr)}">${esc(d.terr)} · SR: ${esc(d.sr)}</div>
-    </div>`;
-  });
-
-  if(!show.length){
-    tableHtml='<tr><td colspan="9" style="text-align:center;padding:40px;color:#888">Không có outlet nào khớp bộ lọc</td></tr>';
-    cardHtml='<div style="text-align:center;padding:40px 20px;color:#888">Không có outlet nào khớp bộ lọc</div>';
-  }
-
-  $('#outletBody').innerHTML=tableHtml;
-  $('#outletCards').innerHTML=cardHtml;
-
-  if(rows.length>300){
-    const moreMsg=`Hiển thị 300 / ${fmt(rows.length)} dòng đầu — thu hẹp bộ lọc để xem chi tiết hơn`;
-    $('#outletBody').insertAdjacentHTML('beforeend',`<tr><td colspan="9" style="text-align:center;padding:14px;color:#888;font-size:12px;background:#fafdfa;font-style:italic">${moreMsg}</td></tr>`);
-    $('#outletCards').insertAdjacentHTML('beforeend',`<div style="text-align:center;padding:14px;color:#888;font-size:12px;font-style:italic">${moreMsg}</div>`);
-  }
-}
 
 const WEEK_DATES={'W25':'15/06 – 20/06'};
 
+// Sort state for allocation table
+let allocSortCol='', allocSortDir=1;
+let allocViewMode='detail'; // 'detail' | 'item'
+
+function setAllocView(mode, btn){
+  allocViewMode=mode;
+  document.querySelectorAll('.avt-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  allocSortCol=''; allocSortDir=1;
+  renderAllocation();
+}
+
 function renderAllocation(){
-  const rows=CURRENT.isAdmin ? ALLOC : ALLOC.filter(d=>d.npp===CURRENT.code);
-  const weeks=[...new Set(rows.map(d=>d.week))].sort();
+  const baseRows=CURRENT.isAdmin ? ALLOC : ALLOC.filter(d=>d.npp===CURRENT.code);
+  const weeks=[...new Set(baseRows.map(d=>d.week))].sort();
+
+  const toggle=$('#allocViewToggle');
+  if(toggle) toggle.style.display=(CURRENT.isAdmin&&!CURRENT.viaAdmin)?'':'none';
 
   const sel=$('#fAllocWeek');
   const cur=sel.value;
@@ -2255,39 +2527,68 @@ function renderAllocation(){
   if(cur && weeks.includes(cur)) sel.value=cur;
 
   const wkFilter=sel.value;
-  const show=wkFilter?rows.filter(d=>d.week===wkFilter):rows;
+  const show=wkFilter?baseRows.filter(d=>d.week===wkFilter):baseRows;
+
+  if(allocViewMode==='item' && CURRENT.isAdmin && !CURRENT.viaAdmin){
+    renderAllocItemSummary(show);
+    return;
+  }
+  const strip=$('#allocKpiStrip');
+  if(strip) strip.style.display='none';
+  renderAllocDetail(show, weeks, wkFilter);
+}
+
+function _sortAlloc(arr){
+  if(!allocSortCol) return arr;
+  return [...arr].sort((a,b)=>{
+    let va=a[allocSortCol], vb=b[allocSortCol];
+    if(['week','npp','item'].includes(allocSortCol))
+      return String(va||'').localeCompare(String(vb||''),'vi')*allocSortDir;
+    return ((va||0)-(vb||0))*allocSortDir;
+  });
+}
+
+function _allocTotalRow(colspan, label, rows, dr=''){
+  const sB1=rows.reduce((s,d)=>s+(d.b1||0),0);
+  const sB2=rows.reduce((s,d)=>s+(d.b2||0),0);
+  const sT=rows.reduce((s,d)=>s+(d.total||0),0);
+  return `<tr style="background:var(--hk-green-soft);font-weight:800;border-top:2px solid var(--hk-green)">
+    <td colspan="${colspan}">${label}${dr}</td>
+    <td class="num">${fmt(sB1)}</td>
+    <td class="num">${fmt(sB2)}</td>
+    <td class="num">${fmt(sT)}</td>
+  </tr>`;
+}
+
+function renderAllocDetail(show, weeks, wkFilter){
+  $('#allocHead').innerHTML=`<tr>
+    <th class="alloc-th" data-col="week">Tuần <span class="ar"></span></th>
+    <th class="alloc-th" data-col="npp">NPP <span class="ar"></span></th>
+    <th class="alloc-th" data-col="item">Item <span class="ar"></span></th>
+    <th class="alloc-th num" data-col="b1">Batch 1 <span class="ar"></span></th>
+    <th class="alloc-th num" data-col="b2">Batch 2 <span class="ar"></span></th>
+    <th class="alloc-th num" data-col="total">Tổng 2 Batch <span class="ar"></span></th>
+  </tr>`;
 
   let body='';
   if(show.length){
     if(wkFilter){
-      // Single week selected — group by item rows + 1 total row
-      body=show.map(d=>{
-        const dr=WEEK_DATES[d.week]?` <span style="color:var(--muted);font-size:11px">(${esc(WEEK_DATES[d.week])})</span>`:'';
-        return `<tr>
-          <td>${esc(d.week)}${dr}</td>
-          <td>${esc(d.npp)}</td>
-          <td><b>${esc(d.item)}</b></td>
-          <td class="num">${fmt(d.b1)}</td>
-          <td class="num">${fmt(d.b2)}</td>
-          <td class="num"><b>${fmt(d.total)}</b></td>
-        </tr>`;
-      }).join('');
-      const sumB1=show.reduce((s,d)=>s+(d.b1||0),0);
-      const sumB2=show.reduce((s,d)=>s+(d.b2||0),0);
-      const sumTotal=show.reduce((s,d)=>s+(d.total||0),0);
-      body+=`<tr style="background:var(--hk-green-soft);font-weight:800;border-top:2px solid var(--hk-green)">
-        <td colspan="3">Tổng cộng</td>
-        <td class="num">${fmt(sumB1)}</td>
-        <td class="num">${fmt(sumB2)}</td>
-        <td class="num">${fmt(sumTotal)}</td>
-      </tr>`;
+      const dr=WEEK_DATES[wkFilter]?` <span style="color:var(--muted);font-size:11px">(${esc(WEEK_DATES[wkFilter])})</span>`:'';
+      body=_sortAlloc(show).map(d=>`<tr>
+        <td>${esc(d.week)}${dr}</td>
+        <td>${esc(d.npp)}</td>
+        <td><b>${esc(d.item)}</b></td>
+        <td class="num">${fmt(d.b1)}</td>
+        <td class="num">${fmt(d.b2)}</td>
+        <td class="num"><b>${fmt(d.total)}</b></td>
+      </tr>`).join('');
+      body+=_allocTotalRow(3,'Tổng cộng',show,dr);
     } else {
-      // All weeks — group rows per week, each followed by a subtotal row
       weeks.forEach(w=>{
         const wkRows=show.filter(d=>d.week===w);
         if(!wkRows.length) return;
         const dr=WEEK_DATES[w]?` <span style="color:var(--muted);font-size:11px">(${esc(WEEK_DATES[w])})</span>`:'';
-        body+=wkRows.map(d=>`<tr>
+        body+=_sortAlloc(wkRows).map(d=>`<tr>
           <td>${esc(d.week)}${dr}</td>
           <td>${esc(d.npp)}</td>
           <td><b>${esc(d.item)}</b></td>
@@ -2295,24 +2596,230 @@ function renderAllocation(){
           <td class="num">${fmt(d.b2)}</td>
           <td class="num"><b>${fmt(d.total)}</b></td>
         </tr>`).join('');
-        const sumB1=wkRows.reduce((s,d)=>s+(d.b1||0),0);
-        const sumB2=wkRows.reduce((s,d)=>s+(d.b2||0),0);
-        const sumTotal=wkRows.reduce((s,d)=>s+(d.total||0),0);
-        body+=`<tr style="background:var(--hk-green-soft);font-weight:800;border-top:2px solid var(--hk-green)">
-          <td colspan="3">Tổng ${esc(w)}${dr}</td>
-          <td class="num">${fmt(sumB1)}</td>
-          <td class="num">${fmt(sumB2)}</td>
-          <td class="num">${fmt(sumTotal)}</td>
-        </tr>`;
+        body+=_allocTotalRow(3,`Tổng ${esc(w)}`,wkRows,dr);
       });
     }
   } else {
     body='<tr><td colspan="6" style="text-align:center;padding:30px;color:#888">Chưa có số chia cho NPP này</td></tr>';
   }
 
+  const gtB1=show.reduce((s,d)=>s+(d.b1||0),0);
+  const gtB2=show.reduce((s,d)=>s+(d.b2||0),0);
+  const gtT=show.reduce((s,d)=>s+(d.total||0),0);
+  $('#allocFoot').innerHTML=show.length?`<tr>
+    <td colspan="3" style="font-weight:800;color:var(--hk-green-dark)">Tổng toàn bộ</td>
+    <td class="num">${fmt(gtB1)}</td>
+    <td class="num">${fmt(gtB2)}</td>
+    <td class="num"><b>${fmt(gtT)}</b></td>
+  </tr>`:'';
+
   $('#allocBody').innerHTML=body;
+  _wireAllocSort();
 }
-$('#fAllocWeek').addEventListener('change',renderAllocation);
+
+function renderAllocItemSummary(show){
+  const itemMap={};
+  show.forEach(d=>{
+    if(!itemMap[d.item]) itemMap[d.item]={item:d.item,npps:new Set(),b1:0,b2:0,total:0,rows:[]};
+    itemMap[d.item].npps.add(d.npp);
+    itemMap[d.item].b1+=(d.b1||0);
+    itemMap[d.item].b2+=(d.b2||0);
+    itemMap[d.item].total+=(d.total||0);
+    itemMap[d.item].rows.push(d);
+  });
+  let items=Object.values(itemMap);
+  const grandTotal=items.reduce((s,x)=>s+x.total,0)||1;
+  const grandB1=items.reduce((s,x)=>s+x.b1,0);
+  const grandB2=items.reduce((s,x)=>s+x.b2,0);
+  const nppCount=[...new Set(show.map(d=>d.npp))].length;
+  const wkCount=[...new Set(show.map(d=>d.week))].length;
+
+  // Sort
+  if(allocSortCol&&['item','b1','b2','total','pct'].includes(allocSortCol)){
+    items=[...items].sort((a,b)=>{
+      const va=allocSortCol==='pct'?a.total/grandTotal:(a[allocSortCol]||0);
+      const vb=allocSortCol==='pct'?b.total/grandTotal:(b[allocSortCol]||0);
+      if(allocSortCol==='item') return String(a.item).localeCompare(String(b.item),'vi')*allocSortDir;
+      return (va-vb)*allocSortDir;
+    });
+  } else {
+    items=[...items].sort((a,b)=>b.total-a.total);
+  }
+
+  // ── Key Metrics Strip ──
+  const b1Share=(grandB1/grandTotal*100).toFixed(1);
+  const b2Share=(grandB2/grandTotal*100).toFixed(1);
+  const topItem=items[0];
+  const topPct=topItem?(topItem.total/grandTotal*100).toFixed(1):'—';
+  const strip=$('#allocKpiStrip');
+  if(strip){
+    strip.style.display='';
+    strip.innerHTML=`
+      <div class="aks-card">
+        <div class="aks-lab">Tổng phân bổ</div>
+        <div class="aks-val">${fmt(grandTotal)}</div>
+        <div class="aks-sub"><b>${wkCount}</b> tuần · <b>${items.length}</b> SKU · <b>${nppCount}</b> NPP</div>
+      </div>
+      <div class="aks-card">
+        <div class="aks-lab">Batch 1</div>
+        <div class="aks-val">${fmt(grandB1)}</div>
+        <div class="aks-sub">chiếm <b>${b1Share}%</b> tổng</div>
+      </div>
+      <div class="aks-card">
+        <div class="aks-lab">Batch 2</div>
+        <div class="aks-val">${fmt(grandB2)}</div>
+        <div class="aks-sub">chiếm <b>${b2Share}%</b> tổng${grandB2===0?' · <span style="color:var(--hk-red)">Chưa phân bổ</span>':''}</div>
+      </div>
+      <div class="aks-card">
+        <div class="aks-lab">SKU trọng tâm</div>
+        <div class="aks-val">${topItem?esc(topItem.item):'—'}</div>
+        <div class="aks-sub">dẫn đầu với <b>${topPct}%</b> tổng volume</div>
+      </div>`;
+  }
+
+  // ── Table header — 7 cột ──
+  $('#allocHead').innerHTML=`<tr>
+    <th class="alloc-th" data-col="item" style="width:18%">Item <span class="ar"></span></th>
+    <th class="num" style="background:linear-gradient(180deg,var(--hk-green-deeper),var(--hk-green-dark));color:#fff;padding:11px 10px;font-weight:600;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;position:sticky;top:0;z-index:2;width:8%">NPP</th>
+    <th class="alloc-th num" data-col="b1" style="width:13%">Batch 1 <span class="ar"></span></th>
+    <th class="alloc-th num" data-col="b2" style="width:13%">Batch 2 <span class="ar"></span></th>
+    <th class="alloc-th num" data-col="total" style="width:13%">Tổng <span class="ar"></span></th>
+    <th class="alloc-th" data-col="pct" style="width:22%">Tỷ trọng <span class="ar"></span></th>
+    <th style="background:linear-gradient(180deg,var(--hk-green-deeper),var(--hk-green-dark));color:#fff;padding:11px 10px;font-weight:600;font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;position:sticky;top:0;z-index:2;width:13%;text-align:center">Batch Mix</th>
+  </tr>`;
+
+  // ── SKU colors for bars ──
+  const skuColors=['#00863C','#3b82f6','#f59e0b','#8b5cf6','#ef4444','#06b6d4'];
+  const colorMap={};
+  items.forEach((x,i)=>colorMap[x.item]=skuColors[i%skuColors.length]);
+
+  // ── Table body ──
+  const body=items.length?items.map((x,idx)=>{
+    const rankNum=idx+1;
+    const rankCls=rankNum===1?'r1':rankNum===2?'r2':rankNum===3?'r3':'rn';
+    const pct=(x.total/grandTotal*100);
+    const barW=Math.max(pct,1);
+    const b2Zero=x.b2===0;
+    const b1Pct=x.total>0?(x.b1/x.total*100).toFixed(0):'0';
+    const b2Pct=x.total>0?(x.b2/x.total*100).toFixed(0):'0';
+    const mixCls=b2Zero?'no-b2':'';
+    return `<tr class="item-sum-row" data-item="${esc(x.item)}" style="cursor:pointer">
+      <td>
+        <span class="item-rank ${rankCls}">${rankNum}</span>
+        <span class="item-expand-ico" id="ico-${esc(x.item)}">▶</span>
+        <b>${esc(x.item)}</b>
+        ${b2Zero?'<span class="b2-zero">Chỉ B1</span>':''}
+      </td>
+      <td class="num" style="color:var(--muted)">${x.npps.size}</td>
+      <td class="num">${fmt(x.b1)}</td>
+      <td class="num">${b2Zero?'<span style="color:#ccc">—</span>':fmt(x.b2)}</td>
+      <td class="num"><b>${fmt(x.total)}</b></td>
+      <td>
+        <div class="pct-share-cell">
+          <div class="pct-share-bar">
+            <div class="pct-share-fill" style="width:${barW}%;background:${colorMap[x.item]}"></div>
+          </div>
+          <span class="pct-share-num" style="color:${colorMap[x.item]}">${pct.toFixed(1)}%</span>
+        </div>
+      </td>
+      <td style="text-align:center">
+        <span class="batch-mix ${mixCls}">
+          <span class="bm-b1">B1 ${b1Pct}%</span>
+          <span class="bm-b2">${b2Zero?'B2 —':`B2 ${b2Pct}%`}</span>
+        </span>
+      </td>
+    </tr>`;
+  }).join('')
+  :'<tr><td colspan="7" style="text-align:center;padding:30px;color:#888">Không có dữ liệu</td></tr>';
+
+  // ── Grand total footer ──
+  $('#allocFoot').innerHTML=items.length?`<tr>
+    <td style="font-weight:800;color:var(--hk-green-dark)">Tổng tất cả items</td>
+    <td class="num" style="color:var(--muted);font-weight:800">${nppCount} NPP</td>
+    <td class="num"><b>${fmt(grandB1)}</b></td>
+    <td class="num"><b>${fmt(grandB2)}</b></td>
+    <td class="num"><b>${fmt(grandTotal)}</b></td>
+    <td><div class="pct-share-cell">
+      <div class="pct-share-bar"><div class="pct-share-fill" style="width:100%;background:var(--hk-green)"></div></div>
+      <span class="pct-share-num" style="color:var(--hk-green-dark)">100%</span>
+    </div></td>
+    <td></td>
+  </tr>`:'';
+
+  $('#allocBody').innerHTML=body;
+  _wireAllocSort();
+
+  // ── Expand/collapse NPP detail per item ──
+  const expandedItems=new Set();
+  document.querySelectorAll('#allocBody .item-sum-row').forEach(tr=>{
+    tr.onclick=()=>{
+      const item=tr.dataset.item;
+      const ico=document.getElementById('ico-'+item);
+      if(expandedItems.has(item)){
+        expandedItems.delete(item);
+        document.querySelectorAll(`#allocBody .item-npp-row[data-item="${item.replace(/"/g,'\\"')}"]`).forEach(r=>r.remove());
+        if(ico) ico.textContent='▶';
+      } else {
+        expandedItems.add(item);
+        if(ico) ico.textContent='▼';
+        const x=items.find(i=>i.item===item);
+        if(!x) return;
+        const nppRows=[...x.rows].sort((a,b)=>b.total-a.total);
+        const itemColor=colorMap[item]||'var(--hk-green)';
+        const subHtml=nppRows.map((d,ni)=>{
+          const nppPct=x.total>0?d.total/x.total*100:0;
+          const nppB1Pct=d.total>0?(d.b1/d.total*100).toFixed(0):'0';
+          const nppB2Pct=d.total>0?(d.b2/d.total*100).toFixed(0):'0';
+          const nppB2Zero=d.b2===0;
+          return `<tr class="item-npp-row" data-item="${esc(item)}">
+            <td style="padding-left:36px;font-size:12.5px">
+              <span style="color:var(--hk-green);font-weight:700;margin-right:6px">→</span>
+              <b>${esc(d.npp)}</b>
+            </td>
+            <td class="num" style="color:var(--muted);font-size:11px">#${ni+1}</td>
+            <td class="num" style="font-size:12.5px">${fmt(d.b1)}</td>
+            <td class="num" style="font-size:12.5px">${nppB2Zero?'<span style="color:#ccc">—</span>':fmt(d.b2)}</td>
+            <td class="num" style="font-size:12.5px;font-weight:700">${fmt(d.total)}</td>
+            <td>
+              <div class="npp-pct-cell">
+                <div class="npp-pct-bar">
+                  <div class="npp-pct-fill" style="width:${Math.max(nppPct,1)}%;background:${itemColor}99"></div>
+                </div>
+                <span style="font-size:11.5px;font-weight:700;min-width:36px;text-align:right;font-variant-numeric:tabular-nums;color:${itemColor}">${nppPct.toFixed(1)}%</span>
+              </div>
+            </td>
+            <td style="text-align:center">
+              <span class="batch-mix ${nppB2Zero?'no-b2':''}">
+                <span class="bm-b1">B1 ${nppB1Pct}%</span>
+                <span class="bm-b2">${nppB2Zero?'B2 —':`B2 ${nppB2Pct}%`}</span>
+              </span>
+            </td>
+          </tr>`;
+        }).join('');
+        tr.insertAdjacentHTML('afterend', subHtml);
+      }
+    };
+  });
+}
+
+function _wireAllocSort(){
+  document.querySelectorAll('.alloc-th').forEach(th=>{
+    const col=th.dataset.col;
+    if(!col) return;
+    th.classList.remove('sort-asc','sort-desc');
+    if(col===allocSortCol) th.classList.add(allocSortDir===1?'sort-asc':'sort-desc');
+    th.onclick=()=>{
+      if(allocSortCol===col){ allocSortDir*=-1; }
+      else { allocSortCol=col; allocSortDir=1; }
+      renderAllocation();
+    };
+  });
+}
+
+$('#fAllocWeek').addEventListener('change',()=>{
+  allocSortCol=''; allocSortDir=1;
+  renderAllocation();
+});
 
 function renderTypeList(){
   const rows=filtered();
@@ -2464,6 +2971,9 @@ function computeNppMetrics(code, rows){
   return {code, total, aso, asoPc, tip, ach, achPc, volD, volI, totalVol, directPc, volume, score, issues, riskLevel};
 }
 
+// Sort state for NPP compare table
+let npcSortCol='risk', npcSortDir=-1; // default: sorted by risk desc
+
 function renderAdminOverview(){
   const rows=filtered();
   const nppMap={};
@@ -2474,9 +2984,25 @@ function renderAdminOverview(){
   rows.forEach(d=>{if(!areaOf[d.nppCode])areaOf[d.nppCode]=d.area});
 
   const list=Object.keys(nppMap).map(code=>computeNppMetrics(code, nppMap[code]));
-  list.sort((a,b)=>b.score-a.score || b.volume-a.volume);
 
-  // Comparison table
+  // Sort by selected column
+  list.sort((a,b)=>{
+    let va,vb;
+    switch(npcSortCol){
+      case 'name': va=a.code; vb=b.code; break;
+      case 'total': va=a.total; vb=b.total; break;
+      case 'volume': va=a.volume; vb=b.volume; break;
+      case 'aso': va=a.asoPc||0; vb=b.asoPc||0; break;
+      case 'tip': va=a.achPc??-1; vb=b.achPc??-1; break;
+      case 'direct': va=a.directPc??-1; vb=b.directPc??-1; break;
+      case 'risk': va=a.score; vb=b.score; break;
+      default: va=a.score; vb=b.score;
+    }
+    if(typeof va==='string') return va.localeCompare(vb,'vi')*npcSortDir;
+    return (va-vb)*npcSortDir;
+  });
+
+  // Comparison table body
   $('#nppCompareBody').innerHTML=list.map(m=>{
     const riskLabel = m.riskLevel==='high'?'Cao':(m.riskLevel==='medium'?'Trung bình':'Thấp');
     return `<tr class="npp-row" data-npp="${esc(m.code)}">
@@ -2493,12 +3019,80 @@ function renderAdminOverview(){
     </tr>`;
   }).join('') || '<tr><td colspan="7" style="text-align:center;padding:30px;color:#888">Không có dữ liệu</td></tr>';
 
+  // Tfoot — totals & weighted averages
+  if(list.length){
+    const totOutlet=list.reduce((s,m)=>s+m.total,0);
+    const totVolume=list.reduce((s,m)=>s+m.volume,0);
+    // Weighted average ASO: sum(aso outlets) / sum(total outlets)
+    const totAso=list.reduce((s,m)=>s+m.aso,0);
+    const avgAsoPc=totOutlet?totAso/totOutlet:0;
+    // Weighted average TIP: sum(ach) / sum(tip.length) across NPPs with TIP
+    const totTipAch=list.reduce((s,m)=>s+m.ach,0);
+    const totTip=list.reduce((s,m)=>s+m.tip.length,0);
+    const avgTipPc=totTip?totTipAch/totTip:null;
+    // Weighted average Direct: sum(volD) / sum(totalVol)
+    const totVolD=list.reduce((s,m)=>s+(m.volD||0),0);
+    const totVolAll=list.reduce((s,m)=>s+(m.totalVol||0),0);
+    const avgDirectPc=totVolAll?totVolD/totVolAll:null;
+    const highCount=list.filter(m=>m.riskLevel==='high').length;
+
+    $('#nppCompareFoot').innerHTML=`<tr>
+      <td>
+        <div class="foot-label">Tổng / Bình quân</div>
+        <div class="foot-sub">${list.length} NPP đang hiển thị</div>
+      </td>
+      <td class="num">
+        <div class="foot-label">${fmt(totOutlet)}</div>
+        <div class="foot-sub">outlets</div>
+      </td>
+      <td class="num">
+        <div class="foot-label">${fmt(totVolume)}</div>
+        <div class="foot-sub">thùng</div>
+      </td>
+      <td>
+        <div class="foot-kpi">${nppKpiCell(avgAsoPc,KPI)}</div>
+        <div class="foot-sub">avg có trọng số</div>
+      </td>
+      <td>
+        <div class="foot-kpi">${nppKpiCell(avgTipPc,0.30,'—')}</div>
+        <div class="foot-sub">avg có trọng số</div>
+      </td>
+      <td>
+        <div class="foot-kpi">${nppKpiCell(avgDirectPc,CH_KPI,'—')}</div>
+        <div class="foot-sub">avg có trọng số</div>
+      </td>
+      <td>
+        <span class="risk-pill ${highCount>0?'high':'low'}">
+          <span class="dot"></span>${highCount} rủi ro cao
+        </span>
+      </td>
+    </tr>`;
+  } else {
+    $('#nppCompareFoot').innerHTML='';
+  }
+
+  // Wire up row click → drill into NPP
   document.querySelectorAll('#nppCompareBody .npp-row').forEach(el=>el.onclick=()=>{
     const code=el.dataset.npp;
     F.npp=(F.npp===code?'':code);
     $('#fNpp').value=F.npp;
     render();
     document.querySelector('#outletPanel').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+
+  // Wire up sortable headers
+  document.querySelectorAll('.npc-th').forEach(th=>{
+    const col=th.dataset.col;
+    // Update arrow indicator
+    th.classList.remove('sort-asc','sort-desc');
+    if(col===npcSortCol){
+      th.classList.add(npcSortDir===1?'sort-asc':'sort-desc');
+    }
+    th.onclick=()=>{
+      if(npcSortCol===col){ npcSortDir*=-1; }
+      else { npcSortCol=col; npcSortDir=-1; }
+      renderAdminOverview();
+    };
   });
 
   // Risk action plan — high-risk NPPs only
@@ -2634,6 +3228,193 @@ if(mobileSortSel){
   };
   syncMobileSort();
 }
+
+// ============================================================
+// BOTTOM NAVIGATION
+// ============================================================
+function bnNav(btn, targetId){
+  document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const el=document.getElementById(targetId);
+  if(el){
+    const topbarH=$('#dashPage .topbar')?.offsetHeight||60;
+    const y=el.getBoundingClientRect().top+window.scrollY-topbarH-8;
+    window.scrollTo({top:y,behavior:'smooth'});
+  }
+}
+
+// ============================================================
+// KPI SCROLL DOTS
+// ============================================================
+(function initKpiDots(){
+  const kpis=$('#kpiSection');
+  const dots=document.querySelectorAll('.kpi-dot');
+  if(!kpis||!dots.length) return;
+  kpis.addEventListener('scroll',()=>{
+    const w=kpis.offsetWidth;
+    const idx=Math.round(kpis.scrollLeft/w*0.78);
+    dots.forEach((d,i)=>d.classList.toggle('active',i===Math.min(idx,4)));
+  },{passive:true});
+  dots.forEach(d=>d.onclick=()=>{
+    const i=+d.dataset.idx;
+    kpis.scrollTo({left:i*(kpis.offsetWidth*0.78),behavior:'smooth'});
+  });
+})();
+
+// ============================================================
+// COLLAPSIBLE FILTER CHIPS (mobile)
+// ============================================================
+function toggleChips(btn){
+  const cc=$('#chipsCollapsible');
+  const isOpen=cc.classList.toggle('open');
+  btn.classList.toggle('open',isOpen);
+  btn.setAttribute('aria-expanded',isOpen);
+}
+
+// Update chip active count badge
+function updateChipBadge(){
+  const active=[F.type,F.prog,F.status,F.sr,F.aso,F.area,F.npp].filter(Boolean).length;
+  const el=$('#chipActiveCount');
+  if(!el) return;
+  el.textContent=active?`(${active} đang lọc)`:'';
+  el.style.color=active?'var(--hk-green-dark)':'';
+}
+
+// ============================================================
+// PROGRESSIVE LOAD MORE — outlet table & cards
+// ============================================================
+let rowsShown=100;
+const ROWS_PER_PAGE=100;
+
+// Override renderTable to use progressive loading
+const _origRenderTable=renderTable;
+let _allRows=[];
+
+function renderTable(){
+  let rows=filtered();
+  rows=[...rows].sort((a,b)=>{
+    let x,y;
+    if(sortK==='status'){x=statusOf(a).key;y=statusOf(b).key}
+    else if(sortK==='terr'){x=a.terr+a.sr;y=b.terr+b.sr}
+    else{x=a[sortK];y=b[sortK]}
+    if(typeof x==='number')return ((x||0)-(y||0))*sortDir;
+    return (''+(x||'')).localeCompare(''+(y||''),'vi')*sortDir;
+  });
+  _allRows=rows;
+  rowsShown=ROWS_PER_PAGE;
+  $('#rowCnt').textContent=fmt(rows.length);
+  _renderRowsUpTo(ROWS_PER_PAGE);
+  updateLoadMore();
+  syncMobileSort();
+  updateChipBadge();
+}
+
+function _renderRowsUpTo(n){
+  const show=_allRows.slice(0,n);
+  let tableHtml='';
+  let cardHtml='';
+  show.forEach(d=>{
+    const st=statusOf(d);
+    const pct=d.target>0?d.actual/d.target:0;
+    const pctCls=pct===0?'zero':(pct>=1?'good':(pct>=TIMEGONE?'mid':'bad'));
+    const fillCls=pct>=1?'good':(pct>=TIMEGONE?'mid':'bad');
+    const w=Math.min(100,pct*100);
+    let pctDisp;
+    if(d.target===0){pctDisp=`<div class="pct-cell"><span style="color:#b8b8b8;font-size:11.5px">không có target</span></div>`}
+    else{pctDisp=`<div class="pct-cell"><div class="pct-bar"><div class="pct-fill ${fillCls}" style="width:${w}%"></div><div class="timeline"></div></div><span class="pct-num ${pctCls}">${(pct*100).toFixed(0)}%</span></div>`}
+    const progPill = d.program==='Target Incentive'?'<span class="pill tip">TIP · Target Incentive</span>':
+                     (d.program==='(Không có)'||d.program==='No Program')?'<span class="pill noprog">'+esc(d.program)+'</span>':
+                     '<span class="pill prog">'+esc(d.program)+'</span>';
+    tableHtml+=`<tr>
+      <td><span class="id-cell" title="${d.id}">${d.id}</span></td>
+      <td><div class="name-cell">${esc(d.name)}</div><div class="addr-cell">${esc(d.addr)}</div></td>
+      <td><div style="font-size:11.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(d.terr)}">${esc(d.terr)}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SR: ${esc(d.sr)}">SR: ${esc(d.sr)}</div></td>
+      <td><div class="type-prog-cell"><span class="type-pill" title="${esc(d.type)}">${esc(d.type)}</span>${progPill}</div></td>
+      <td class="num">${d.target?fmt(d.target):'<span style="color:#b8b8b8">—</span>'}</td>
+      <td class="num"><b>${fmt(d.actual)}</b></td>
+      <td>${pctDisp}</td>
+      <td class="num">${d.balance?fmt(d.balance):'<span style="color:#b8b8b8">—</span>'}</td>
+      <td><div class="status-cell ${st.cls}" title="${st.label}"><span class="status-dot"></span>${st.label}</div></td>
+    </tr>`;
+    const pctPill = d.target===0
+      ? `<span class="oc-pct zero">không có target</span>`
+      : `<span class="oc-pct ${pctCls}">${(pct*100).toFixed(0)}%</span>`;
+    const progBadge = d.program==='Target Incentive' ? '<span class="pill tip">TIP</span>' :
+                     (d.program==='(Không có)'||d.program==='No Program') ? '' :
+                     `<span class="pill prog">${esc(d.program)}</span>`;
+    cardHtml+=`<div class="oc-card">
+      <div class="oc-top">
+        <div class="oc-name-wrap"><div class="oc-name">${esc(d.name)}</div><div class="oc-addr">${esc(d.addr)}</div></div>
+        <div class="status-cell ${st.cls} oc-status"><span class="status-dot"></span>${st.label}</div>
+      </div>
+      ${d.target>0?`<div class="oc-progress"><div class="pct-bar"><div class="pct-fill ${fillCls}" style="width:${w}%"></div><div class="timeline"></div></div>${pctPill}</div>`:''}
+      <div class="oc-stats">
+        <div class="oc-stat"><span class="oc-stat-lab">Target</span><span class="oc-stat-val">${d.target?fmt(d.target):'—'}</span></div>
+        <div class="oc-stat"><span class="oc-stat-lab">Actual</span><span class="oc-stat-val strong">${fmt(d.actual)}</span></div>
+        <div class="oc-stat"><span class="oc-stat-lab">Còn lại</span><span class="oc-stat-val">${d.balance?fmt(d.balance):'—'}</span></div>
+      </div>
+      <div class="oc-meta">
+        <span class="type-pill" title="${esc(d.type)}">${esc(d.type)}</span>
+        ${progBadge}
+        <span class="oc-id" title="${d.id}">#${d.id}</span>
+      </div>
+      <div class="oc-terr" title="${esc(d.terr)} · SR: ${esc(d.sr)}">${esc(d.terr)} · SR: ${esc(d.sr)}</div>
+    </div>`;
+  });
+
+  if(!show.length){
+    tableHtml='<tr><td colspan="9" style="text-align:center;padding:40px;color:#888">Không có outlet nào khớp bộ lọc</td></tr>';
+    cardHtml='<div style="text-align:center;padding:40px 20px;color:#888">Không có outlet nào khớp bộ lọc</div>';
+  }
+  $('#outletBody').innerHTML=tableHtml;
+  $('#outletCards').innerHTML=cardHtml;
+}
+
+function updateLoadMore(){
+  const total=_allRows.length;
+  const wrap=$('#loadMoreWrap');
+  if(!wrap) return;
+  if(rowsShown>=total){
+    wrap.style.display='none';
+  } else {
+    wrap.style.display='';
+    const remaining=total-rowsShown;
+    $('#loadMoreBtn').textContent=`Xem thêm ${Math.min(ROWS_PER_PAGE,remaining)} outlet ↓`;
+    $('#loadMoreInfo').textContent=`Đang hiển thị ${fmt(rowsShown)} / ${fmt(total)} outlet`;
+  }
+}
+
+function loadMoreRows(){
+  rowsShown=Math.min(rowsShown+ROWS_PER_PAGE,_allRows.length);
+  _renderRowsUpTo(rowsShown);
+  updateLoadMore();
+}
+
+// ============================================================
+// SYNC NPP COMPARE TABLE active state with viewAsNpp dropdown
+// ============================================================
+function syncNppCompareActive(){
+  const code=$('#viewAsNpp')?.value||'';
+  document.querySelectorAll('#nppCompareBody .npp-row').forEach(r=>{
+    r.classList.toggle('is-viewing', r.dataset.npp===code && code!=='');
+  });
+}
+
+// Patch applyViewAs to sync active state
+const _origApplyViewAs=applyViewAs;
+// (applyViewAs already defined above — we add sync call inside render)
+
+// ============================================================
+// ADMIN Bottom Nav visibility
+// ============================================================
+function updateAdminBottomNav(){
+  const btn=$('#bnAdmin');
+  if(btn) btn.style.display=CURRENT.isAdmin?'':'none';
+}
+
+// Init
+updateAdminBottomNav();
+
 </script>
 </body>
 </html>
