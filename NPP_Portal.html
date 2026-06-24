@@ -932,7 +932,7 @@
   .pct-fill.good{background:linear-gradient(90deg,var(--hk-green),var(--hk-green-light))}
   .pct-fill.mid{background:linear-gradient(90deg,var(--hk-gold),#e8c95e)}
   .pct-fill.bad{background:linear-gradient(90deg,#cc4848,#e36868)}
-  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:76.7%;width:1.5px;background:rgba(0,0,0,.45)}
+  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:80.0%;width:1.5px;background:rgba(0,0,0,.45)}
   .pct-num{font-weight:700;min-width:36px;text-align:right;font-variant-numeric:tabular-nums;font-size:11.5px;flex-shrink:0}
   .pct-num.good{color:var(--hk-green-dark)} .pct-num.mid{color:#7a5e0a} .pct-num.bad{color:var(--hk-red)}
   .pct-num.zero{color:#b8b8b8;font-weight:500}
@@ -1442,7 +1442,7 @@
       Liên hệ Sales Admin nếu quên thông tin đăng nhập.
     </div>
   </div>
-  <div class="login-foot">Kỳ báo cáo: <b>Tháng 6/2026</b> · Dữ liệu cập nhật <b>10:10 23/06/2026</b></div>
+  <div class="login-foot">Kỳ báo cáo: <b>Tháng 6/2026</b> · Dữ liệu cập nhật <b>09:00 24/06/2026</b></div>
 </div>
 
 <!-- ================ DASHBOARD ================ -->
@@ -1462,9 +1462,9 @@
       </div>
       <div class="top-period">
         <div class="blk"><span class="lab">Kỳ</span><span class="vl">T6/2026</span></div>
-        <div class="blk"><span class="lab">Ngày</span><span class="vl">23/30</span></div>
-        <div class="blk"><span class="lab">Time gone</span><span class="vl">76.7%</span></div>
-        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">10:10 23/06/2026</span></div>
+        <div class="blk"><span class="lab">Ngày</span><span class="vl">24/30</span></div>
+        <div class="blk"><span class="lab">Time gone</span><span class="vl">80.0%</span></div>
+        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">09:00 24/06/2026</span></div>
       </div>
       <div class="top-user">
         <div class="info">
@@ -1495,13 +1495,13 @@
           <span class="mm-lab">Mã NPP</span><span class="mm-val" id="mmUser">—</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Kỳ báo cáo</span><span class="mm-val">T6/2026 · Ngày 23/30</span>
+          <span class="mm-lab">Kỳ báo cáo</span><span class="mm-val">T6/2026 · Ngày 24/30</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Time gone</span><span class="mm-val">76.7%</span>
+          <span class="mm-lab">Time gone</span><span class="mm-val">80.0%</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">10:10 23/06/2026</span>
+          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">09:00 24/06/2026</span>
         </div>
       </div>
     </div>
@@ -1534,7 +1534,7 @@
       <div class="kpi k5">
         <div class="lab">Vượt time-gone</div>
         <div class="val" id="kPace">0</div>
-        <div class="sub" id="kPaceSub">% ≥ 76.7%</div>
+        <div class="sub" id="kPaceSub">% ≥ 80.0%</div>
       </div>
     </div>
 
@@ -1939,7 +1939,7 @@ const ALLOC=[{"week": "W26 (22- 27/06)", "npp": "HMcc", "item": "HS2", "itemCode
 <script>
 const $=s=>document.querySelector(s);
 const fmt=n=>Math.round(n||0).toLocaleString('vi-VN');
-const TIMEGONE=0.7666666666666667;
+const TIMEGONE=0.8;
 const KPI=0.93;
 
 let CURRENT={code:'',npp:'',area:'',rows:[]};
@@ -2359,7 +2359,7 @@ function renderChannelMix(){
 }
 
 // ============ TIP MODULE — Editorial render ============
-const DAYS_LEFT = 7;
+const DAYS_LEFT = 6;
 
 // Smooth count-up animation
 function countUp(el, target, duration=900){
