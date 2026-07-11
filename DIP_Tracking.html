@@ -107,6 +107,39 @@ body.embedded main{padding-top:10px}
 .dn-leg-row{border-radius:8px;transition:background .15s ease}
 .dn-leg-row[style*="cursor:pointer"]:hover{background:#f2f7f3}
 .dn-leg-row[style*="cursor:pointer"]:focus-visible{outline:2px solid var(--green-deep);outline-offset:1px;background:#f2f7f3}
+
+/* Donut custom tooltip (external, thay native Chart.js tooltip) — hiện tỷ
+   trọng từng SKU trong brand đang hover dưới dạng cột ngang, thay vì liệt
+   kê text đơn thuần, để "sang trọng, dễ nhìn" hơn khi rê chuột. */
+.dn-tooltip{
+  position:absolute;top:0;left:0;z-index:20;pointer-events:none;
+  background:rgba(255,255,255,.4);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  border:1px solid var(--line);border-radius:10px;
+  box-shadow:0 10px 28px rgba(16,34,27,.16);
+  padding:10px 12px;min-width:180px;max-width:230px;
+  opacity:0;transition:opacity .12s ease;
+  transform:translate(-50%,calc(-100% - 12px));
+  font-family:'Inter',sans-serif;
+}
+.dn-tt-head{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.dn-tt-dot{width:9px;height:9px;border-radius:3px;flex:0 0 9px}
+.dn-tt-name{font-weight:700;font-size:12px;color:var(--ink);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dn-tt-val{font-size:11px;color:var(--muted);white-space:nowrap}
+.dn-tt-skulist{margin-top:7px;padding-top:7px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:5px}
+.dn-tt-row{display:grid;grid-template-columns:34px 1fr 28px;align-items:center;gap:6px}
+.dn-tt-sku{font-size:10px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dn-tt-bar-wrap{height:6px;border-radius:3px;background:#eef2ee;overflow:hidden}
+.dn-tt-bar{display:block;height:100%;border-radius:3px}
+.dn-tt-pct{font-size:10px;font-weight:700;color:var(--muted);text-align:right}
+.dn-tt-more{font-size:10px;color:#9aa79e;margin-top:2px}
+.dn-tt-hint{font-size:9.5px;color:#9aa79e;margin-top:6px;padding-top:5px;border-top:1px solid var(--line)}
+.dn-tt-foot-head{font-weight:700;font-size:11px;color:var(--ink);margin-top:6px;padding-top:6px;border-top:1px solid var(--line)}
+.dn-tt-foot-sub{font-size:10px;color:var(--muted);margin-top:6px;margin-bottom:3px}
+.dn-tt-textlist{display:flex;flex-direction:column;gap:3px}
+.dn-tt-textrow{display:grid;grid-template-columns:1fr auto auto;gap:8px;font-size:10.5px;white-space:nowrap}
+.dn-tt-textrow span:first-child{font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis}
+.dn-tt-textrow span:nth-child(2){color:var(--muted);text-align:right}
+.dn-tt-textrow span:last-child{font-weight:700;text-align:right;min-width:34px}
 .grid{display:grid}
 .grid.row-2{grid-template-columns:1.6fr 0.8fr;gap:16px;margin-bottom:16px}
 .warn{display:none;align-items:flex-start;gap:10px;background:#fdf3e0;border:1px solid #ecd9ad;color:#6d4a03;border-radius:10px;padding:10px 14px;font-size:12.5px;margin:0 0 12px}
@@ -467,18 +500,6 @@ function drawBrand(lastM){
       detail[b][s][yr===25?'c25':'c26']+=r[k];
     });
   }
-  const skuLines=b=>{
-    const d=detail[b]; if(!d) return [];
-    const items=Object.entries(d).map(([s,v])=>({s,...v,g:v.c25>0?(v.c26/v.c25-1)*100:null}))
-      .filter(x=>x.c25>0||x.c26>0).sort((x,y)=>y.c26-x.c26);
-    const lines=items.slice(0,7).map(x=>{
-      const gtxt=x.g==null?(x.c26>0?'NEW':'—'):(x.g>=0?'▲ +':'▼ ')+x.g.toFixed(0)+'%';
-      const vol=x.c26>=10000?(x.c26/1000).toFixed(0)+'K':x.c26>=1000?(x.c26/1000).toFixed(1)+'K':''+Math.round(x.c26);
-      return '  '+x.s+': '+vol+'  '+gtxt;
-    });
-    if(items.length>7) lines.push('  … +'+(items.length-7)+' mã khác');
-    return lines;
-  };
   const drillNames=[...items];
   const drillTxt=drillNames.length<=2?drillNames.join(' + '):drillNames.length+' brands';
   document.getElementById('brTitle').textContent=(drill?'SKU Breakdown — '+drillTxt:'Brand Comparison')+' — '+MET_NAME[met]+' (T1–T'+lastM+')';
@@ -516,7 +537,72 @@ function drawBrand(lastM){
     });
     ctx.restore();
   }};
+  /* Custom external tooltip — cùng ngôn ngữ thiết kế "kính mờ" với tooltip
+     donut (.dn-tooltip dùng chung): hiện tỷ trọng SKU dạng cột ngang thay
+     vì list chữ đơn thuần, nhìn chuyên nghiệp/hiện đại hơn tooltip mặc
+     định của Chart.js. */
+  const brTooltip=(context)=>{
+    const {chart, tooltip}=context;
+    let el=chart.canvas.parentNode.querySelector('.dn-tooltip');
+    if(!el){
+      el=document.createElement('div');
+      el.className='dn-tooltip';
+      chart.canvas.parentNode.appendChild(el);
+    }
+    if(tooltip.opacity===0){ el.style.opacity=0; return; }
+    const dp=tooltip.dataPoints&&tooltip.dataPoints[0];
+    const it=dp?arr[dp.dataIndex]:null;
+    if(!it){ el.style.opacity=0; return; }
+
+    const isTY=dp.datasetIndex===1;
+    const seriesColor=isTY?'#0b7a3b':'#b8c4bb';
+    const label=(isTY?'2026 (TY)':'2025 (LY)')+': '+fmtFull(isTY?it.c26:it.c25);
+    const head=it.g==null?'Brand mới (không có LY)':'Growth: '+(it.g>=0?'+':'')+it.g.toFixed(1)+'%';
+
+    /* Cấu trúc số liệu giữ nguyên như bản gốc (native Chart.js tooltip
+       trước đây): label + growth headline + tối đa 7 dòng SKU (mã, volume
+       TY, % growth vs LY) + "+N mã khác". Chỉ đổi giao diện hiển thị sang
+       card kính mờ thay vì box tooltip mặc định. */
+    let footerHtml='<div class="dn-tt-foot-head">'+head+'</div>';
+    if(!drill){
+      const d=detail[it.b];
+      const items=d?Object.entries(d).map(([s,v])=>({s,...v,g:v.c25>0?(v.c26/v.c25-1)*100:null}))
+        .filter(x=>x.c25>0||x.c26>0).sort((x,y)=>y.c26-x.c26):[];
+      if(items.length){
+        const lines=items.slice(0,7).map(x=>{
+          const gtxt=x.g==null?(x.c26>0?'NEW':'—'):(x.g>=0?'▲ +':'▼ ')+x.g.toFixed(0)+'%';
+          const vol=x.c26>=10000?(x.c26/1000).toFixed(0)+'K':x.c26>=1000?(x.c26/1000).toFixed(1)+'K':''+Math.round(x.c26);
+          return '<div class="dn-tt-textrow"><span>'+x.s+'</span><span>'+vol+'</span><span>'+gtxt+'</span></div>';
+        }).join('');
+        footerHtml+='<div class="dn-tt-foot-sub">SKU bên trong (TY · % vs LY):</div>'+
+          '<div class="dn-tt-textlist">'+lines+'</div>'+
+          (items.length>7?'<div class="dn-tt-more">+'+(items.length-7)+' mã khác</div>':'');
+      }
+    }
+
+    el.innerHTML=
+      '<div class="dn-tt-head">'+
+        '<span class="dn-tt-dot" style="background:'+seriesColor+'"></span>'+
+        '<span class="dn-tt-name">'+it.b+'</span>'+
+      '</div>'+
+      '<div class="dn-tt-val">'+label+'</div>'+
+      footerHtml;
+
+    const canvasRect={w:chart.canvas.offsetWidth};
+    const ttW=el.offsetWidth||190, ttH=el.offsetHeight||80;
+    let x=tooltip.caretX, y=tooltip.caretY;
+    x=Math.max(ttW/2+4, Math.min(canvasRect.w-ttW/2-4, x));
+    y=Math.max(ttH+16, y);
+    el.style.opacity=1;
+    el.style.left=x+'px';
+    el.style.top=y+'px';
+  };
+
   if(chBrand) chBrand.destroy();
+  // Ẩn tooltip cũ (nếu đang hiện dở) khi vẽ lại chart — tránh treo tooltip
+  // "ma" từ lần hover trước khi đổi filter mà chuột không di chuyển.
+  const staleBrTip=document.getElementById('cBrand').parentNode.querySelector('.dn-tooltip');
+  if(staleBrTip) staleBrTip.style.opacity=0;
   chBrand=new Chart(document.getElementById('cBrand'),{type:'bar',
     data:{labels:arr.map(x=>x.b),datasets:[
       {label:'2025 (LY)',data:arr.map(x=>x.c25),backgroundColor:'#b8c4bb',borderRadius:4},
@@ -525,21 +611,14 @@ function drawBrand(lastM){
     options:{maintainAspectRatio:false,layout:{padding:{top:42}},
       scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'#eef2ee'}},x:{grid:{display:false}}},
       plugins:{legend:{labels:{boxWidth:12,boxHeight:12}},
-        tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmtFull(c.parsed.y),
-          footer:its=>{
-            const it=arr[its[0].dataIndex];
-            const head=it.g==null?'Brand mới (không có LY)':'Growth: '+(it.g>=0?'+':'')+it.g.toFixed(1)+'%';
-            if(drill) return head;
-            const lines=skuLines(it.b);
-            return lines.length?[head,'','SKU bên trong (TY · % vs LY):',...lines]:head;
-          }}}}},
+        tooltip:{enabled:false, external:brTooltip}}},
     plugins:[brandLabels]
   });
 }
 
 
 /* ---------- brand mix donut (current year) ---------- */
-const BRAND_COLORS={'Heineken Original':'#064a2c','Heineken Silver':'#0b7a3b','Tiger Regular':'#d98e04','Tiger Crystal':'#e9b949','Tiger Smooth':'#a35f00','Bia Việt':'#c43d2f','Bivina':'#6f8f7f','Larue':'#5e6e64','Other':'#b8c4bb'};
+const BRAND_COLORS={'Heineken Original':'#064a2c','Heineken Silver':'#0b7a3b','Tiger Regular':'#0057a0','Tiger Crystal':'#e9b949','Tiger Smooth':'#a35f00','Bia Việt':'#c43d2f','Bivina':'#6f8f7f','Larue':'#5e6e64','Other':'#b8c4bb'};
 /* Palette riêng cho các lát SKU khi drill vào 1 brand — không cần khớp
    BRAND_COLORS vì tiêu đề đã ghi rõ đang xem SKU của brand nào. */
 const SKU_SLICE_COLORS=['#0b7a3b','#0f9d58','#3f9142','#d98e04','#e9b949','#c43d2f','#8a5a03','#6f8f7f','#5e6e64','#2f6f4f'];
@@ -583,15 +662,17 @@ function drawDonut(lastM){
   document.getElementById('dnSub').textContent = drilling
     ? 'Tỷ trọng từng SKU trong '+donutDrillBrand+' · '+MET_NAME[met]+' lũy kế T1–T'+lastM+'/2026'+(rpt==='ALL'?'':' · '+rpt)
     : 'Tỷ trọng brand trong '+MET_NAME[met]+' lũy kế T1–T'+lastM+'/2026 (toàn danh mục)'+(rpt==='ALL'?'':' · '+rpt)+' · bấm 1 lát để xem chi tiết SKU';
+  /* Cỡ chữ vẽ trên canvas được scale còn ~80% so với bản gốc (donut 280px
+     → 224px) để chữ/nhãn không bị to lấn át hình tròn đã thu nhỏ. */
   const centerText={id:'centerText',afterDraw(chart){
     const {ctx}=chart, m=chart.getDatasetMeta(0);
     if(!m.data[0]) return;
     const cx=m.data[0].x, cy=m.data[0].y;
     ctx.save();ctx.textAlign='center';
-    ctx.font="700 20px 'Barlow Condensed',sans-serif";ctx.fillStyle='#064a2c';
+    ctx.font="700 16px 'Barlow Condensed',sans-serif";ctx.fillStyle='#064a2c';
     ctx.fillText(fmt(tot),cx,cy-2);
-    ctx.font='500 10px Inter,sans-serif';ctx.fillStyle='#5e6e64';
-    ctx.fillText('thùng · T1–T'+lastM,cx,cy+13);
+    ctx.font='500 8.5px Inter,sans-serif';ctx.fillStyle='#5e6e64';
+    ctx.fillText('thùng · T1–T'+lastM,cx,cy+11);
 
     /* name + % on each slice */
     m.data.forEach((arc,ix)=>{
@@ -605,27 +686,106 @@ function drawDonut(lastM){
         const words=name.split(' ');
         const lines=words.length>1?[words[0],words.slice(1).join(' ')]:[name];
         ctx.textAlign='center';ctx.fillStyle='#fff';
-        ctx.font='600 10px Inter,sans-serif';
-        lines.forEach((ln,i)=>ctx.fillText(ln,x,y-8+(i*11)));
-        ctx.font='700 12px Inter,sans-serif';
-        ctx.fillText(pctTxt,x,y-8+(lines.length*11)+3);
+        ctx.font='600 8.5px Inter,sans-serif';
+        lines.forEach((ln,i)=>ctx.fillText(ln,x,y-7+(i*9)));
+        ctx.font='700 10px Inter,sans-serif';
+        ctx.fillText(pctTxt,x,y-7+(lines.length*9)+2);
       }else if(p>=1.5){
         /* outside with leader line */
-        const r1=arc.outerRadius+3, r2=arc.outerRadius+12;
+        const r1=arc.outerRadius+2, r2=arc.outerRadius+9;
         const x1=cx+Math.cos(ang)*r1, y1=cy+Math.sin(ang)*r1;
         const x2=cx+Math.cos(ang)*r2, y2=cy+Math.sin(ang)*r2;
         const right=Math.cos(ang)>=0;
         ctx.strokeStyle='#9aa79e';ctx.lineWidth=1;
-        ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineTo(x2+(right?8:-8),y2);ctx.stroke();
-        ctx.font='600 10px Inter,sans-serif';ctx.fillStyle='#10221b';
+        ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineTo(x2+(right?6:-6),y2);ctx.stroke();
+        ctx.font='600 8.5px Inter,sans-serif';ctx.fillStyle='#10221b';
         ctx.textAlign=right?'left':'right';
-        ctx.fillText(name+' '+pctTxt, x2+(right?11:-11), y2+3);
+        ctx.fillText(name+' '+pctTxt, x2+(right?8:-8), y2+2);
       }
     });
     ctx.restore();
   }};
   const colorFor=(name,ix)=> drilling ? SKU_SLICE_COLORS[ix%SKU_SLICE_COLORS.length] : (BRAND_COLORS[name]||'#9aa79e');
+
+  /* Tỷ trọng SKU trong từng brand (dùng cho tooltip dạng cột khi hover) —
+     chỉ cần tính khi đang ở view brand (!drilling), scope lọc giống hệt
+     vòng lặp per{} ở trên (2026, tới lastM, theo npp/rpt hiện chọn). */
+  const brandSkuMap={};
+  if(!drilling){
+    DATA.sku.forEach(r=>{
+      if(r[0]<202601||r[0]%100>lastM) return;
+      if(npp!=='ALL' && r[1]!==npp) return;
+      if(rpt!=='ALL' && r[4]!==rpt) return;
+      const b=r[3], s=r[2];
+      if(!brandSkuMap[b]) brandSkuMap[b]={};
+      brandSkuMap[b][s]=(brandSkuMap[b][s]||0)+r[k];
+    });
+  }
+
+  /* Custom external tooltip — thay tooltip mặc định của Chart.js bằng 1 thẻ
+     div tự vẽ, cho phép hiện tỷ trọng SKU bên trong brand dưới dạng cột
+     ngang (thanh màu + %) thay vì chỉ liệt kê chữ, nhìn "sang" hơn. */
+  const donutTooltip=(context)=>{
+    const {chart, tooltip}=context;
+    let el=chart.canvas.parentNode.querySelector('.dn-tooltip');
+    if(!el){
+      el=document.createElement('div');
+      el.className='dn-tooltip';
+      chart.canvas.parentNode.appendChild(el);
+    }
+    if(tooltip.opacity===0){ el.style.opacity=0; return; }
+    const dp=tooltip.dataPoints&&tooltip.dataPoints[0];
+    const item=dp?arr[dp.dataIndex]:null;
+    if(!item){ el.style.opacity=0; return; }
+
+    const pct=tot>0?item.v/tot*100:0;
+    const dotColor=colorFor(item.b, dp.dataIndex);
+    let bodyHtml='';
+    if(!drilling){
+      const skus=Object.entries(brandSkuMap[item.b]||{})
+        .map(([s,v])=>({s,v})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+      const top=skus.slice(0,5);
+      const maxV=top.length?top[0].v:1;
+      if(top.length){
+        bodyHtml='<div class="dn-tt-skulist">'+top.map(x=>{
+          const w=Math.max(6, x.v/maxV*100);
+          const p2=item.v>0?x.v/item.v*100:0;
+          return '<div class="dn-tt-row">'+
+            '<span class="dn-tt-sku">'+x.s+'</span>'+
+            '<span class="dn-tt-bar-wrap"><span class="dn-tt-bar" style="width:'+w+'%;background:'+dotColor+'"></span></span>'+
+            '<span class="dn-tt-pct">'+p2.toFixed(0)+'%</span>'+
+          '</div>';
+        }).join('');
+        if(skus.length>top.length) bodyHtml+='<div class="dn-tt-more">+'+(skus.length-top.length)+' mã khác</div>';
+        bodyHtml+='</div>';
+      }
+    }
+
+    el.innerHTML=
+      '<div class="dn-tt-head">'+
+        '<span class="dn-tt-dot" style="background:'+dotColor+'"></span>'+
+        '<span class="dn-tt-name">'+item.b+'</span>'+
+      '</div>'+
+      '<div class="dn-tt-val">'+fmtFull(item.v)+' · '+pct.toFixed(1)+'%</div>'+
+      bodyHtml+
+      (drilling?'':'<div class="dn-tt-hint">Bấm để xem chi tiết SKU</div>');
+
+    // Định vị theo điểm caret của tooltip, kẹp trong biên canvas để không tràn ra ngoài card.
+    const canvasRect={w:chart.canvas.offsetWidth,h:chart.canvas.offsetHeight};
+    const ttW=el.offsetWidth||190, ttH=el.offsetHeight||80;
+    let x=tooltip.caretX, y=tooltip.caretY;
+    x=Math.max(ttW/2+4, Math.min(canvasRect.w-ttW/2-4, x));
+    y=Math.max(ttH+16, y);
+    el.style.opacity=1;
+    el.style.left=x+'px';
+    el.style.top=y+'px';
+  };
+
   if(chDonut) chDonut.destroy();
+  // Ẩn tooltip cũ (nếu đang hiện dở) khi vẽ lại chart — tránh treo tooltip
+  // "ma" từ lần hover trước khi đổi filter mà chuột không di chuyển.
+  const staleTip=document.getElementById('cDonut').parentNode.querySelector('.dn-tooltip');
+  if(staleTip) staleTip.style.opacity=0;
   chDonut=new Chart(document.getElementById('cDonut'),{type:'doughnut',
     data:{labels:arr.map(x=>x.b),datasets:[{data:arr.map(x=>x.v),
       backgroundColor:arr.map((x,ix)=>colorFor(x.b,ix)),
@@ -640,7 +800,7 @@ function drawDonut(lastM){
       },
       onHover:(evt,els)=>{ evt.native.target.style.cursor = (!drilling && els.length) ? 'pointer' : 'default'; },
       plugins:{legend:{display:false},
-        tooltip:{callbacks:{label:c=>{const p=tot>0?c.parsed/tot*100:0;return c.label+': '+fmtFull(c.parsed)+' ('+p.toFixed(1)+'%)'+(drilling?'':' — bấm để xem SKU');}}}}},
+        tooltip:{enabled:false, external:donutTooltip}}},
     plugins:[centerText]
   });
   /* HTML legend with share % — bấm dòng legend cũng khoan sâu được, không chỉ bấm lát donut */
