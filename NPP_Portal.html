@@ -132,12 +132,16 @@
   .dash.show{display:block}
 
   /* Top bar */
-  .topbar{
-    background:linear-gradient(105deg,var(--hk-green-deeper) 0%,var(--hk-green-dark) 50%,var(--hk-green) 100%);
-    color:#fff;padding:18px 0;
+  /* app-header = topbar + quick-nav dính liền, cùng cuộn dính (sticky) như
+     1 khối thống nhất — tránh 2 vùng sticky lồng nhau lệch chiều cao nhau. */
+  .app-header{
     position:sticky;top:0;z-index:50;
     box-shadow:0 2px 12px rgba(0,40,20,.15);
     will-change:transform;
+  }
+  .topbar{
+    background:linear-gradient(105deg,var(--hk-green-deeper) 0%,var(--hk-green-dark) 50%,var(--hk-green) 100%);
+    color:#fff;padding:18px 0;
   }
   .topbar-inner{
     max-width:1400px;margin:0 auto;padding:0 24px;
@@ -932,7 +936,7 @@
   .pct-fill.good{background:linear-gradient(90deg,var(--hk-green),var(--hk-green-light))}
   .pct-fill.mid{background:linear-gradient(90deg,var(--hk-gold),#e8c95e)}
   .pct-fill.bad{background:linear-gradient(90deg,#cc4848,#e36868)}
-  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:29.0%;width:1.5px;background:rgba(0,0,0,.45)}
+  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:35.5%;width:1.5px;background:rgba(0,0,0,.45)}
   .pct-num{font-weight:700;min-width:36px;text-align:right;font-variant-numeric:tabular-nums;font-size:11.5px;flex-shrink:0}
   .pct-num.good{color:var(--hk-green-dark)} .pct-num.mid{color:#7a5e0a} .pct-num.bad{color:var(--hk-red)}
   .pct-num.zero{color:#b8b8b8;font-weight:500}
@@ -1156,6 +1160,64 @@
   @media(prefers-reduced-motion:reduce){
     *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
   }
+
+  /* ============================================================
+     QUICK NAV — Desktop/tablet, dải điều hướng cuộn nhanh nối liền dưới
+     topbar (cùng nền xanh đậm --hk-green-deeper) để đọc như 1 khối tiêu đề
+     thống nhất thay vì 1 thanh trắng tách rời. Item = pill trong suốt trên
+     nền tối; item active nổi bật bằng nền trắng đặc, tương phản rõ.
+     ============================================================ */
+  .quick-nav{
+    background:var(--hk-green-deeper);
+    padding:8px 24px;
+  }
+  .qn-list{
+    max-width:1400px;margin:0 auto;overflow-x:auto;
+    display:flex;gap:8px;list-style:none;padding:2px 0;
+  }
+  .qn-item{
+    display:flex;align-items:center;gap:7px;white-space:nowrap;
+    padding:8px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.16);
+    background:rgba(255,255,255,.07);color:rgba(255,255,255,.87);font-family:inherit;
+    font-weight:700;font-size:13px;cursor:pointer;
+    transition:background .15s ease,color .15s ease,border-color .15s ease,transform .15s ease;
+  }
+  .qn-item:hover{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.32)}
+  .qn-item:active{transform:scale(.97)}
+  .qn-item:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .qn-item.active{
+    background:#fff;border-color:#fff;color:var(--hk-green-deeper);
+    box-shadow:0 2px 8px rgba(0,20,10,.2);
+  }
+  @media(max-width:860px){.quick-nav{display:none}}
+
+  /* ============================================================
+     TRACKING DIP — iframe embed + skeleton loading state
+     ============================================================ */
+  .dip-frame-wrap{
+    position:relative;border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;background:#fff;min-height:420px;
+  }
+  .dip-frame-wrap iframe{
+    width:100%;border:0;display:block;min-height:900px;
+    opacity:0;transition:opacity .35s ease;
+  }
+  .dip-frame-wrap iframe.is-loaded{opacity:1}
+  .dip-skeleton{
+    position:absolute;inset:0;z-index:1;padding:24px;
+    display:flex;flex-direction:column;gap:14px;background:#fff;
+    transition:opacity .25s ease,visibility .25s ease;
+  }
+  .dip-skeleton.is-hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .dip-sk-row,.dip-sk-card{
+    border-radius:8px;background:linear-gradient(90deg,#eef2ee 25%,#f7faf7 37%,#eef2ee 63%);
+    background-size:400% 100%;animation:dipShimmer 1.4s ease infinite;
+  }
+  .dip-sk-row{height:16px}
+  .dip-sk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .dip-sk-card{height:70px}
+  @keyframes dipShimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+  @media(max-width:640px){.dip-sk-grid{grid-template-columns:repeat(2,1fr)}}
 
   /* ============================================================
      BOTTOM NAVIGATION — Mobile only, 5 sections
@@ -1442,39 +1504,54 @@
       Liên hệ Sales Admin nếu quên thông tin đăng nhập.
     </div>
   </div>
-  <div class="login-foot">Kỳ báo cáo: <b>Tháng 7/2026</b> · Dữ liệu cập nhật <b>09:28 09/07/2026</b></div>
+  <div class="login-foot">Kỳ báo cáo: <b>Tháng 7/2026</b> · Dữ liệu cập nhật <b>13:37 11/07/2026</b></div>
 </div>
 
 <!-- ================ DASHBOARD ================ -->
 <div class="dash" id="dashPage">
 
-  <div class="topbar">
-    <div class="topbar-inner">
-      <div class="top-brand">
-        <svg class="ico" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="46" fill="#fff"/>
-          <polygon points="50,18 58,42 84,42 63,57 71,82 50,67 29,82 37,57 16,42 42,42" fill="#E30613"/>
-        </svg>
-        <div class="tx">
-          <span class="nm">NPP Portal</span>
-          <span class="sb">Sales performance dashboard</span>
+  <!-- app-header: topbar + quick-nav dính liền thành 1 khối sticky duy nhất -->
+  <div class="app-header" id="appHeader">
+    <div class="topbar">
+      <div class="topbar-inner">
+        <div class="top-brand">
+          <svg class="ico" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="46" fill="#fff"/>
+            <polygon points="50,18 58,42 84,42 63,57 71,82 50,67 29,82 37,57 16,42 42,42" fill="#E30613"/>
+          </svg>
+          <div class="tx">
+            <span class="nm">NPP Portal</span>
+            <span class="sb">Sales performance dashboard</span>
+          </div>
         </div>
-      </div>
-      <div class="top-period">
-        <div class="blk"><span class="lab">Kỳ</span><span class="vl">T7/2026</span></div>
-        <div class="blk"><span class="lab">Ngày</span><span class="vl">9/31</span></div>
-        <div class="blk"><span class="lab">Time gone</span><span class="vl">29.0%</span></div>
-        <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">09:28 09/07/2026</span></div>
-      </div>
-      <div class="top-user">
-        <div class="info">
-          <div class="who" id="userName">—</div>
-          <div class="sub" id="userMeta">—</div>
+        <div class="top-period">
+          <div class="blk"><span class="lab">Kỳ</span><span class="vl">T7/2026</span></div>
+          <div class="blk"><span class="lab">Ngày</span><span class="vl">11/31</span></div>
+          <div class="blk"><span class="lab">Time gone</span><span class="vl">35.5%</span></div>
+          <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">13:37 11/07/2026</span></div>
         </div>
-        <div class="avatar" id="userAvatar">—</div>
-        <button class="top-logout" id="logoutBtn">Đăng xuất</button>
+        <div class="top-user">
+          <div class="info">
+            <div class="who" id="userName">—</div>
+            <div class="sub" id="userMeta">—</div>
+          </div>
+          <div class="avatar" id="userAvatar">—</div>
+          <button class="top-logout" id="logoutBtn">Đăng xuất</button>
+        </div>
       </div>
     </div>
+
+    <!-- ===== QUICK NAV — Desktop/tablet, điều hướng cuộn nhanh giữa các khu vực ===== -->
+    <nav class="quick-nav" id="quickNav" aria-label="Điều hướng nhanh giữa các khu vực">
+      <ul class="qn-list">
+        <li><button type="button" class="qn-item active" data-target="kpiSection" aria-current="true" onclick="bnNav(this,'kpiSection')"><span aria-hidden="true">📊</span> Dashboard</button></li>
+        <li><button type="button" class="qn-item" data-target="tipCenter" onclick="bnNav(this,'tipCenter')"><span aria-hidden="true">🎯</span> TIP</button></li>
+        <li><button type="button" class="qn-item" data-target="channelModule" onclick="bnNav(this,'channelModule')"><span aria-hidden="true">📦</span> Channel</button></li>
+        <li><button type="button" class="qn-item" data-target="outletPanel" onclick="bnNav(this,'outletPanel')"><span aria-hidden="true">🏪</span> Outlet</button></li>
+        <li><button type="button" class="qn-item" data-target="dipTracking" onclick="bnNav(this,'dipTracking')"><span aria-hidden="true">📈</span> Tracking DIP</button></li>
+        <li><button type="button" class="qn-item" id="qnAdmin" data-target="adminOverview" onclick="bnNav(this,'adminOverview')" style="display:none"><span aria-hidden="true">⚡</span> Admin</button></li>
+      </ul>
+    </nav>
   </div>
 
   <div class="welcome">
@@ -1495,13 +1572,13 @@
           <span class="mm-lab">Mã NPP</span><span class="mm-val" id="mmUser">—</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Kỳ báo cáo</span><span class="mm-val">T7/2026 · Ngày 9/31</span>
+          <span class="mm-lab">Kỳ báo cáo</span><span class="mm-val">T7/2026 · Ngày 11/31</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Time gone</span><span class="mm-val">29.0%</span>
+          <span class="mm-lab">Time gone</span><span class="mm-val">35.5%</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">09:28 09/07/2026</span>
+          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">13:37 11/07/2026</span>
         </div>
       </div>
     </div>
@@ -1534,7 +1611,7 @@
       <div class="kpi k5">
         <div class="lab">Vượt time-gone</div>
         <div class="val" id="kPace">0</div>
-        <div class="sub" id="kPaceSub">% ≥ 29.0%</div>
+        <div class="sub" id="kPaceSub">% ≥ 35.5%</div>
       </div>
     </div>
 
@@ -1623,12 +1700,12 @@
       <div class="tbl-scroll">
         <table class="outlets" id="allocTable">
           <thead id="allocHead"><tr>
-            <th class="alloc-th" data-col="week">Tuần <span class="ar"></span></th>
-            <th class="alloc-th" data-col="npp">NPP <span class="ar"></span></th>
-            <th class="alloc-th" data-col="item">Item <span class="ar"></span></th>
-            <th class="alloc-th num" data-col="b1">Số chia Batch 1 <span class="ar"></span></th>
-            <th class="alloc-th num" data-col="b2">Số chia Batch 2 <span class="ar"></span></th>
-            <th class="alloc-th num" data-col="total">Tổng 2 Batch <span class="ar"></span></th>
+            <th class="alloc-th" data-col="week" style="width:24%">Tuần <span class="ar"></span></th>
+            <th class="alloc-th" data-col="npp" style="width:12%">NPP <span class="ar"></span></th>
+            <th class="alloc-th" data-col="item" style="width:12%">Item <span class="ar"></span></th>
+            <th class="alloc-th num" data-col="b1" style="width:16%">Số chia Batch 1 <span class="ar"></span></th>
+            <th class="alloc-th num" data-col="b2" style="width:16%">Số chia Batch 2 <span class="ar"></span></th>
+            <th class="alloc-th num" data-col="total" style="width:20%">Tổng 2 Batch <span class="ar"></span></th>
           </tr></thead>
           <tbody id="allocBody"></tbody>
           <tfoot id="allocFoot"></tfoot>
@@ -1899,6 +1976,37 @@
       </div>
     </div>
 
+    <!-- ============================================================
+         TRACKING DIP — So sánh YoY 2026 vs 2025, khoá theo NPP đăng nhập
+         Nội dung nạp LAZY (chỉ set src cho iframe khi user cuộn tới gần
+         hoặc bấm vào tab điều hướng) để không cộng thêm ~450KB Chart.js
+         vào mọi phiên đăng nhập nếu người dùng không mở tab này.
+         ============================================================ -->
+    <section class="panel" id="dipTracking" aria-labelledby="dipTrackingTitle">
+      <header class="panel-hd">
+        <div>
+          <h2 id="dipTrackingTitle">Tracking <span class="accent">DIP</span> — So sánh 2026 vs 2025</h2>
+          <p class="meta" id="dipMeta">Đang tải dữ liệu YoY…</p>
+        </div>
+      </header>
+
+      <div class="dip-frame-wrap" id="dipFrameWrap">
+        <!-- Skeleton: hiện cho tới khi iframe báo kích thước thật lần đầu -->
+        <div class="dip-skeleton" id="dipSkeleton" aria-hidden="true">
+          <div class="dip-sk-row" style="width:55%"></div>
+          <div class="dip-sk-row" style="width:85%;height:12px"></div>
+          <div class="dip-sk-grid">
+            <div class="dip-sk-card"></div><div class="dip-sk-card"></div>
+            <div class="dip-sk-card"></div><div class="dip-sk-card"></div>
+          </div>
+          <div class="dip-sk-row" style="height:240px"></div>
+        </div>
+        <iframe id="dipFrame" data-src="DIP_Tracking.html"
+                title="Tracking DIP — biểu đồ và bảng so sánh Sell In/Out theo NPP, YoY 2026 vs 2025"
+                scrolling="no"></iframe>
+      </div>
+    </section>
+
     <div class="foot-attribution">
       <span class="star">★</span> Confidential · Internal use only · <b id="footUser">—</b> <span class="star">★</span>
     </div>
@@ -1923,6 +2031,10 @@
       <span class="bn-ico">🏪</span>
       <span class="bn-lbl">Outlet</span>
     </button>
+    <button class="bn-item" data-target="dipTracking" onclick="bnNav(this,'dipTracking')">
+      <span class="bn-ico">📈</span>
+      <span class="bn-lbl">DIP</span>
+    </button>
     <button class="bn-item" id="bnAdmin" data-target="adminOverview" onclick="bnNav(this,'adminOverview')" style="display:none">
       <span class="bn-ico">⚡</span>
       <span class="bn-lbl">Admin</span>
@@ -1939,7 +2051,7 @@ const ALLOC=[{"week": "W27 (29/06 - 04/07) ", "npp": "HMcc", "item": "HS2", "ite
 <script>
 const $=s=>document.querySelector(s);
 const fmt=n=>Math.round(n||0).toLocaleString('vi-VN');
-const TIMEGONE=0.2903225806451613;
+const TIMEGONE=0.3548387096774194;
 const KPI=0.93;
 
 let CURRENT={code:'',npp:'',area:'',rows:[]};
@@ -2034,6 +2146,67 @@ function applyViewAs(code){
   refreshHeaderUI();
   render();
   renderAllocation();
+  syncDipFrame();
+}
+
+// ============================================================
+// TRACKING DIP (YoY 2026 vs 2025) — iframe embed linked theo NPP đăng nhập
+//   - dipLoaded: iframe chỉ nhận src thật (từ data-src) khi cần, tránh tải
+//     ~450KB Chart.js/data cho những phiên không mở tab này.
+//   - dipReady: true sau khi iframe con báo DIP_READY (đã chạy xong script) —
+//     chỉ từ lúc đó mới postMessage NPP an toàn (trước đó chưa có listener).
+// ============================================================
+let dipLoaded=false, dipReady=false;
+
+function ensureDipFrameLoaded(){
+  if(dipLoaded) return;
+  const f=$('#dipFrame');
+  if(!f || !f.dataset.src) return;
+  dipLoaded=true;
+  f.src=f.dataset.src;
+}
+
+function syncDipFrame(){
+  const lockToNpp = !CURRENT.isAdmin;
+  const nppCode = CURRENT.isAdmin ? 'ALL' : CURRENT.code;
+  const meta=$('#dipMeta');
+  if(meta) meta.innerHTML = nppCode==='ALL'
+    ? 'Admin xem toàn bộ 9 NPP — có thể đổi NPP ngay trong bảng bên dưới.'
+    : 'Dữ liệu YoY khoá theo tài khoản đang đăng nhập: <b>'+esc(CURRENT.npp)+' ('+esc(nppCode)+')</b>.';
+  if(!dipReady) return;
+  const f=$('#dipFrame');
+  try{ f.contentWindow.postMessage({type:'DIP_SET_NPP', npp:nppCode, lock:lockToNpp}, '*'); }catch(e){}
+}
+
+window.addEventListener('message', e=>{
+  const d=e.data||{};
+  if(d.type==='DIP_READY'){
+    dipReady=true;
+    syncDipFrame();
+  } else if(d.type==='DIP_HEIGHT'){
+    const f=$('#dipFrame');
+    if(f){
+      f.style.height=(d.height+16)+'px';
+      f.classList.add('is-loaded');
+    }
+    const sk=$('#dipSkeleton');
+    if(sk) sk.classList.add('is-hidden');
+  }
+});
+
+// Nạp iframe khi khu vực Tracking DIP sắp lọt vào khung nhìn (cuộn tay)…
+const dipObserver = 'IntersectionObserver' in window ? new IntersectionObserver(entries=>{
+  if(entries.some(en=>en.isIntersecting)){
+    ensureDipFrameLoaded();
+    dipObserver.disconnect();
+  }
+}, {rootMargin:'200px'}) : null;
+if(dipObserver){
+  const dipSection=document.getElementById('dipTracking');
+  if(dipSection) dipObserver.observe(dipSection);
+} else {
+  // Trình duyệt cũ không hỗ trợ IntersectionObserver → nạp ngay, không lazy được.
+  ensureDipFrameLoaded();
 }
 
 function enterDash(){
@@ -2060,6 +2233,7 @@ function enterDash(){
   render();
   renderAllocation();
   updateAdminBottomNav();
+  syncDipFrame();
 }
 
 $('#logoutBtn').onclick=()=>{
@@ -2359,7 +2533,7 @@ function renderChannelMix(){
 }
 
 // ============ TIP MODULE — Editorial render ============
-const DAYS_LEFT = 22;
+const DAYS_LEFT = 20;
 
 // Smooth count-up animation
 function countUp(el, target, duration=900){
@@ -2551,13 +2725,18 @@ function _allocTotalRow(colspan, label, rows, dr=''){
 }
 
 function renderAllocDetail(show, weeks, wkFilter){
+  /* Width theo độ dài số liệu thật: Tuần kèm khoảng ngày "(15/06 – 20/06)"
+     nên rộng nhất; NPP/Item chỉ là mã ngắn (BD8, HS2…); 3 cột số dồn phần
+     còn lại. Chỉ áp cho view "Chi tiết NPP" — KHÔNG dùng <colgroup> vì
+     #allocTable còn được renderAllocItemSummary() dùng chung với thứ tự
+     cột khác, colgroup sẽ áp nhầm width sang view đó. */
   $('#allocHead').innerHTML=`<tr>
-    <th class="alloc-th" data-col="week">Tuần <span class="ar"></span></th>
-    <th class="alloc-th" data-col="npp">NPP <span class="ar"></span></th>
-    <th class="alloc-th" data-col="item">Item <span class="ar"></span></th>
-    <th class="alloc-th num" data-col="b1">Batch 1 <span class="ar"></span></th>
-    <th class="alloc-th num" data-col="b2">Batch 2 <span class="ar"></span></th>
-    <th class="alloc-th num" data-col="total">Tổng 2 Batch <span class="ar"></span></th>
+    <th class="alloc-th" data-col="week" style="width:24%">Tuần <span class="ar"></span></th>
+    <th class="alloc-th" data-col="npp" style="width:12%">NPP <span class="ar"></span></th>
+    <th class="alloc-th" data-col="item" style="width:12%">Item <span class="ar"></span></th>
+    <th class="alloc-th num" data-col="b1" style="width:16%">Batch 1 <span class="ar"></span></th>
+    <th class="alloc-th num" data-col="b2" style="width:16%">Batch 2 <span class="ar"></span></th>
+    <th class="alloc-th num" data-col="total" style="width:20%">Tổng 2 Batch <span class="ar"></span></th>
   </tr>`;
 
   let body='';
@@ -3204,12 +3383,21 @@ if(mobileSortSel){
 // BOTTOM NAVIGATION
 // ============================================================
 function bnNav(btn, targetId){
-  document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  document.querySelectorAll('.bn-item,.qn-item').forEach(b=>{
+    const isActive=b.dataset.target===targetId;
+    b.classList.toggle('active', isActive);
+    if(b.classList.contains('qn-item')){
+      if(isActive) b.setAttribute('aria-current','true'); else b.removeAttribute('aria-current');
+    }
+  });
+  if(targetId==='dipTracking') ensureDipFrameLoaded();
   const el=document.getElementById(targetId);
   if(el){
-    const topbarH=$('#dashPage .topbar')?.offsetHeight||60;
-    const y=el.getBoundingClientRect().top+window.scrollY-topbarH-8;
+    // #appHeader gồm topbar + quick-nav dính liền (cả 2 cùng sticky) — lấy
+    // tổng chiều cao của cả khối để tính điểm cuộn tới, tránh section bị
+    // header đè lên phần đầu.
+    const headerH=$('#appHeader')?.offsetHeight||60;
+    const y=el.getBoundingClientRect().top+window.scrollY-headerH-8;
     window.scrollTo({top:y,behavior:'smooth'});
   }
 }
@@ -3381,6 +3569,8 @@ const _origApplyViewAs=applyViewAs;
 function updateAdminBottomNav(){
   const btn=$('#bnAdmin');
   if(btn) btn.style.display=CURRENT.isAdmin?'':'none';
+  const qnBtn=$('#qnAdmin');
+  if(qnBtn) qnBtn.style.display=CURRENT.isAdmin?'':'none';
 }
 
 // Init
