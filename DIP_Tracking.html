@@ -884,20 +884,28 @@ function renderTargetChart(fmtK, scope){
   const hasData=aAA.some(v=>v>0)||aBB.some(v=>v>0);
   document.getElementById('emptyMain').classList.toggle('show', !hasData);
   document.getElementById('chTitle').textContent='Monthly Comparison — Sell Out vs Target theo nhóm RPT';
-  document.getElementById('chSub').textContent=scope+' · nét liền: Sell Out thực tế · nét đứt: Target · mũi tên trên điểm: % đạt Target từng tháng (2026) · T'+(CUR%100)+'/26 là MTD';
+  document.getElementById('chSub').textContent=scope+' · nét liền: Sell Out thực tế (số K thùng trên điểm) · nét đứt: Target · mũi tên: % đạt Target từng tháng (2026) · T'+(CUR%100)+'/26 là MTD';
 
   const tgtLabels={id:'tgtLabels',afterDatasetsDraw(chart){
     const {ctx}=chart;
     const mAA=chart.getDatasetMeta(1), mBB=chart.getDatasetMeta(3);
     ctx.save(); ctx.textAlign='center';
     const narrow=chart.width<640;
-    const draw=(meta,pctArr)=>{
-      pctArr.forEach((p,ix)=>{
-        if(p==null) return;
+    const draw=(meta,valArr,pctArr,valColor)=>{
+      valArr.forEach((v,ix)=>{
+        if(v==null) return;
         const pt=meta.data[ix]; if(!pt||pt.skip) return;
-        if(narrow&&ix%2!==0) return;
+        const isMTD=(202600+mm[ix])===CUR;
+        // volume Sell Out (K thùng) ngay trên điểm
+        ctx.font=(narrow?'700 9px':'700 10.5px')+' Inter,sans-serif';
+        ctx.fillStyle=isMTD?'#9aa79e':valColor;
+        ctx.textBaseline='bottom';
+        ctx.fillText(fmtK(v)+(isMTD?' MTD':''), pt.x, pt.y-10);
+        // mũi tên + % đạt Target, đẩy lên trên số volume
+        const p=pctArr[ix];
+        if(p==null||(narrow&&ix%2!==0)) return;
         const up=p>=100, col=up?'#00863C':'#E30613';
-        const ty=pt.y-22;
+        const ty=pt.y-30;
         ctx.fillStyle=col;
         ctx.beginPath();
         if(up){ctx.moveTo(pt.x,ty-5);ctx.lineTo(pt.x-4,ty+2);ctx.lineTo(pt.x+4,ty+2);}
@@ -907,7 +915,7 @@ function renderTargetChart(fmtK, scope){
         ctx.fillText(p.toFixed(0)+'%', pt.x, ty-6);
       });
     };
-    draw(mAA,pAA); draw(mBB,pBB);
+    draw(mAA,aAA,pAA,'#005F2B'); draw(mBB,aBB,pBB,'#8a5a03');
     ctx.restore();
   }};
 
@@ -931,7 +939,7 @@ function renderTargetChart(fmtK, scope){
                  borderColor:ctx=>(202600+mm[ctx.p1DataIndex])===CUR?'rgba(217,142,4,.55)':undefined}}
     ]},
     options:{maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      layout:{padding:{top:36,bottom:6,left:6,right:14}},
+      layout:{padding:{top:44,bottom:6,left:6,right:14}},
       scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'#eef2ee'},title:{display:true,text:'Volume (thùng)',font:{size:11}}},
               x:{grid:{display:false}}},
       plugins:{legend:{labels:{boxWidth:12,boxHeight:12}},
