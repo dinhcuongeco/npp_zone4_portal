@@ -29,8 +29,10 @@
     --r:14px;
     --bottom-nav-h:64px;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{font-family:'Inter','Helvetica Neue',system-ui,-apple-system,sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+  button,a,select,input,[onclick]{touch-action:manipulation}
   .dash.show{padding-bottom:0} /* overridden on mobile */
 
   /* ================ LOGIN PAGE ================ */
@@ -58,7 +60,7 @@
     width:100%;max-width:440px;
     box-shadow:var(--shadow-lg),0 0 0 1px rgba(255,255,255,.1);
     position:relative;
-    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
     animation:slideUp .6s cubic-bezier(.2,.7,.2,1);
   }
   @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -206,7 +208,7 @@
   }
   .admin-view-as label{font-size:12px;font-weight:700;color:var(--hk-green-dark);letter-spacing:.02em}
   .admin-view-as select{
-    appearance:none;font:inherit;font-size:13px;font-weight:600;padding:6px 28px 6px 10px;
+    -webkit-appearance:none;-moz-appearance:none;appearance:none;font:inherit;font-size:13px;font-weight:600;padding:6px 28px 6px 10px;
     border:1px solid var(--hk-green);border-radius:8px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300863C'/%3E%3C/svg%3E") no-repeat right 10px center;
     color:var(--ink);cursor:pointer;min-width:240px;
   }
@@ -840,6 +842,17 @@
   .panel-hd h2{font-size:17px;font-weight:800;letter-spacing:-.015em}
   .panel-hd h2 .accent{color:var(--hk-green);font-weight:800}
   .panel-hd .meta{font-size:12px;color:var(--muted);font-weight:500}
+
+  /* Đề mục chính (landmark) của quick-nav — TIP/Channel dùng .tm-title/.ch-title
+     riêng đã có eyebrow to sẵn; Outlet + Volume HVN dùng chung style này để
+     đồng bộ độ nổi bật, tách biệt rõ với bảng/card dữ liệu bên dưới. */
+  .section-eb{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:10.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--hk-green);margin-bottom:6px;
+  }
+  .section-eb::before{content:"";width:18px;height:1.5px;background:var(--hk-green);display:inline-block}
+  #outletPanel .panel-hd h2,#dipTracking .panel-hd h2{font-size:22px;letter-spacing:-.02em}
   .panel-hd .meta b{color:var(--ink);font-weight:700}
   .panel-hd .actions{display:flex;gap:8px;flex-wrap:wrap}
   .panel-hd .search{
@@ -862,7 +875,7 @@
   .chip-grp{display:flex;align-items:center;gap:6px;background:var(--hk-green-soft);padding:4px 6px 4px 12px;border-radius:20px;font-size:12px}
   .chip-grp label{font-weight:700;color:var(--hk-green-dark);letter-spacing:.04em;font-size:10.5px;text-transform:uppercase}
   .chip-grp select{
-    appearance:none;font:inherit;font-size:12.5px;padding:4px 24px 4px 8px;
+    -webkit-appearance:none;-moz-appearance:none;appearance:none;font:inherit;font-size:12.5px;padding:4px 24px 4px 8px;
     border:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300863C'/%3E%3C/svg%3E") no-repeat right 8px center;
     border-radius:16px;font-weight:600;color:var(--ink);cursor:pointer;
   }
@@ -872,6 +885,7 @@
     .panel{padding:16px 14px;margin-top:14px;border-radius:12px}
     .panel-hd{align-items:flex-start;gap:10px}
     .panel-hd h2{font-size:15px}
+    #outletPanel .panel-hd h2,#dipTracking .panel-hd h2{font-size:18px}
     .panel-hd .meta{font-size:11px;line-height:1.5}
     .panel-hd .actions{width:100%;flex-direction:column;gap:8px}
     .panel-hd .search{
@@ -880,7 +894,7 @@
     .mobile-sort{
       display:block;width:100%;font-size:14px;padding:12px 14px;min-height:48px;border-radius:10px;
       border:1px solid var(--line);font:inherit;background:#fff;
-      appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300863C'/%3E%3C/svg%3E");
+      -webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300863C'/%3E%3C/svg%3E");
       background-repeat:no-repeat;background-position:right 14px center;
     }
     .panel-hd .btn{
@@ -936,7 +950,7 @@
   .pct-fill.good{background:linear-gradient(90deg,var(--hk-green),var(--hk-green-light))}
   .pct-fill.mid{background:linear-gradient(90deg,var(--hk-gold),#e8c95e)}
   .pct-fill.bad{background:linear-gradient(90deg,#cc4848,#e36868)}
-  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:35.5%;width:1.5px;background:rgba(0,0,0,.45)}
+  .pct-bar .timeline{position:absolute;top:-2px;bottom:-2px;left:38.7%;width:1.5px;background:rgba(0,0,0,.45)}
   .pct-num{font-weight:700;min-width:36px;text-align:right;font-variant-numeric:tabular-nums;font-size:11.5px;flex-shrink:0}
   .pct-num.good{color:var(--hk-green-dark)} .pct-num.mid{color:#7a5e0a} .pct-num.bad{color:var(--hk-red)}
   .pct-num.zero{color:#b8b8b8;font-weight:500}
@@ -1504,7 +1518,7 @@
       Liên hệ Sales Admin nếu quên thông tin đăng nhập.
     </div>
   </div>
-  <div class="login-foot">Kỳ báo cáo: <b>Tháng 7/2026</b> · Dữ liệu cập nhật <b>15:20 11/07/2026</b></div>
+  <div class="login-foot">Kỳ báo cáo: <b>Tháng 7/2026</b> · Dữ liệu cập nhật <b>10:39 12/07/2026</b></div>
 </div>
 
 <!-- ================ DASHBOARD ================ -->
@@ -1526,9 +1540,9 @@
         </div>
         <div class="top-period">
           <div class="blk"><span class="lab">Kỳ</span><span class="vl">T7/2026</span></div>
-          <div class="blk"><span class="lab">Ngày</span><span class="vl">11/31</span></div>
-          <div class="blk"><span class="lab">Time gone</span><span class="vl">35.5%</span></div>
-          <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">15:20 11/07/2026</span></div>
+          <div class="blk"><span class="lab">Ngày</span><span class="vl">12/31</span></div>
+          <div class="blk"><span class="lab">Time gone</span><span class="vl">38.7%</span></div>
+          <div class="blk"><span class="lab">Dữ liệu cập nhật</span><span class="vl">10:39 12/07/2026</span></div>
         </div>
         <div class="top-user">
           <div class="info">
@@ -1548,7 +1562,7 @@
         <li><button type="button" class="qn-item" data-target="tipCenter" onclick="bnNav(this,'tipCenter')"><span aria-hidden="true">🎯</span> TIP</button></li>
         <li><button type="button" class="qn-item" data-target="channelModule" onclick="bnNav(this,'channelModule')"><span aria-hidden="true">📦</span> Channel</button></li>
         <li><button type="button" class="qn-item" data-target="outletPanel" onclick="bnNav(this,'outletPanel')"><span aria-hidden="true">🏪</span> Outlet</button></li>
-        <li><button type="button" class="qn-item" data-target="dipTracking" onclick="bnNav(this,'dipTracking')"><span aria-hidden="true">📈</span> Tracking DIP</button></li>
+        <li><button type="button" class="qn-item" data-target="dipTracking" onclick="bnNav(this,'dipTracking')"><span aria-hidden="true">📈</span> Volume HVN</button></li>
         <li><button type="button" class="qn-item" id="qnAdmin" data-target="adminOverview" onclick="bnNav(this,'adminOverview')" style="display:none"><span aria-hidden="true">⚡</span> Admin</button></li>
       </ul>
     </nav>
@@ -1572,13 +1586,13 @@
           <span class="mm-lab">Mã NPP</span><span class="mm-val" id="mmUser">—</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Kỳ báo cáo</span><span class="mm-val">T7/2026 · Ngày 11/31</span>
+          <span class="mm-lab">Kỳ báo cáo</span><span class="mm-val">T7/2026 · Ngày 12/31</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Time gone</span><span class="mm-val">35.5%</span>
+          <span class="mm-lab">Time gone</span><span class="mm-val">38.7%</span>
         </div>
         <div class="mm-row">
-          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">15:20 11/07/2026</span>
+          <span class="mm-lab">Dữ liệu cập nhật</span><span class="mm-val">10:39 12/07/2026</span>
         </div>
       </div>
     </div>
@@ -1611,7 +1625,7 @@
       <div class="kpi k5">
         <div class="lab">Vượt time-gone</div>
         <div class="val" id="kPace">0</div>
-        <div class="sub" id="kPaceSub">% ≥ 35.5%</div>
+        <div class="sub" id="kPaceSub">% ≥ 38.7%</div>
       </div>
     </div>
 
@@ -1897,6 +1911,7 @@
     <div class="panel" id="outletPanel">
       <div class="panel-hd">
         <div>
+          <div class="section-eb">Dữ liệu Outlet</div>
           <h2>Chi tiết <span class="accent">từng outlet</span></h2>
           <div class="meta">Hiển thị <b id="rowCnt">0</b> outlet · Click tiêu đề cột để sắp xếp · Phím Ctrl+F không hoạt động trong bảng — hãy dùng ô tìm kiếm bên phải</div>
         </div>
@@ -1985,7 +2000,8 @@
     <section class="panel" id="dipTracking" aria-labelledby="dipTrackingTitle">
       <header class="panel-hd">
         <div>
-          <h2 id="dipTrackingTitle">Tracking <span class="accent">DIP</span> — So sánh 2026 vs 2025</h2>
+          <div class="section-eb">So sánh Sell In/Out YoY</div>
+          <h2 id="dipTrackingTitle">Volume <span class="accent">HVN</span></h2>
           <p class="meta" id="dipMeta">Đang tải dữ liệu YoY…</p>
         </div>
       </header>
@@ -2002,7 +2018,7 @@
           <div class="dip-sk-row" style="height:240px"></div>
         </div>
         <iframe id="dipFrame" data-src="DIP_Tracking.html"
-                title="Tracking DIP — biểu đồ và bảng so sánh Sell In/Out theo NPP, YoY 2026 vs 2025"
+                title="Volume HVN — biểu đồ và bảng so sánh Sell In/Out theo NPP, YoY 2026 vs 2025"
                 scrolling="no"></iframe>
       </div>
     </section>
@@ -2033,7 +2049,7 @@
     </button>
     <button class="bn-item" data-target="dipTracking" onclick="bnNav(this,'dipTracking')">
       <span class="bn-ico">📈</span>
-      <span class="bn-lbl">DIP</span>
+      <span class="bn-lbl">Volume</span>
     </button>
     <button class="bn-item" id="bnAdmin" data-target="adminOverview" onclick="bnNav(this,'adminOverview')" style="display:none">
       <span class="bn-ico">⚡</span>
@@ -2051,7 +2067,7 @@ const ALLOC=[{"week": "W27 (29/06 - 04/07) ", "npp": "HMcc", "item": "HS2", "ite
 <script>
 const $=s=>document.querySelector(s);
 const fmt=n=>Math.round(n||0).toLocaleString('vi-VN');
-const TIMEGONE=0.3548387096774194;
+const TIMEGONE=0.3870967741935484;
 const KPI=0.93;
 
 let CURRENT={code:'',npp:'',area:'',rows:[]};
@@ -2136,7 +2152,7 @@ function applyViewAs(code){
   $('#search').value='';
   // Reset allocation view mode theo loại user
   allocViewMode = (CURRENT.isAdmin && !CURRENT.viaAdmin) ? 'item' : 'detail';
-  allocSortCol=''; allocSortDir=1;
+  allocSortCol=''; allocSortDir=1; allocWeekTouched=false;
   document.querySelectorAll('.avt-btn').forEach(b=>{
     b.classList.toggle('active',
       (b.id==='avt-item' && allocViewMode==='item') ||
@@ -2194,7 +2210,7 @@ window.addEventListener('message', e=>{
   }
 });
 
-// Nạp iframe khi khu vực Tracking DIP sắp lọt vào khung nhìn (cuộn tay)…
+// Nạp iframe khi khu vực Volume HVN (Tracking DIP) sắp lọt vào khung nhìn (cuộn tay)…
 const dipObserver = 'IntersectionObserver' in window ? new IntersectionObserver(entries=>{
   if(entries.some(en=>en.isIntersecting)){
     ensureDipFrameLoaded();
@@ -2221,7 +2237,7 @@ function enterDash(){
   F.area=''; F.npp='';
   // Admin mặc định xem "Tổng hợp theo Item", user thường xem "Chi tiết NPP"
   allocViewMode = CURRENT.isAdmin && !CURRENT.viaAdmin ? 'item' : 'detail';
-  allocSortCol=''; allocSortDir=1;
+  allocSortCol=''; allocSortDir=1; allocWeekTouched=false;
   // Sync toggle button state
   const avt=document.querySelectorAll('.avt-btn');
   avt.forEach(b=>{
@@ -2533,7 +2549,7 @@ function renderChannelMix(){
 }
 
 // ============ TIP MODULE — Editorial render ============
-const DAYS_LEFT = 20;
+const DAYS_LEFT = 19;
 
 // Smooth count-up animation
 function countUp(el, target, duration=900){
@@ -2666,6 +2682,9 @@ const WEEK_DATES={'W25':'15/06 – 20/06'};
 // Sort state for allocation table
 let allocSortCol='', allocSortDir=1;
 let allocViewMode='detail'; // 'detail' | 'item'
+// true sau khi user tự tay đổi bộ lọc tuần — tránh renderAllocation() ghi đè
+// lại lựa chọn "Tất cả tuần" của user về tuần mới nhất ở lần render sau.
+let allocWeekTouched=false;
 
 function setAllocView(mode, btn){
   allocViewMode=mode;
@@ -2688,7 +2707,13 @@ function renderAllocation(){
     const dr=WEEK_DATES[w]?` (${WEEK_DATES[w]})`:'';
     return `<option value="${esc(w)}">${esc(w)}${esc(dr)}</option>`;
   }).join('');
-  if(cur && weeks.includes(cur)) sel.value=cur;
+  if(cur && weeks.includes(cur)){
+    sel.value=cur;
+  } else if(!allocWeekTouched && weeks.length){
+    // Mặc định mở lên hiển thị tuần mới nhất (weeks đã sort tăng dần) thay
+    // vì "Tất cả tuần" — chỉ áp dụng khi user chưa tự tay chọn tuần nào.
+    sel.value=weeks[weeks.length-1];
+  }
 
   const wkFilter=sel.value;
   const show=wkFilter?baseRows.filter(d=>d.week===wkFilter):baseRows;
@@ -2967,6 +2992,7 @@ function _wireAllocSort(){
 }
 
 $('#fAllocWeek').addEventListener('change',()=>{
+  allocWeekTouched=true;
   allocSortCol=''; allocSortDir=1;
   renderAllocation();
 });

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YoY Comparison — HCM Zone 4</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>
 /*!
  * Chart.js v4.4.4
@@ -27,21 +27,25 @@
 :root{
   --ink:#10221b; --muted:#5e6e64; --line:#dfe7e1;
   --bg:#f2f5f1; --card:#fff;
-  --green:#0b7a3b; --green-deep:#064a2c; --green-soft:#e3f2e8;
-  --grey:#b8c4bb; --amber:#d98e04; --red:#c43d2f; --red-soft:#fbe9e6;
+  /* Đồng bộ với palette portal chính (npp_portal_template.html --hk-green*)
+     để 2 module không lệch mã màu khi cuộn qua lại trong cùng portal. */
+  --green:#00863C; --green-deep:#005F2B; --green-soft:#E6F4EC;
+  --grey:#b8c4bb; --amber:#d98e04; --red:#E30613; --red-soft:#fbe9e6;
 }
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+button,.chip,[onclick]{touch-action:manipulation}
 .num{font-variant-numeric:tabular-nums}
 header{background:linear-gradient(135deg,var(--green-deep),var(--green));color:#fff;padding:20px 28px;position:relative;overflow:hidden}
 header::after{content:'';position:absolute;right:-60px;top:-90px;width:320px;height:320px;border:42px solid rgba(255,255,255,.06);border-radius:50%}
-.h-eyebrow{font-family:'Barlow Condensed';font-weight:600;letter-spacing:.22em;text-transform:uppercase;font-size:13px;color:#bfe3cd}
-h1{font-family:'Barlow Condensed';font-weight:700;font-size:34px;text-transform:uppercase;letter-spacing:.02em;margin-top:2px}
+.h-eyebrow{font-weight:700;letter-spacing:.22em;text-transform:uppercase;font-size:11px;color:#bfe3cd}
+h1{font-weight:800;font-size:28px;letter-spacing:-.02em;margin-top:2px}
 .h-sub{color:#d7ecdf;font-size:13px;margin-top:4px}
 
 .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 28px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;box-shadow:0 2px 8px rgba(16,34,27,.05)}
-.f-label{font-family:'Barlow Condensed';font-weight:600;text-transform:uppercase;letter-spacing:.14em;font-size:12px;color:var(--muted)}
-.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:500;cursor:pointer;transition:.15s}
+.f-label{font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:10.5px;color:var(--muted)}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-size:13px;font-weight:500;cursor:pointer;transition:border-color .15s,background-color .15s,color .15s}
 .chip:hover{border-color:var(--green)}
 .chip.on{background:var(--green-deep);border-color:var(--green-deep);color:#fff}
 .chip.item{padding:4px 11px;font-size:12px}
@@ -76,19 +80,24 @@ body.embedded main{padding-top:10px}
 .card:hover{box-shadow:0 6px 20px rgba(16,34,27,.10);transform:translateY(-2px)}
 @media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}}
 @media print{.card:hover{box-shadow:none;transform:none}}
-.card h2{font-family:'Barlow Condensed';font-weight:600;font-size:19px;text-transform:uppercase;letter-spacing:.08em;color:var(--green-deep)}
+.card h2{font-weight:800;font-size:17px;letter-spacing:-.015em;color:var(--green-deep)}
 .card .sub{font-size:12px;color:var(--muted);margin:2px 0 14px}
 .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px}
-@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .filters{padding:12px 14px;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap}
+  .chip{min-height:36px;padding:8px 14px}
+  .dd-btn,select{min-height:40px}
+}
 @media(max-width:1000px){.grid.row-2{grid-template-columns:1fr !important}}
 .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
 .kpi.hero{background:var(--green-deep);border-color:var(--green-deep);color:#fff}
 .kpi.hero.neg{background:#8f2b20;border-color:#8f2b20}
 .kpi.hero.neg .k-label{color:#f3c9c3}
 .kpi.hero.neg .k-delta{color:#f7ddd9}
-.kpi .k-label{font-family:'Barlow Condensed';font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi .k-label{font-weight:700;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi.hero .k-label{color:#a8d8bb}
-.kpi .k-value{font-family:'Barlow Condensed';font-weight:700;font-size:25px;line-height:1.1;margin-top:2px}
+.kpi .k-value{font-weight:800;font-size:22px;letter-spacing:-.02em;line-height:1.1;margin-top:2px}
 .kpi .k-delta{font-size:10.5px;margin-top:2px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kpi.hero .k-delta{color:#cfe8d8}
 .kpi.rpt{border-top:4px solid var(--green)}
@@ -148,7 +157,7 @@ body.embedded main{padding-top:10px}
 .warn .w-ico{font-size:15px;line-height:1.2}
 
 .tbl{width:100%;border-collapse:collapse}
-.tbl th{font-family:'Barlow Condensed';font-weight:600;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:right;padding:8px 10px;border-bottom:2px solid var(--line)}
+.tbl th{font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right;padding:8px 10px;border-bottom:2px solid var(--line)}
 .tbl th:first-child,.tbl td:first-child{text-align:left}
 .tbl td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;font-size:13px}
 .tbl tr:hover td{background:#f7faf7}
@@ -162,7 +171,7 @@ footer{text-align:center;color:var(--muted);font-size:11.5px;padding:0 28px 28px
 /* empty state */
 .empty{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:var(--muted);background:rgba(255,255,255,.85);z-index:5;border-radius:10px;text-align:center;padding:20px}
 .empty.show{display:flex}
-.empty b{color:var(--green-deep);font-family:'Barlow Condensed';font-size:18px;letter-spacing:.06em;text-transform:uppercase}
+.empty b{color:var(--green-deep);font-size:15px;font-weight:800;letter-spacing:-.01em}
 /* table scroll on small screens */
 .tbl-wrap{overflow-x:auto}
 .tbl th:first-child,.tbl td:first-child{position:sticky;left:0;background:#fff;z-index:2}
@@ -190,6 +199,7 @@ footer{text-align:center;color:var(--muted);font-size:11.5px;padding:0 28px 28px
   <span class="f-label">Metric</span>
   <button class="chip met on" data-m="i">Sell In</button>
   <button class="chip met" data-m="o">Sell Out</button>
+  <button class="chip met" data-m="tgt" title="Xem Sell Out theo nhóm Group AA/BB so với Target từng tháng của 2026">Target</button>
   <div class="f-sep"></div>
   <span class="f-label">View by</span>
   <select id="selDim" aria-label="Chọn chiều xem: tổng, brand hoặc SKU">
@@ -198,14 +208,14 @@ footer{text-align:center;color:var(--muted);font-size:11.5px;padding:0 28px 28px
     <option value="SKU">Theo SKU</option>
   </select>
   <div id="itemChips" style="display:none;flex-basis:100%;gap:6px;flex-wrap:wrap;padding:2px 0" role="group" aria-label="Chọn một hoặc nhiều brand/SKU"></div>
-  <div class="f-sep"></div>
-  <span class="f-label">Labels</span>
-  <button class="chip" id="lyToggle" aria-pressed="true" title="Ẩn/hiện nhãn số liệu 2025 trên biểu đồ — tắt khi trình chiếu để đỡ rối">2025: ON</button>
-  <div class="f-sep"></div>
-  <span class="f-label">Group RPT</span>
-  <button class="chip rpt on" data-r="ALL">All</button>
-  <button class="chip rpt" data-r="Group AA">Group AA</button>
-  <button class="chip rpt" data-r="Group BB">Group BB</button>
+  <div class="f-sep grp-labels"></div>
+  <span class="f-label grp-labels">Labels</span>
+  <button class="chip grp-labels" id="lyToggle" aria-pressed="true" title="Ẩn/hiện nhãn số liệu 2025 trên biểu đồ — tắt khi trình chiếu để đỡ rối">2025: ON</button>
+  <div class="f-sep grp-rpt"></div>
+  <span class="f-label grp-rpt">Group RPT</span>
+  <button class="chip rpt on grp-rpt" data-r="ALL">All</button>
+  <button class="chip rpt grp-rpt" data-r="Group AA">Group AA</button>
+  <button class="chip rpt grp-rpt" data-r="Group BB">Group BB</button>
   <div class="f-sep"></div>
   <span class="f-label">NPP</span>
   <select id="selNpp" aria-label="Chọn nhà phân phối"><option value="ALL">Toàn Zone (9 NPP)</option></select>
@@ -226,6 +236,15 @@ footer{text-align:center;color:var(--muted);font-size:11.5px;padding:0 28px 28px
     <div class="kpi"><div class="k-label">Chênh lệch tuyệt đối</div><div class="k-value num" id="kDif">—</div><div class="k-delta" id="kDifD"></div></div>
   </div>
 
+  <div class="card">
+    <h2 id="chTitle">Monthly Comparison</h2>
+    <div class="sub" id="chSub"></div>
+    <div class="warn" id="warn"><span class="w-ico">⚠️</span><span id="warnTxt"></span></div>
+    <div class="chart-wrap"><canvas id="cYoy"></canvas>
+      <div class="empty" id="emptyMain"><b>Không có dữ liệu</b><span>Tổ hợp bộ lọc hiện tại không có số liệu ở cả 2025 lẫn 2026.<br>Thử đổi NPP, Group RPT hoặc Brand/SKU.</span></div>
+    </div>
+  </div>
+
   <div class="grid row-2">
     <div class="card" style="margin-bottom:0">
       <h2 id="brTitle">Brand Comparison — YoY</h2>
@@ -242,15 +261,6 @@ footer{text-align:center;color:var(--muted);font-size:11.5px;padding:0 28px 28px
         <div style="position:relative;height:224px;flex:0 0 224px"><canvas id="cDonut"></canvas></div>
         <div id="dnLegend" style="flex:1;min-width:150px;font-size:11.5px"></div>
       </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2 id="chTitle">Monthly Comparison</h2>
-    <div class="sub" id="chSub"></div>
-    <div class="warn" id="warn"><span class="w-ico">⚠️</span><span id="warnTxt"></span></div>
-    <div class="chart-wrap"><canvas id="cYoy"></canvas>
-      <div class="empty" id="emptyMain"><b>Không có dữ liệu</b><span>Tổ hợp bộ lọc hiện tại không có số liệu ở cả 2025 lẫn 2026.<br>Thử đổi NPP, Group RPT hoặc Brand/SKU.</span></div>
     </div>
   </div>
 
@@ -296,6 +306,11 @@ const CUR=Math.max(...MONTHS);                 // 202607 (MTD)
 const LASTCLOSED26=Math.max(...MONTHS.filter(m=>m>202600&&m<CUR)); // 202606
 
 let met='i', dim='ALL', items=new Set(), npp='ALL', rpt='ALL', showLY=true;
+/* Tab "Target" không phải 1 cột dữ liệu riêng — KPI/Brand Comparison/Brand
+   Mix vẫn cần 1 metric i/o hợp lệ để tính, nên khi met==='tgt' các phần đó
+   tự rơi về Sell Out (baseMet()). Chỉ card "Monthly Comparison" đổi hẳn
+   sang view Sell Out theo nhóm AA/BB so với Target — xem renderTargetMonthly(). */
+const baseMet=()=>met==='tgt'?'o':met;
 
 /* ---------- controls ---------- */
 const selNpp=document.getElementById('selNpp');
@@ -312,6 +327,14 @@ document.querySelectorAll('.chip.rpt').forEach(b=>b.onclick=()=>{
 document.querySelectorAll('.chip.met').forEach(b=>b.onclick=()=>{
   met=b.dataset.m;
   document.querySelectorAll('.chip.met').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-pressed',x===b);});
+  /* Tab Target luôn xem cả 2 nhóm AA/BB song song + không so YoY với 2025 —
+     2 bộ filter "Labels" (toggle 2025) và "Group RPT" (lọc còn 1 nhóm) hết
+     tác dụng nên ẩn đi để khỏi gây hiểu lầm là còn áp dụng được. */
+  document.querySelectorAll('.grp-labels,.grp-rpt').forEach(el=>{el.style.display=met==='tgt'?'none':'';});
+  if(met==='tgt' && rpt!=='ALL'){
+    rpt='ALL';
+    document.querySelectorAll('.chip.rpt').forEach(x=>{x.classList.toggle('on',x.dataset.r==='ALL');x.setAttribute('aria-pressed',x.dataset.r==='ALL');});
+  }
   refresh();
 });
 
@@ -432,7 +455,7 @@ selDim.onchange=()=>{
 function series(metric){
   // returns {m: value} for filtered rows, by yyyymm
   const acc={};
-  const k=MET_IDX[metric||met];
+  const k=MET_IDX[metric||baseMet()];
   DATA.sku.forEach(r=>{
     if(npp!=='ALL' && r[1]!==npp) return;
     if(rpt!=='ALL' && r[4]!==rpt) return;
@@ -443,9 +466,26 @@ function series(metric){
   return acc;
 }
 
+/* Giống series() nhưng tách riêng theo Group RPT (AA/BB) thay vì lọc còn 1
+   nhóm — dùng cho tab Target vì cần hiện đồng thời cả 2 nhóm. Bỏ qua chip
+   "Group RPT" (không có nghĩa khi đã tách theo nhóm), vẫn tôn trọng NPP/Brand/SKU. */
+function seriesByRpt(metric){
+  const out={'Group AA':{},'Group BB':{}};
+  const k=MET_IDX[metric];
+  DATA.sku.forEach(r=>{
+    if(npp!=='ALL' && r[1]!==npp) return;
+    if(dim==='SKU' && !items.has(r[2])) return;
+    if(dim==='BRAND' && !items.has(r[3])) return;
+    const g=r[4];
+    if(g!=='Group AA' && g!=='Group BB') return;
+    out[g][r[0]]=(out[g][r[0]]||0)+r[k];
+  });
+  return out;
+}
+
 /* cumulative T1..lastM for both years with arbitrary filters (ignores dim unless keepDim) */
 function cumFor(lastM, {rptF=null, brandF=null, keepDim=false}={}){
-  const k=MET_IDX[met];
+  const k=MET_IDX[baseMet()];
   let c25=0,c26=0;
   DATA.sku.forEach(r=>{
     const mo=r[0]%100, yr=r[0]<202600?25:26;
@@ -471,7 +511,7 @@ let ch, chBrand, chDonut;
 /* ---------- brand grouped bar chart ---------- */
 function drawBrand(lastM){
   const per={};
-  const k=MET_IDX[met];
+  const k=MET_IDX[baseMet()];
   const drill = dim==='BRAND' && items.size>0;   // drill into SKUs of selected brand(s)
   DATA.sku.forEach(r=>{
     const mo=r[0]%100, yr=r[0]<202600?25:26;
@@ -502,7 +542,7 @@ function drawBrand(lastM){
   }
   const drillNames=[...items];
   const drillTxt=drillNames.length<=2?drillNames.join(' + '):drillNames.length+' brands';
-  document.getElementById('brTitle').textContent=(drill?'SKU Breakdown — '+drillTxt:'Brand Comparison')+' — '+MET_NAME[met]+' (T1–T'+lastM+')';
+  document.getElementById('brTitle').textContent=(drill?'SKU Breakdown — '+drillTxt:'Brand Comparison')+' — '+MET_NAME[baseMet()]+' (T1–T'+lastM+')';
   document.getElementById('brSub').textContent=(drill
     ? 'Growth từng ShortCode trong '+drillTxt+' · '
     : 'Lũy kế cùng kỳ theo brand · ')
@@ -522,10 +562,10 @@ function drawBrand(lastM){
       if(p25&&it.c25>0){ctx.font='600 10px Inter,sans-serif';ctx.fillStyle='#7d8b81';ctx.fillText(fmtKb(it.c25),p25.x,p25.y-3);}
       /* K value + growth stack on 2026 bar */
       const pt=m26.data[ix]; if(!pt) return;
-      ctx.font='700 10.5px Inter,sans-serif';ctx.fillStyle='#064a2c';
+      ctx.font='700 10.5px Inter,sans-serif';ctx.fillStyle='#005F2B';
       if(it.c26>0) ctx.fillText(fmtKb(it.c26),pt.x,pt.y-3);
       if(it.g==null){ctx.font='700 10px Inter,sans-serif';ctx.fillStyle='#9aa79e';ctx.fillText('NEW',pt.x,pt.y-16);return;}
-      const up=it.g>=0, col=up?'#0b7a3b':'#c43d2f';
+      const up=it.g>=0, col=up?'#00863C':'#E30613';
       ctx.fillStyle=col;
       const y=pt.y-22;
       ctx.beginPath();
@@ -555,7 +595,7 @@ function drawBrand(lastM){
     if(!it){ el.style.opacity=0; return; }
 
     const isTY=dp.datasetIndex===1;
-    const seriesColor=isTY?'#0b7a3b':'#b8c4bb';
+    const seriesColor=isTY?'#00863C':'#b8c4bb';
     const label=(isTY?'2026 (TY)':'2025 (LY)')+': '+fmtFull(isTY?it.c26:it.c25);
     const head=it.g==null?'Brand mới (không có LY)':'Growth: '+(it.g>=0?'+':'')+it.g.toFixed(1)+'%';
 
@@ -606,7 +646,7 @@ function drawBrand(lastM){
   chBrand=new Chart(document.getElementById('cBrand'),{type:'bar',
     data:{labels:arr.map(x=>x.b),datasets:[
       {label:'2025 (LY)',data:arr.map(x=>x.c25),backgroundColor:'#b8c4bb',borderRadius:4},
-      {label:'2026 (TY)',data:arr.map(x=>x.c26),backgroundColor:'#0b7a3b',borderRadius:4}
+      {label:'2026 (TY)',data:arr.map(x=>x.c26),backgroundColor:'#00863C',borderRadius:4}
     ]},
     options:{maintainAspectRatio:false,layout:{padding:{top:42}},
       scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'#eef2ee'}},x:{grid:{display:false}}},
@@ -618,10 +658,10 @@ function drawBrand(lastM){
 
 
 /* ---------- brand mix donut (current year) ---------- */
-const BRAND_COLORS={'Heineken Original':'#064a2c','Heineken Silver':'#0b7a3b','Tiger Regular':'#0057a0','Tiger Crystal':'#e9b949','Tiger Smooth':'#a35f00','Bia Việt':'#c43d2f','Bivina':'#6f8f7f','Larue':'#5e6e64','Other':'#b8c4bb'};
+const BRAND_COLORS={'Heineken Original':'#005F2B','Heineken Silver':'#00863C','Tiger Regular':'#0057a0','Tiger Crystal':'#e9b949','Tiger Smooth':'#a35f00','Bia Việt':'#c43d2f','Bivina':'#6f8f7f','Larue':'#5e6e64','Other':'#b8c4bb'};
 /* Palette riêng cho các lát SKU khi drill vào 1 brand — không cần khớp
    BRAND_COLORS vì tiêu đề đã ghi rõ đang xem SKU của brand nào. */
-const SKU_SLICE_COLORS=['#0b7a3b','#0f9d58','#3f9142','#d98e04','#e9b949','#c43d2f','#8a5a03','#6f8f7f','#5e6e64','#2f6f4f'];
+const SKU_SLICE_COLORS=['#00863C','#0f9d58','#3f9142','#d98e04','#e9b949','#c43d2f','#8a5a03','#6f8f7f','#5e6e64','#2f6f4f'];
 
 /* Click vào 1 lát brand → khoan sâu xem tỷ trọng SKU trong brand đó.
    Click nút "◀ Tất cả brand" để quay lại. Trạng thái này độc lập với
@@ -634,7 +674,7 @@ document.getElementById('dnBackBtn').onclick=()=>{
 
 function drawDonut(lastM){
   _donutLastM=lastM;
-  const k=MET_IDX[met];
+  const k=MET_IDX[baseMet()];
   const per={};
   const drilling = donutDrillBrand && BRANDS.includes(donutDrillBrand);
   DATA.sku.forEach(r=>{
@@ -660,8 +700,8 @@ function drawDonut(lastM){
     ? 'SKU trong '+donutDrillBrand
     : 'Brand Mix '+(npp==='ALL'?'— Zone':'— '+npp)+' · 2026';
   document.getElementById('dnSub').textContent = drilling
-    ? 'Tỷ trọng từng SKU trong '+donutDrillBrand+' · '+MET_NAME[met]+' lũy kế T1–T'+lastM+'/2026'+(rpt==='ALL'?'':' · '+rpt)
-    : 'Tỷ trọng brand trong '+MET_NAME[met]+' lũy kế T1–T'+lastM+'/2026 (toàn danh mục)'+(rpt==='ALL'?'':' · '+rpt)+' · bấm 1 lát để xem chi tiết SKU';
+    ? 'Tỷ trọng từng SKU trong '+donutDrillBrand+' · '+MET_NAME[baseMet()]+' lũy kế T1–T'+lastM+'/2026'+(rpt==='ALL'?'':' · '+rpt)
+    : 'Tỷ trọng brand trong '+MET_NAME[baseMet()]+' lũy kế T1–T'+lastM+'/2026 (toàn danh mục)'+(rpt==='ALL'?'':' · '+rpt)+' · bấm 1 lát để xem chi tiết SKU';
   /* Cỡ chữ vẽ trên canvas được scale còn ~80% so với bản gốc (donut 280px
      → 224px) để chữ/nhãn không bị to lấn át hình tròn đã thu nhỏ. */
   const centerText={id:'centerText',afterDraw(chart){
@@ -669,7 +709,7 @@ function drawDonut(lastM){
     if(!m.data[0]) return;
     const cx=m.data[0].x, cy=m.data[0].y;
     ctx.save();ctx.textAlign='center';
-    ctx.font="700 16px 'Barlow Condensed',sans-serif";ctx.fillStyle='#064a2c';
+    ctx.font="800 15px Inter,sans-serif";ctx.fillStyle='#005F2B';
     ctx.fillText(fmt(tot),cx,cy-2);
     ctx.font='500 8.5px Inter,sans-serif';ctx.fillStyle='#5e6e64';
     ctx.fillText('thùng · T1–T'+lastM,cx,cy+11);
@@ -830,6 +870,109 @@ function drawDonut(lastM){
   }
 }
 
+/* ---------- Tab "Target": Sell Out theo nhóm AA/BB so với Target, năm 2026 ---------- */
+function renderTargetChart(fmtK, scope){
+  const mm=[1,2,3,4,5,6,7,8,9,10,11,12];
+  const oByG=seriesByRpt('o'), tByG=seriesByRpt('t');
+  const mk=(g,src)=>mm.map(m=>{const key=202600+m; return MONTHS.includes(key)?(src[g][key]??0):null;});
+  const aAA=mk('Group AA',oByG), tAA=mk('Group AA',tByG);
+  const aBB=mk('Group BB',oByG), tBB=mk('Group BB',tByG);
+  const pctAt=(a,t,ix)=>(t!=null&&t>0&&a!=null&&(202600+mm[ix])!==CUR)?a/t*100:null;
+  const pAA=mm.map((m,ix)=>pctAt(aAA[ix],tAA[ix],ix));
+  const pBB=mm.map((m,ix)=>pctAt(aBB[ix],tBB[ix],ix));
+
+  const hasData=aAA.some(v=>v>0)||aBB.some(v=>v>0);
+  document.getElementById('emptyMain').classList.toggle('show', !hasData);
+  document.getElementById('chTitle').textContent='Monthly Comparison — Sell Out vs Target theo nhóm RPT';
+  document.getElementById('chSub').textContent=scope+' · nét liền: Sell Out thực tế · nét đứt: Target · mũi tên trên điểm: % đạt Target từng tháng (2026) · T'+(CUR%100)+'/26 là MTD';
+
+  const tgtLabels={id:'tgtLabels',afterDatasetsDraw(chart){
+    const {ctx}=chart;
+    const mAA=chart.getDatasetMeta(1), mBB=chart.getDatasetMeta(3);
+    ctx.save(); ctx.textAlign='center';
+    const narrow=chart.width<640;
+    const draw=(meta,pctArr)=>{
+      pctArr.forEach((p,ix)=>{
+        if(p==null) return;
+        const pt=meta.data[ix]; if(!pt||pt.skip) return;
+        if(narrow&&ix%2!==0) return;
+        const up=p>=100, col=up?'#00863C':'#E30613';
+        const ty=pt.y-22;
+        ctx.fillStyle=col;
+        ctx.beginPath();
+        if(up){ctx.moveTo(pt.x,ty-5);ctx.lineTo(pt.x-4,ty+2);ctx.lineTo(pt.x+4,ty+2);}
+        else{ctx.moveTo(pt.x,ty+2);ctx.lineTo(pt.x-4,ty-5);ctx.lineTo(pt.x+4,ty-5);}
+        ctx.closePath();ctx.fill();
+        ctx.font=(narrow?'700 8.5px':'700 10px')+' Inter,sans-serif';
+        ctx.fillText(p.toFixed(0)+'%', pt.x, ty-6);
+      });
+    };
+    draw(mAA,pAA); draw(mBB,pBB);
+    ctx.restore();
+  }};
+
+  ch=new Chart(document.getElementById('cYoy'),{
+    data:{labels:mm.map(m=>'T'+m),datasets:[
+      {type:'line',label:'AA Target',data:tAA,borderColor:'#33A663',backgroundColor:'#33A663',
+        borderWidth:2,borderDash:[5,4],tension:.2,pointRadius:2.5,pointBackgroundColor:'#33A663',spanGaps:false,order:2},
+      {type:'line',label:'AA Sell Out',data:aAA,borderColor:'#00863C',backgroundColor:'#00863C',
+        borderWidth:3,tension:.2,pointRadius:mm.map(m=>(202600+m)===CUR?6:4),
+        pointStyle:mm.map(m=>(202600+m)===CUR?'rectRot':'circle'),
+        pointBackgroundColor:mm.map(m=>(202600+m)===CUR?'#fff':'#00863C'),spanGaps:false,order:1,
+        segment:{borderDash:ctx=>(202600+mm[ctx.p1DataIndex])===CUR?[6,4]:undefined,
+                 borderColor:ctx=>(202600+mm[ctx.p1DataIndex])===CUR?'rgba(0,134,60,.5)':undefined}},
+      {type:'line',label:'BB Target',data:tBB,borderColor:'#e9b949',backgroundColor:'#e9b949',
+        borderWidth:2,borderDash:[5,4],tension:.2,pointRadius:2.5,pointBackgroundColor:'#e9b949',spanGaps:false,order:2},
+      {type:'line',label:'BB Sell Out',data:aBB,borderColor:'#d98e04',backgroundColor:'#d98e04',
+        borderWidth:3,tension:.2,pointRadius:mm.map(m=>(202600+m)===CUR?6:4),
+        pointStyle:mm.map(m=>(202600+m)===CUR?'rectRot':'circle'),
+        pointBackgroundColor:mm.map(m=>(202600+m)===CUR?'#fff':'#d98e04'),spanGaps:false,order:1,
+        segment:{borderDash:ctx=>(202600+mm[ctx.p1DataIndex])===CUR?[6,4]:undefined,
+                 borderColor:ctx=>(202600+mm[ctx.p1DataIndex])===CUR?'rgba(217,142,4,.55)':undefined}}
+    ]},
+    options:{maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      layout:{padding:{top:36,bottom:6,left:6,right:14}},
+      scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'#eef2ee'},title:{display:true,text:'Volume (thùng)',font:{size:11}}},
+              x:{grid:{display:false}}},
+      plugins:{legend:{labels:{boxWidth:12,boxHeight:12}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': '+fmtFull(c.parsed.y)}}}},
+    plugins:[tgtLabels]
+  });
+}
+
+function renderTargetTable(lastM){
+  const mm=[1,2,3,4,5,6,7,8,9,10,11,12];
+  const oByG=seriesByRpt('o'), tByG=seriesByRpt('t');
+  let h='<tr><th>Tháng</th>'+
+    '<th style="border-left:2px solid var(--line)">AA Target</th><th>AA Sell Out</th><th>% đạt</th>'+
+    '<th style="border-left:2px solid var(--line)">BB Target</th><th>BB Sell Out</th><th>% đạt</th></tr>';
+  let cTAA=0,cAAA=0,cTBB=0,cABB=0;
+  const pctCls=(v,mtd)=>v==null?'':mtd?'':v>=100?'g-up':v>=95?'':'g-down';
+  mm.forEach(m=>{
+    const key=202600+m;
+    if(!MONTHS.includes(key)) return;
+    const isMTD=key===CUR;
+    const tAA=tByG['Group AA'][key]||0, aAA=oByG['Group AA'][key]||0;
+    const tBB=tByG['Group BB'][key]||0, aBB=oByG['Group BB'][key]||0;
+    const pAA=tAA>0?aAA/tAA*100:null, pBB=tBB>0?aBB/tBB*100:null;
+    if(m<=lastM){cTAA+=tAA;cAAA+=aAA;cTBB+=tBB;cABB+=aBB;}
+    h+='<tr><td><b>Tháng '+m+'</b>'+(isMTD?'<span class="tag">MTD</span>':'')+'</td>'+
+       '<td class="num" style="color:#7d8b81;border-left:2px solid var(--line)">'+(tAA?fmtFull(tAA):'—')+'</td>'+
+       '<td class="num">'+(aAA?fmtFull(aAA):'—')+'</td>'+
+       '<td class="num '+pctCls(pAA,isMTD)+'">'+(pAA==null?'—':pAA.toFixed(1)+'%')+'</td>'+
+       '<td class="num" style="color:#7d8b81;border-left:2px solid var(--line)">'+(tBB?fmtFull(tBB):'—')+'</td>'+
+       '<td class="num">'+(aBB?fmtFull(aBB):'—')+'</td>'+
+       '<td class="num '+pctCls(pBB,isMTD)+'">'+(pBB==null?'—':pBB.toFixed(1)+'%')+'</td></tr>';
+  });
+  const vAA=cTAA>0?cAAA/cTAA*100:null, vBB=cTBB>0?cABB/cTBB*100:null;
+  h+='<tr class="total"><td>Lũy kế T1–T'+lastM+'</td>'+
+     '<td class="num" style="border-left:2px solid var(--line)">'+fmtFull(cTAA)+'</td><td class="num">'+fmtFull(cAAA)+'</td>'+
+     '<td class="num '+(vAA!=null&&vAA>=100?'g-up':'g-down')+'">'+(vAA==null?'—':vAA.toFixed(1)+'%')+'</td>'+
+     '<td class="num" style="border-left:2px solid var(--line)">'+fmtFull(cTBB)+'</td><td class="num">'+fmtFull(cABB)+'</td>'+
+     '<td class="num '+(vBB!=null&&vBB>=100?'g-up':'g-down')+'">'+(vBB==null?'—':vBB.toFixed(1)+'%')+'</td></tr>';
+  document.getElementById('tbl').innerHTML=h;
+}
+
 function refresh(){
   const s=series();
   const sT=series('t');
@@ -845,100 +988,112 @@ function refresh(){
   /* --- data comparability warning --- */
   const warn=document.getElementById('warn'), warnTxt=document.getElementById('warnTxt');
   const has25=v25.some(v=>v!=null&&v>0), has26=v26.some(v=>v!=null&&v>0);
-  let msg='';
-  if(dim==='SKU'&&items.size){
-    const only25=selArr.filter(s=>{const c=COVER[s]||{};return (c[25]||0)>0&&!(c[26]>0);});
-    const only26=selArr.filter(s=>{const c=COVER[s]||{};return (c[26]||0)>0&&!(c[25]>0);});
-    const parts=[];
-    if(only25.length) parts.push('<b>'+only25.join(', ')+'</b> chỉ có dữ liệu 2025 (đã ngừng/recode)');
-    if(only26.length) parts.push('<b>'+only26.join(', ')+'</b> chỉ có dữ liệu 2026 (mã mới, không có LY)');
-    if(parts.length) msg='Lưu ý so sánh YoY: '+parts.join(' · ')+'. Các mã này làm % growth lệch — cân nhắc bỏ chọn hoặc đối chiếu view Brand.';
-  } else if(dim==='BRAND'&&items.size&&(!has25||!has26)){
-    msg='Lựa chọn brand hiện tại không có dữ liệu ở '+(has25?'2026':'2025')+' trong phạm vi lọc — không đủ cơ sở so sánh YoY.';
-  }
-  warnTxt.innerHTML=msg;
-  warn.classList.toggle('show',!!msg);
-  document.getElementById('emptyMain').classList.toggle('show', !has25 && !has26);
-  document.getElementById('chTitle').textContent='Monthly Comparison — '+MET_NAME[met];
-  document.getElementById('chSub').textContent=scope+' · số đậm xanh trên điểm: volume 2026 (K thùng) · số xám dưới điểm: volume 2025 · ▲▼ %: tăng trưởng vs LY · T7/26 là MTD';
 
   if(ch) ch.destroy();
   const fmtK = v => v>=100000 ? Math.round(v/1000).toLocaleString('vi-VN')+'K'
                    : v>=10000 ? (v/1000).toFixed(1)+'K'
                    : Math.round(v).toLocaleString('vi-VN');
-  const growthLabels={id:'growthLabels',afterDatasetsDraw(chart){
-    const {ctx}=chart;
-    const m25=chart.getDatasetMeta(0); // 2025 line
-    const m26=chart.getDatasetMeta(1); // 2026 line
-    ctx.save();
-    ctx.textAlign='center';
-    const narrow=chart.width<640;   // mobile: lighter labeling
-    /* 2026: volume value + triangle + % stacked above each point */
-    v26.forEach((v,ix)=>{
-      if(v==null) return;
-      const pt=m26.data[ix]; if(!pt||pt.skip) return;
-      const x=pt.x;
-      const isMTD=(202600+mm[ix])===CUR;
-      // volume label
-      ctx.font=(narrow?'700 9.5px':'700 11.5px')+' Inter,sans-serif';
-      ctx.fillStyle=isMTD?'#9aa79e':'#064a2c';
-      ctx.textBaseline='bottom';
-      ctx.fillText(fmtK(v)+(isMTD?' MTD':''), x, pt.y-10);
-      // growth triangle + %
-      const g=growth[ix];
-      if(g!=null&&(!narrow||ix%2===0)){
-        const up=g>=0, col=up?'#0b7a3b':'#c43d2f';
-        const ty=pt.y-30;
-        ctx.fillStyle=col;
-        ctx.beginPath();
-        if(up){ctx.moveTo(x,ty-6);ctx.lineTo(x-5,ty+2);ctx.lineTo(x+5,ty+2);}
-        else{ctx.moveTo(x,ty+2);ctx.lineTo(x-5,ty-6);ctx.lineTo(x+5,ty-6);}
-        ctx.closePath();ctx.fill();
-        ctx.font='600 11px Inter,sans-serif';
-        ctx.fillText((up?'+':'')+g.toFixed(1)+'%', x, ty-8);
-      }
+
+  if(met==='tgt'){
+    warnTxt.innerHTML=''; warn.classList.remove('show');
+    renderTargetChart(fmtK, scope);
+  } else {
+    let msg='';
+    if(dim==='SKU'&&items.size){
+      const only25=selArr.filter(s=>{const c=COVER[s]||{};return (c[25]||0)>0&&!(c[26]>0);});
+      const only26=selArr.filter(s=>{const c=COVER[s]||{};return (c[26]||0)>0&&!(c[25]>0);});
+      const parts=[];
+      if(only25.length) parts.push('<b>'+only25.join(', ')+'</b> chỉ có dữ liệu 2025 (đã ngừng/recode)');
+      if(only26.length) parts.push('<b>'+only26.join(', ')+'</b> chỉ có dữ liệu 2026 (mã mới, không có LY)');
+      if(parts.length) msg='Lưu ý so sánh YoY: '+parts.join(' · ')+'. Các mã này làm % growth lệch — cân nhắc bỏ chọn hoặc đối chiếu view Brand.';
+    } else if(dim==='BRAND'&&items.size&&(!has25||!has26)){
+      msg='Lựa chọn brand hiện tại không có dữ liệu ở '+(has25?'2026':'2025')+' trong phạm vi lọc — không đủ cơ sở so sánh YoY.';
+    }
+    warnTxt.innerHTML=msg;
+    warn.classList.toggle('show',!!msg);
+    document.getElementById('emptyMain').classList.toggle('show', !has25 && !has26);
+    document.getElementById('chTitle').textContent='Monthly Comparison — '+MET_NAME[baseMet()];
+    document.getElementById('chSub').textContent=scope+' · số đậm xanh trên điểm: volume 2026 (K thùng) · số xám dưới điểm: volume 2025 · ▲▼ %: tăng trưởng vs LY · nét đứt cuối: tháng đang chạy (MTD), chưa đủ ngày để so YoY';
+    const growthLabels={id:'growthLabels',afterDatasetsDraw(chart){
+      const {ctx}=chart;
+      const m25=chart.getDatasetMeta(0); // 2025 line
+      const m26=chart.getDatasetMeta(1); // 2026 line
+      ctx.save();
+      ctx.textAlign='center';
+      const narrow=chart.width<640;   // mobile: lighter labeling
+      /* 2026: volume value + triangle + % stacked above each point */
+      v26.forEach((v,ix)=>{
+        if(v==null) return;
+        const pt=m26.data[ix]; if(!pt||pt.skip) return;
+        const x=pt.x;
+        const isMTD=(202600+mm[ix])===CUR;
+        // volume label
+        ctx.font=(narrow?'700 9.5px':'700 11.5px')+' Inter,sans-serif';
+        ctx.fillStyle=isMTD?'#9aa79e':'#005F2B';
+        ctx.textBaseline='bottom';
+        ctx.fillText(fmtK(v)+(isMTD?' MTD':''), x, pt.y-10);
+        // growth triangle + %
+        const g=growth[ix];
+        if(g!=null&&(!narrow||ix%2===0)){
+          const up=g>=0, col=up?'#00863C':'#E30613';
+          const ty=pt.y-30;
+          ctx.fillStyle=col;
+          ctx.beginPath();
+          if(up){ctx.moveTo(x,ty-6);ctx.lineTo(x-5,ty+2);ctx.lineTo(x+5,ty+2);}
+          else{ctx.moveTo(x,ty+2);ctx.lineTo(x-5,ty-6);ctx.lineTo(x+5,ty-6);}
+          ctx.closePath();ctx.fill();
+          ctx.font='600 11px Inter,sans-serif';
+          ctx.fillText((up?'+':'')+g.toFixed(1)+'%', x, ty-8);
+        }
+      });
+      /* 2025: volume value below each point in grey, dodging the 2026 line */
+      if(showLY && !narrow) v25.forEach((v,ix)=>{
+        if(v==null) return;
+        const pt=m25.data[ix]; if(!pt||pt.skip) return;
+        let yy=pt.y+9;
+        const p26=m26.data[ix];
+        if(p26&&!p26.skip&&Math.abs(p26.y-pt.y)<26&&p26.y>pt.y) yy=p26.y+9; // 2026 just below -> push label under it
+        ctx.font='500 10.5px Inter,sans-serif';
+        ctx.fillStyle='#7d8b81';
+        ctx.textBaseline='top';
+        ctx.fillText(fmtK(v), pt.x, yy);
+      });
+      ctx.restore();
+    }};
+    ch=new Chart(document.getElementById('cYoy'),{
+      data:{labels:mm.map(m=>'T'+m),datasets:[
+        {type:'line',label:'2025 (LY)',data:v25,borderColor:'#9aa79e',backgroundColor:'#9aa79e',
+          borderWidth:2.5,borderDash:[6,4],tension:.3,pointRadius:3.5,pointBackgroundColor:'#9aa79e',spanGaps:false,order:2},
+        {type:'line',label:'2026 (TY)',data:v26,borderColor:'#00863C',backgroundColor:'#00863C',
+          borderWidth:3,tension:.3,pointRadius:mm.map(m=>(202600+m)===CUR?6:4),
+          pointStyle:mm.map(m=>(202600+m)===CUR?'rectRot':'circle'),
+          pointBackgroundColor:mm.map(m=>(202600+m)===CUR?'#fff':'#00863C'),spanGaps:false,order:1,
+          /* Đoạn dẫn vào tháng MTD vẽ nét đứt + nhạt màu hơn — tránh hiểu nhầm
+             thành xu hướng giảm thật khi tháng đang chạy chưa đủ ngày để so sánh. */
+          segment:{
+            borderDash:ctx=>(202600+mm[ctx.p1DataIndex])===CUR?[6,4]:undefined,
+            borderColor:ctx=>(202600+mm[ctx.p1DataIndex])===CUR?'rgba(0,134,60,.5)':undefined
+          }}
+      ]},
+      options:{maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+        layout:{padding:{top:44,bottom:6,left:6,right:14}},
+        scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'#eef2ee'},title:{display:true,text:'Volume (thùng)',font:{size:11}}},
+                x:{grid:{display:false}}},
+        plugins:{legend:{labels:{boxWidth:12,boxHeight:12}},
+          tooltip:{callbacks:{
+            label:c=>c.dataset.label+': '+fmtFull(c.parsed.y),
+            footer:items=>{const g=growth[items[0].dataIndex];return g==null?'':'Growth vs LY: '+(g>=0?'+':'')+g.toFixed(1)+'%';}
+          }}}},
+      plugins:[growthLabels]
     });
-    /* 2025: volume value below each point in grey, dodging the 2026 line */
-    if(showLY && !narrow) v25.forEach((v,ix)=>{
-      if(v==null) return;
-      const pt=m25.data[ix]; if(!pt||pt.skip) return;
-      let yy=pt.y+9;
-      const p26=m26.data[ix];
-      if(p26&&!p26.skip&&Math.abs(p26.y-pt.y)<26&&p26.y>pt.y) yy=p26.y+9; // 2026 just below -> push label under it
-      ctx.font='500 10.5px Inter,sans-serif';
-      ctx.fillStyle='#7d8b81';
-      ctx.textBaseline='top';
-      ctx.fillText(fmtK(v), pt.x, yy);
-    });
-    ctx.restore();
-  }};
-  ch=new Chart(document.getElementById('cYoy'),{
-    data:{labels:mm.map(m=>'T'+m),datasets:[
-      {type:'line',label:'2025 (LY)',data:v25,borderColor:'#9aa79e',backgroundColor:'#9aa79e',
-        borderWidth:2.5,borderDash:[6,4],tension:.3,pointRadius:3.5,pointBackgroundColor:'#9aa79e',spanGaps:false,order:2},
-      {type:'line',label:'2026 (TY)',data:v26,borderColor:'#0b7a3b',backgroundColor:'#0b7a3b',
-        borderWidth:3,tension:.3,pointRadius:mm.map(m=>(202600+m)===CUR?6:4),
-        pointStyle:mm.map(m=>(202600+m)===CUR?'rectRot':'circle'),
-        pointBackgroundColor:mm.map(m=>(202600+m)===CUR?'#fff':'#0b7a3b'),spanGaps:false,order:1}
-    ]},
-    options:{maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      layout:{padding:{top:44,bottom:6,left:6,right:14}},
-      scales:{y:{ticks:{callback:v=>fmt(v)},grid:{color:'#eef2ee'},title:{display:true,text:'Volume (thùng)',font:{size:11}}},
-              x:{grid:{display:false}}},
-      plugins:{legend:{labels:{boxWidth:12,boxHeight:12}},
-        tooltip:{callbacks:{
-          label:c=>c.dataset.label+': '+fmtFull(c.parsed.y),
-          footer:items=>{const g=growth[items[0].dataIndex];return g==null?'':'Growth vs LY: '+(g>=0?'+':'')+g.toFixed(1)+'%';}
-        }}}},
-    plugins:[growthLabels]
-  });
+  }
 
   /* KPI — same-period cumulative through last closed 2026 month */
   const lastM = LASTCLOSED26%100;
   let c26=0,c25=0;
   for(let m=1;m<=lastM;m++){c26+=s[202600+m]||0;c25+=s[202500+m]||0;}
   const g=c25>0?(c26/c25-1)*100:null;
-  document.getElementById('kGL').textContent='Growth YoY — '+MET_NAME[met];
+  document.getElementById('kGL').textContent='Growth YoY — '+MET_NAME[baseMet()];
   document.getElementById('kG').textContent=g==null?'—':(g>=0?'+':'')+g.toFixed(1)+'%';
   document.querySelector('.kpi.hero').classList.toggle('neg', g!=null && g<0);
   document.getElementById('kGD').textContent='Cùng kỳ T1–T'+lastM+' · '+scope;
@@ -948,7 +1103,7 @@ function refresh(){
   const dif=c26-c25;
   document.getElementById('kDif').textContent=(dif>=0?'+':'')+fmt(dif);
   document.getElementById('kDifD').textContent=dif>=0?'2026 cao hơn cùng kỳ':'2026 thấp hơn cùng kỳ';
-  document.getElementById('kDif').style.color=dif>=0?'#0b7a3b':'#c43d2f';
+  document.getElementById('kDif').style.color=dif>=0?'#00863C':'#E30613';
 
   /* Group RPT scorecards (respect metric+NPP+Brand/SKU view, show both groups) */
   [['AA','Group AA','kAA'],['BB','Group BB','kBB']].forEach(([tag,rname,idp])=>{
@@ -958,50 +1113,54 @@ function refresh(){
     document.getElementById(idp+'per').textContent='(T1–T'+lastM+')';
     const ge=document.getElementById(idp+'g');
     ge.textContent=gg==null?(p26>0?'mới — không có LY':'—'):(gg>=0?'▲ +':'▼ ')+gg.toFixed(1)+'% vs LY';
-    ge.style.color=gg==null?'#9aa79e':gg>=0?'#0b7a3b':'#c43d2f';
-    document.getElementById(idp+'d').textContent='LY: '+fmt(p25)+' · '+MET_NAME[met];
+    ge.style.color=gg==null?'#9aa79e':gg>=0?'#00863C':'#E30613';
+    document.getElementById(idp+'d').textContent='LY: '+fmt(p25)+' · '+MET_NAME[baseMet()];
   });
 
   drawBrand(lastM);
   drawDonut(lastM);
 
   /* table */
-  let h='<tr><th>Tháng</th>'+
-    '<th style="border-left:2px solid var(--line)">Target 25</th><th>Actual 25</th><th>% vs T</th>'+
-    '<th style="border-left:2px solid var(--line)">Target 26</th><th>Actual 26</th><th>% vs T</th>'+
-    '<th style="border-left:2px solid var(--line)">+/−</th><th>% YoY</th></tr>';
-  let cT25=0,cT26=0;
-  const pctCls=(v,mtd)=>v==null?'':mtd?'':v>=100?'g-up':v>=95?'':'g-down';
-  mm.forEach((m,ix)=>{
-    const a=v25[ix],b=v26[ix];
-    if(a==null&&b==null) return;
-    const isMTD=(202600+m)===CUR;
-    const t25=MONTHS.includes(202500+m)?(sT[202500+m]||0):null;
-    const t26=MONTHS.includes(202600+m)?(sT[202600+m]||0):null;
-    const p25=(t25>0&&a!=null)?a/t25*100:null;
-    const p26=(t26>0&&b!=null)?b/t26*100:null;
-    const d=(a!=null&&b!=null)?b-a:null;
-    const gp=(a>0&&b!=null&&!isMTD)?(b/a-1)*100:null;
-    h+='<tr><td><b>Tháng '+m+'</b>'+(isMTD?'<span class="tag">MTD</span>':'')+'</td>'+
-       '<td class="num" style="color:#7d8b81;border-left:2px solid var(--line)">'+(t25==null?'—':fmtFull(t25))+'</td>'+
-       '<td class="num">'+(a==null?'—':fmtFull(a))+'</td>'+
-       '<td class="num '+pctCls(p25,false)+'">'+(p25==null?'—':p25.toFixed(1)+'%')+'</td>'+
-       '<td class="num" style="color:#7d8b81;border-left:2px solid var(--line)">'+(t26==null?'—':fmtFull(t26))+'</td>'+
-       '<td class="num">'+(b==null?'—':fmtFull(b))+'</td>'+
-       '<td class="num '+pctCls(p26,isMTD)+'">'+(p26==null?'—':p26.toFixed(1)+'%')+'</td>'+
-       '<td class="num '+(d==null?'':d>=0?'g-up':'g-down')+'" style="border-left:2px solid var(--line)">'+(d==null||isMTD?'—':(d>=0?'+':'')+fmtFull(d))+'</td>'+
-       '<td class="num '+(gp==null?'':gp>=0?'g-up':'g-down')+'">'+(gp==null?'—':(gp>=0?'+':'')+gp.toFixed(1)+'%')+'</td></tr>';
-  });
-  for(let m=1;m<=lastM;m++){cT25+=sT[202500+m]||0;cT26+=sT[202600+m]||0;}
-  const vp25=cT25>0?c25/cT25*100:null, vp26=cT26>0?c26/cT26*100:null;
-  h+='<tr class="total"><td>Lũy kế T1–T'+lastM+'</td>'+
-     '<td class="num" style="border-left:2px solid var(--line)">'+fmtFull(cT25)+'</td><td class="num">'+fmtFull(c25)+'</td>'+
-     '<td class="num '+(vp25!=null&&vp25>=100?'g-up':'g-down')+'">'+(vp25==null?'—':vp25.toFixed(1)+'%')+'</td>'+
-     '<td class="num" style="border-left:2px solid var(--line)">'+fmtFull(cT26)+'</td><td class="num">'+fmtFull(c26)+'</td>'+
-     '<td class="num '+(vp26!=null&&vp26>=100?'g-up':'g-down')+'">'+(vp26==null?'—':vp26.toFixed(1)+'%')+'</td>'+
-     '<td class="num '+(dif>=0?'g-up':'g-down')+'" style="border-left:2px solid var(--line)">'+(dif>=0?'+':'')+fmtFull(dif)+'</td>'+
-     '<td class="num '+(g>=0?'g-up':'g-down')+'">'+(g==null?'—':(g>=0?'+':'')+g.toFixed(1)+'%')+'</td></tr>';
-  document.getElementById('tbl').innerHTML=h;
+  if(met==='tgt'){
+    renderTargetTable(lastM);
+  } else {
+    let h='<tr><th>Tháng</th>'+
+      '<th style="border-left:2px solid var(--line)">Target 25</th><th>Actual 25</th><th>% vs T</th>'+
+      '<th style="border-left:2px solid var(--line)">Target 26</th><th>Actual 26</th><th>% vs T</th>'+
+      '<th style="border-left:2px solid var(--line)">+/−</th><th>% YoY</th></tr>';
+    let cT25=0,cT26=0;
+    const pctCls=(v,mtd)=>v==null?'':mtd?'':v>=100?'g-up':v>=95?'':'g-down';
+    mm.forEach((m,ix)=>{
+      const a=v25[ix],b=v26[ix];
+      if(a==null&&b==null) return;
+      const isMTD=(202600+m)===CUR;
+      const t25=MONTHS.includes(202500+m)?(sT[202500+m]||0):null;
+      const t26=MONTHS.includes(202600+m)?(sT[202600+m]||0):null;
+      const p25=(t25>0&&a!=null)?a/t25*100:null;
+      const p26=(t26>0&&b!=null)?b/t26*100:null;
+      const d=(a!=null&&b!=null)?b-a:null;
+      const gp=(a>0&&b!=null&&!isMTD)?(b/a-1)*100:null;
+      h+='<tr><td><b>Tháng '+m+'</b>'+(isMTD?'<span class="tag">MTD</span>':'')+'</td>'+
+         '<td class="num" style="color:#7d8b81;border-left:2px solid var(--line)">'+(t25==null?'—':fmtFull(t25))+'</td>'+
+         '<td class="num">'+(a==null?'—':fmtFull(a))+'</td>'+
+         '<td class="num '+pctCls(p25,false)+'">'+(p25==null?'—':p25.toFixed(1)+'%')+'</td>'+
+         '<td class="num" style="color:#7d8b81;border-left:2px solid var(--line)">'+(t26==null?'—':fmtFull(t26))+'</td>'+
+         '<td class="num">'+(b==null?'—':fmtFull(b))+'</td>'+
+         '<td class="num '+pctCls(p26,isMTD)+'">'+(p26==null?'—':p26.toFixed(1)+'%')+'</td>'+
+         '<td class="num '+(d==null?'':d>=0?'g-up':'g-down')+'" style="border-left:2px solid var(--line)">'+(d==null||isMTD?'—':(d>=0?'+':'')+fmtFull(d))+'</td>'+
+         '<td class="num '+(gp==null?'':gp>=0?'g-up':'g-down')+'">'+(gp==null?'—':(gp>=0?'+':'')+gp.toFixed(1)+'%')+'</td></tr>';
+    });
+    for(let m=1;m<=lastM;m++){cT25+=sT[202500+m]||0;cT26+=sT[202600+m]||0;}
+    const vp25=cT25>0?c25/cT25*100:null, vp26=cT26>0?c26/cT26*100:null;
+    h+='<tr class="total"><td>Lũy kế T1–T'+lastM+'</td>'+
+       '<td class="num" style="border-left:2px solid var(--line)">'+fmtFull(cT25)+'</td><td class="num">'+fmtFull(c25)+'</td>'+
+       '<td class="num '+(vp25!=null&&vp25>=100?'g-up':'g-down')+'">'+(vp25==null?'—':vp25.toFixed(1)+'%')+'</td>'+
+       '<td class="num" style="border-left:2px solid var(--line)">'+fmtFull(cT26)+'</td><td class="num">'+fmtFull(c26)+'</td>'+
+       '<td class="num '+(vp26!=null&&vp26>=100?'g-up':'g-down')+'">'+(vp26==null?'—':vp26.toFixed(1)+'%')+'</td>'+
+       '<td class="num '+(dif>=0?'g-up':'g-down')+'" style="border-left:2px solid var(--line)">'+(dif>=0?'+':'')+fmtFull(dif)+'</td>'+
+       '<td class="num '+(g>=0?'g-up':'g-down')+'">'+(g==null?'—':(g>=0?'+':'')+g.toFixed(1)+'%')+'</td></tr>';
+    document.getElementById('tbl').innerHTML=h;
+  }
 }
 document.querySelectorAll('.chip.met,.chip.rpt').forEach(b=>b.setAttribute('aria-pressed',b.classList.contains('on')));
 
